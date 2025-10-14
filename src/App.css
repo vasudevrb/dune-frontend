@@ -1,0 +1,52 @@
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  background-color: black;
+}
+
+.text-button {
+  margin-top: 4rem;
+  transition: filter 0.4s ease-in-out;
+}
+.text-button:hover {
+  filter: drop-shadow(0 0 1em #94664d);
+}
+.text-button.react:hover {
+  filter: drop-shadow(0 0 1em #94664d);
+}
+
+.mantine-Drawer-content	 {
+  background-size: cover;
+  background: linear-gradient(
+    to top,
+    rgba(255, 172, 51, 0.2) 0%,   /* bright near bottom */
+    rgba(255, 172, 51, 0.15) 20%,
+    rgba(255, 172, 51, 0.1) 40%,
+    rgba(255, 172, 51, 0) 70%     /* fully transparent higher up */
+  ) no-repeat;
+}
+
+.mantine-Drawer-body {
+  padding: 0;
+  margin: 0;
+}
+
+.game-screen {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background: #94664d;
+}
+
+.game-board {
+  flex: 0 0 70%;
+  background: bisque;
+}
+
+.players {
+  flex: 0 0 30%;
+  background: #646cff;
+}
