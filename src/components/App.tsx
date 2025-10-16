@@ -1,8 +1,9 @@
 import '@mantine/core/styles.css'
-import './App.css'
+import '../css/App.css'
 import {Button, Drawer, MantineProvider} from '@mantine/core';
 import {useDisclosure} from "@mantine/hooks";
-import {ImperiumRow} from "./ImperiumRow";
+import {ImperiumRow} from "./ImperiumRow.tsx";
+import {Players} from "./Players.tsx";
 
 function Content() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -27,8 +28,11 @@ function Content() {
       <Button className="text-button" radius="xs" variant="filled" onClick={open}>
         Imperium Row
       </Button>
+
     </div>
-    <div className="players"></div>
+    <div className="players">
+      <Players/>
+    </div>
   </div>
 }
 

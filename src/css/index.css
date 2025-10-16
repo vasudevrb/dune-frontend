@@ -3,6 +3,7 @@
   width: 100%;
   margin: 0;
   padding: 0;
+  position: fixed;
 
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
