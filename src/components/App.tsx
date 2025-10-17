@@ -14,22 +14,26 @@ function Content() {
             position="bottom"
             opened={opened}
             onClose={close}
+            overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}
             styles={{
               content: {
                 height: 'auto'
               },
-            }}
-            overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}>
+            }}>
 
       <ImperiumRow />
     </Drawer>
 
     <div className="game-board">
-      <Button className="text-button" radius="xs" variant="filled" onClick={open}>
+      <Button className="text-button"
+              radius="xs"
+              variant="filled"
+              onClick={open}>
         Imperium Row
       </Button>
-
     </div>
+
+
     <div className="players">
       <Players/>
     </div>
