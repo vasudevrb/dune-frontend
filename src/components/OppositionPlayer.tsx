@@ -5,7 +5,7 @@ import spice_icon from '../assets/spice.svg';
 import solari_icon from '../assets/solari.svg';
 import first_player_icon from '../assets/first_player_token.png';
 
-export function OppositionPlayer() {
+export function OppositionPlayer(props: { first_player: boolean; }) {
   return (
     <Group className="player-container" align="flex-start">
       <Stack align={"center"} gap={"5"}>
@@ -27,7 +27,10 @@ export function OppositionPlayer() {
             Feyd Rautha
           </Text>
           <Tooltip label="First player">
-            <img width={30} src={first_player_icon} alt="First player"/>
+            <img width={30}
+                 src={first_player_icon}
+                 alt="First player"
+                 hidden={!props.first_player}/>
           </Tooltip>
         </Group>
 
