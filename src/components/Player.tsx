@@ -7,7 +7,7 @@ import plus_icon from '../assets/plus.svg';
 import minus_icon from '../assets/minus.svg';
 import first_player_icon from '../assets/first_player_token.png';
 
-export function Player(props) {
+export function Player(props: { first_player: boolean }) {
   return (
     <Stack className="current-player-container"
            align={"ce"}

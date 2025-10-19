@@ -4,6 +4,7 @@ import {Button, Drawer, MantineProvider} from '@mantine/core';
 import {useDisclosure} from "@mantine/hooks";
 import {ImperiumRow} from "./ImperiumRow.tsx";
 import {Players} from "./Players.tsx";
+import {Setup} from "./setup/Setup.tsx";
 
 function Content() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -49,7 +50,7 @@ function App() {
     },
     primaryColor: 'dune-brown'
   }} >
-    <Content />
+    <Setup/>
   </MantineProvider>
 }
 
