@@ -1,4 +1,4 @@
-import {ActionIcon, Flex, Group, Stack, Stepper, Text, TextInput} from "@mantine/core";
+import {ActionIcon, Flex, Group, Stack, Stepper, Text, TextInput, Title} from "@mantine/core";
 import '../../css/Setup.css'
 import {useState} from "react";
 import arrow_right_icon from "../../assets/arrow_right.svg";
@@ -27,10 +27,14 @@ export function Setup() {
   const handleNameNextClick = async () => {
     if (playerName.trim() === "") {
       setNameError("Invalid name.")
-    } else {
-      setNameError("")
+    } else if (gameId.trim() === "") {
       if(await getGameId() == 200) {
         console.log(`Game id is ${gameId}`)
+        nextStep()
+      }
+    } else {
+      if (await joinGame(gameId) == 200) {
+        console.log(`Joined game with id ${gameId}`)
         nextStep()
       }
     }
@@ -41,7 +45,7 @@ export function Setup() {
       const response = await fetch(`http://localhost:8080/create-game?playerName=${playerName}`)
         .then(res => res.json())
       console.log(response)
-      gameId = response.gameId
+      setGameId(response.gameId)
       return 200
     } catch (err) {
       if (err instanceof Error) {
@@ -52,8 +56,24 @@ export function Setup() {
     }
   }
 
+  const joinGame = async (id: string) => {
+    try {
+      const response = await fetch(`http://localhost:8080/join-game?playerName=${playerName}&gameId=${id}`)
+        .then(res => res.json())
+      if (id === response.gameId) {
+        return 200
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        setNameError(err.message);
+      } else {
+        setNameError("Something went wrong. Please check the console.")
+      }
+    }
+  }
+
   return (
-    <Flex justify="center" align="center" h="100vh">
+    <Flex justify="center" direction={"column"} align="center" h="100vh">
       <Stepper
         active={active}
         onStepClick={setActive}
@@ -75,7 +95,7 @@ export function Setup() {
           steps: {
             display: "flex",
             justifyContent: "center",
-            width: "50%",
+            width: "60%",
             gap:"5px"
           },
           stepBody: {
@@ -180,8 +200,18 @@ export function Setup() {
 
         </Stepper.Step>
 
-        <Stepper.Step/>
+        <Stepper.Step>
+
+        </Stepper.Step>
+
+        <Stepper.Step>
+
+        </Stepper.Step>
       </Stepper>
+
+      <Text style={{ color: 'white' }} hidden={gameId === ""}>
+        Game ID: {gameId}
+      </Text>
     </Flex>
   )
 }
