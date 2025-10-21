@@ -1,9 +1,14 @@
 import {ActionIcon, Box, Button, Flex, Group, Image, Stack, Stepper, Text, TextInput, Title} from "@mantine/core";
 import '../../css/Setup.css'
-import {ReactNode, useState} from "react";
+import {useState} from "react";
 import arrow_right_icon from "../../assets/arrow_right.svg";
 import {Carousel} from "@mantine/carousel";
 
+export interface Character {
+  characterName: string;
+  urls: Array<string>;
+  shownImageId: number;
+}
 
 export function Setup() {
   const [active, setActive] = useState(0);
@@ -11,6 +16,17 @@ export function Setup() {
   const [nameError, setNameError] = useState("");
   const [gameType, setGameType] = useState(-1);
   const [gameId, setGameId] = useState("");
+  const [selectedCharacter, setSelectedCharacter] = useState<Character>();
+  const [firstChar, setFirstChar] = useState<Character>({
+    characterName: "",
+    urls: [],
+    shownImageId: 0
+  });
+  const [secondChar, setSecondChar] = useState<Character>({
+    characterName: "",
+    urls: [],
+    shownImageId: 0
+  });
 
   const nextStep = () => setActive((current) => (current < 2 ? current + 1 : current));
   const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
@@ -29,14 +45,19 @@ export function Setup() {
     if (playerName.trim() === "") {
       setNameError("Invalid name.")
     } else if (gameId.trim() === "") {
-      if (await getGameId() == 200) {
-        console.log(`Game id is ${gameId}`)
+      const newId = await getGameId()
+      if (newId) {
+        setGameId(newId)
+        console.log(`Game id is ${newId}`)
         nextStep()
+        getCharacters()
       }
     } else {
-      if (await joinGame(gameId) == 200) {
+      const joinResponse = await joinGame(gameId)
+      if (joinResponse == 200) {
         console.log(`Joined game with id ${gameId}`)
         nextStep()
+        getCharacters()
       }
     }
   }
@@ -46,8 +67,7 @@ export function Setup() {
       const response = await fetch(`http://localhost:8080/create-game?playerName=${playerName}`)
         .then(res => res.json())
       console.log(response)
-      setGameId(response.gameId)
-      return 200
+      return response.gameId
     } catch (err) {
       if (err instanceof Error) {
         setNameError(err.message);
@@ -71,6 +91,43 @@ export function Setup() {
         setNameError("Something went wrong. Please check the console.")
       }
     }
+  }
+
+  const getCharacters = async () => {
+    try {
+      const response = await fetch(`http://localhost:8080/characters`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          playerName: playerName,
+        })
+      }).then(res => res.json())
+      console.log(response)
+      const firstCharacter = response[0]
+      firstCharacter["shownImageId"] = 0
+      const secondCharacter = response[1]
+      secondCharacter["shownImageId"] = 0
+
+      setFirstChar(firstCharacter)
+      setSecondChar(secondCharacter)
+    } catch (err) {
+      console.log(`Error when fetching playable characters: ${err}`)
+    }
+  }
+
+  const flipCharacterCard = (charIndex: number, character: Character) => {
+    const newShownImageId = character.shownImageId ^ 1;
+    if (charIndex == 0) {
+      setFirstChar(prev => ({...prev, shownImageId: newShownImageId}))
+    } else {
+      setSecondChar(prev => ({...prev, shownImageId: newShownImageId}))
+    }
+  }
+
+  const selectCharacter = (character: Character) => {
+
   }
 
   return (
@@ -209,6 +266,7 @@ export function Setup() {
 
         <Stepper.Step>
           <Carousel slideGap="md"
+                    slideSize="50%"
                     controlSize={40}
                     w={"100%"}
                     h={"100%"}
@@ -222,7 +280,7 @@ export function Setup() {
                          radius={"lg"}
                          w="100%"
                          h="400px"
-                         src="http://localhost:8080/characters/muaddib.jpg" alt="Card">
+                         src={firstChar.urls[firstChar.shownImageId]} alt="Card">
                   </Image>
 
                   <Group pos="absolute"
@@ -230,12 +288,16 @@ export function Setup() {
                          right={70}
                          gap={"md"}>
 
-                    <Button
-                      size="xs"
-                      radius="xl"
-                      variant="filled">
-                      Flip Card
-                    </Button>
+                    {
+                      (firstChar.urls.length > 1) &&
+                      <Button
+                        onClick={() => flipCharacterCard(0, firstChar)}
+                        size="xs"
+                        radius="xl"
+                        variant="filled">
+                        Flip Card
+                      </Button>
+                    }
 
                     <Button
                       size="xs"
@@ -256,7 +318,7 @@ export function Setup() {
                          radius={"lg"}
                          w="100%"
                          h="400px"
-                         src="http://localhost:8080/characters/muaddib.jpg" alt="Card">
+                         src={secondChar.urls[secondChar.shownImageId]} alt="Card">
                   </Image>
 
                   <Group pos="absolute"
@@ -264,12 +326,16 @@ export function Setup() {
                          right={70}
                          gap={"md"}>
 
-                    <Button
-                      size="xs"
-                      radius="xl"
-                      variant="filled">
-                      Flip Card
-                    </Button>
+                    {
+                      (secondChar.urls.length > 1) &&
+                      <Button
+                        onClick={() => flipCharacterCard(1, secondChar)}
+                        size="xs"
+                        radius="xl"
+                        variant="filled">
+                        Flip Card
+                      </Button>
+                    }
 
                     <Button
                       size="xs"
