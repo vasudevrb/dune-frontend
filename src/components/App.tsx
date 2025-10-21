@@ -6,7 +6,8 @@ import {useDisclosure} from "@mantine/hooks";
 import {ImperiumRow} from "./ImperiumRow.tsx";
 import {Players} from "./Players.tsx";
 import {Setup} from "./setup/Setup.tsx";
-import {useRef} from "react";
+import {useRef, useState} from "react";
+import type {PlayerModel} from "../model/Player.tsx";
 
 function Content() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -45,7 +46,15 @@ function Content() {
 
 
 function App() {
-  const wsRef = useRef<WebSocket | null>(null);
+  const wsRef = useRef<WebSocket>(null);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [gameId, setGameId] = useState("");
+  const [players, setPlayers] = useState<PlayerModel[]>([]);
+
+  const gameStartHandler = (gameId: string, players: PlayerModel[]) => {
+    setGameId(gameId);
+    setPlayers(players);
+  }
 
   const createWebSocket = (gameId: string) => {
     if (wsRef.current) {
@@ -62,7 +71,9 @@ function App() {
     primaryColor: 'dune-brown'
   }} >
     <Setup
-    webSocketRetriever={(gameId: string) => createWebSocket(gameId)}/>
+    webSocketRetriever={(gameId: string) => createWebSocket(gameId)}
+    gameStartHandler = {(gameId: string, players: PlayerModel[]) => gameStartHandler(gameId, players)}
+    />
   </MantineProvider>
 }
 

@@ -3,6 +3,7 @@ import '../../css/Setup.css'
 import {type RefObject, useState} from "react";
 import arrow_right_icon from "../../assets/arrow_right.svg";
 import {Carousel} from "@mantine/carousel";
+import type {PlayerModel} from "../../model/Player.tsx";
 
 export interface Character {
   characterName: string;
@@ -13,10 +14,15 @@ export interface Character {
 export interface PlayerInfo {
   id: number,
   name: string;
+  characterName: string;
+  color: string;
   status: string;
 }
 
-export function Setup(props: {webSocketRetriever: (gameId: string) => RefObject<WebSocket>}) {
+export function Setup(props: {
+  webSocketRetriever: (gameId: string) => RefObject<WebSocket>,
+  gameStartHandler: (gameId: string, players: PlayerModel[]) => void
+}) {
   const [active, setActive] = useState(0);
   const [playerName, setPlayerName] = useState("");
   const [nameError, setNameError] = useState("");
@@ -34,11 +40,7 @@ export function Setup(props: {webSocketRetriever: (gameId: string) => RefObject<
     shownImageId: 0
   });
 
-  const [players, setPlayers] = useState<PlayerInfo[]>([
-    ({id: 1, name: "a", status: "ready"}),
-    ({id: 2, name: "c", status: "ready"}),
-    ({id: 3, name: "b", status: "ready"}),
-  ]);
+  const [players, setPlayers] = useState<PlayerInfo[]>([]);
 
   const nextStep = () => setActive((current) => (current < 3 ? current + 1 : current));
   const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
@@ -153,10 +155,12 @@ export function Setup(props: {webSocketRetriever: (gameId: string) => RefObject<
       console.log(`Message received: ${event.data}`);
       const data = JSON.parse(event.data)
       if (data.action === "GET_CHARACTER_READY_STATES") {
-        const p = data.body.map((item: { name: string; status: string; }, index: number) => {
+        const p = data.body.map((item: PlayerInfo, index: number) => {
           return {
             id: index,
             name: item.name,
+            characterName: item.characterName,
+            color: item.color,
             status: item.status,
           }
         })
@@ -182,14 +186,34 @@ export function Setup(props: {webSocketRetriever: (gameId: string) => RefObject<
     }
   }
 
-  const selectCharacter = (character: Character) => {
+  const selectCharacter = async (character: Character) => {
     setSelectedCharacter(character)
+    try {
+      const response = await fetch(`http://localhost:8080/pick-character`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          gameId: gameId,
+          playerName: playerName,
+          characterName: character.characterName
+        })
+      }).then(res => res.json())
+      console.log(response)
+    } catch (err) {
+      console.log(`Error when picking character: ${err}`)
+    }
     nextStep()
     openWebSocket()
   }
 
   const handleStartGameClick = () => {
-
+    props.gameStartHandler(gameId, players.map(pi => ({
+      name: pi.name,
+      character: pi.characterName,
+      color: pi.color
+    })))
   }
 
   return (
@@ -426,7 +450,8 @@ export function Setup(props: {webSocketRetriever: (gameId: string) => RefObject<
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th>Player name</Table.Th>
-                  <Table.Th>Selected character</Table.Th>
+                  <Table.Th>Character</Table.Th>
+                  <Table.Th>Color</Table.Th>
                   <Table.Th>Status</Table.Th>
                 </Table.Tr>
               </Table.Thead>
@@ -435,7 +460,8 @@ export function Setup(props: {webSocketRetriever: (gameId: string) => RefObject<
                 players.map(pl =>
                   <Table.Tr key={pl.id}>
                     <Table.Td style={{ textAlign: 'left' }}>{pl.name}</Table.Td>
-                    <Table.Td style={{ textAlign: 'left' }}>{pl.name}</Table.Td>
+                    <Table.Td style={{ textAlign: 'left' }}>{pl.characterName}</Table.Td>
+                    <Table.Td style={{ textAlign: 'left' }}>{pl.color}</Table.Td>
                     <Table.Td style={{ textAlign: 'left' }}>{pl.status}</Table.Td>
                   </Table.Tr>
                 )
