@@ -6,6 +6,7 @@ import {useDisclosure} from "@mantine/hooks";
 import {ImperiumRow} from "./ImperiumRow.tsx";
 import {Players} from "./Players.tsx";
 import {Setup} from "./setup/Setup.tsx";
+import {useRef} from "react";
 
 function Content() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -44,6 +45,15 @@ function Content() {
 
 
 function App() {
+  const wsRef = useRef<WebSocket | null>(null);
+
+  const createWebSocket = (gameId: string) => {
+    if (wsRef.current) {
+      wsRef.current.close();
+    }
+    wsRef.current = new WebSocket(`ws://localhost:8080/game/${gameId}`);
+    return wsRef;
+  }
   return <MantineProvider theme={{
     colors: {
       'dune-brown': ['#B0A199', '#A79185', '#A08170', '#9B735D', '#94664D',
@@ -51,7 +61,8 @@ function App() {
     },
     primaryColor: 'dune-brown'
   }} >
-    <Setup/>
+    <Setup
+    webSocketRetriever={(gameId: string) => createWebSocket(gameId)}/>
   </MantineProvider>
 }
 

@@ -1,6 +1,6 @@
-import {ActionIcon, Box, Button, Flex, Group, Image, Stack, Stepper, Text, TextInput, Title} from "@mantine/core";
+import {ActionIcon, Box, Button, Flex, Group, Image, Stack, Stepper, Table, Text, TextInput, Title} from "@mantine/core";
 import '../../css/Setup.css'
-import {useState} from "react";
+import {type RefObject, useState} from "react";
 import arrow_right_icon from "../../assets/arrow_right.svg";
 import {Carousel} from "@mantine/carousel";
 
@@ -10,11 +10,17 @@ export interface Character {
   shownImageId: number;
 }
 
-export function Setup() {
+export interface PlayerInfo {
+  id: number,
+  name: string;
+  status: string;
+}
+
+export function Setup(props: {webSocketRetriever: (gameId: string) => RefObject<WebSocket>}) {
   const [active, setActive] = useState(0);
   const [playerName, setPlayerName] = useState("");
   const [nameError, setNameError] = useState("");
-  const [gameType, setGameType] = useState(-1);
+  const [gameType, setGameType] = useState(-1); // 0 for create; 1 for join
   const [gameId, setGameId] = useState("");
   const [selectedCharacter, setSelectedCharacter] = useState<Character>();
   const [firstChar, setFirstChar] = useState<Character>({
@@ -28,7 +34,13 @@ export function Setup() {
     shownImageId: 0
   });
 
-  const nextStep = () => setActive((current) => (current < 2 ? current + 1 : current));
+  const [players, setPlayers] = useState<PlayerInfo[]>([
+    ({id: 1, name: "a", status: "ready"}),
+    ({id: 2, name: "c", status: "ready"}),
+    ({id: 3, name: "b", status: "ready"}),
+  ]);
+
+  const nextStep = () => setActive((current) => (current < 3 ? current + 1 : current));
   const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
 
   const handleCreateGameClick = () => {
@@ -126,7 +138,57 @@ export function Setup() {
     }
   }
 
+  // @ts-expect-error msg can be any
+  const sendMessage = (wsRef: RefObject<WebSocket | null>, msg) => {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(msg);
+    } else {
+      console.warn("WebSocket is not open");
+    }
+  };
+
+  const openWebSocket = () => {
+    const wsRef = props.webSocketRetriever(gameId);
+    wsRef.current.onmessage = (event: { data: string; }) => {
+      console.log(`Message received: ${event.data}`);
+      const data = JSON.parse(event.data)
+      if (data.action === "GET_CHARACTER_READY_STATES") {
+        const p = data.body.map((item: { name: string; status: string; }, index: number) => {
+          return {
+            id: index,
+            name: item.name,
+            status: item.status,
+          }
+        })
+        setPlayers(p)
+      }
+    };
+    wsRef.current.onopen = () => {
+      sendMessage(wsRef, JSON.stringify(
+        {
+          action: "ADD_TO_GAME",
+          body: {
+            gameId: gameId,
+            playerName: playerName,
+          }
+        }
+      ))
+
+      sendMessage(wsRef, JSON.stringify(
+        {
+          action: "GET_CHARACTER_READY_STATES"
+        }
+      ))
+    }
+  }
+
   const selectCharacter = (character: Character) => {
+    setSelectedCharacter(character)
+    nextStep()
+    openWebSocket()
+  }
+
+  const handleStartGameClick = () => {
 
   }
 
@@ -300,6 +362,7 @@ export function Setup() {
                     }
 
                     <Button
+                      onClick={() => selectCharacter(firstChar)}
                       size="xs"
                       radius="xl"
                       variant="filled">
@@ -338,6 +401,7 @@ export function Setup() {
                     }
 
                     <Button
+                      onClick={() => selectCharacter(secondChar)}
                       size="xs"
                       radius="xl"
                       variant="filled">
@@ -352,6 +416,47 @@ export function Setup() {
 
 
         <Stepper.Step>
+          <Stack p={"40px"}
+                 w={"100%"}
+                 align={"center"}
+                 justify={"center"}
+                 gap={"md"}>
+
+            <Table w={"50%"}>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Player name</Table.Th>
+                  <Table.Th>Selected character</Table.Th>
+                  <Table.Th>Status</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {
+                players.map(pl =>
+                  <Table.Tr key={pl.id}>
+                    <Table.Td style={{ textAlign: 'left' }}>{pl.name}</Table.Td>
+                    <Table.Td style={{ textAlign: 'left' }}>{pl.name}</Table.Td>
+                    <Table.Td style={{ textAlign: 'left' }}>{pl.status}</Table.Td>
+                  </Table.Tr>
+                )
+              }
+              </Table.Tbody>
+            </Table>
+
+            {
+              (gameType === 0 && players.length >= 3 && players.map(p => p.status).every(s => s === "Ready")) &&
+              <Button
+                mt={"40px"}
+                onClick={() => handleStartGameClick()}
+                size="xs"
+                radius="xl"
+                variant="filled">
+                Start Game
+              </Button>
+            }
+
+          </Stack>
+
         </Stepper.Step>
       </Stepper>
       <Text p={"10px"}
