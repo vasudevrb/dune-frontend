@@ -1,4 +1,5 @@
 import '@mantine/core/styles.css'
+import '@mantine/carousel/styles.css';
 import '../css/App.css'
 import {Button, Drawer, MantineProvider} from '@mantine/core';
 import {useDisclosure} from "@mantine/hooks";

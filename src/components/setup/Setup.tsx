@@ -1,7 +1,8 @@
-import {ActionIcon, Flex, Group, Stack, Stepper, Text, TextInput, Title} from "@mantine/core";
+import {ActionIcon, Box, Button, Flex, Group, Image, Stack, Stepper, Text, TextInput, Title} from "@mantine/core";
 import '../../css/Setup.css'
-import {useState} from "react";
+import {ReactNode, useState} from "react";
 import arrow_right_icon from "../../assets/arrow_right.svg";
+import {Carousel} from "@mantine/carousel";
 
 
 export function Setup() {
@@ -28,7 +29,7 @@ export function Setup() {
     if (playerName.trim() === "") {
       setNameError("Invalid name.")
     } else if (gameId.trim() === "") {
-      if(await getGameId() == 200) {
+      if (await getGameId() == 200) {
         console.log(`Game id is ${gameId}`)
         nextStep()
       }
@@ -73,15 +74,21 @@ export function Setup() {
   }
 
   return (
-    <Flex justify="center" direction={"column"} align="center" h="100vh">
+    <Flex justify="center"
+          direction={"column"}
+          align="center"
+          h="100%"
+          pl={"100px"}
+          pr={"100px"}
+          pt={"100px"}>
       <Stepper
         active={active}
         onStepClick={setActive}
         allowNextStepsSelect={false}
         bg="#B0A19999"
         p={"20"}
-        w={"60%"}
-        h={"60%"}
+        w={"100%"}
+        h={"100%"}
         size={"xl"}
         styles={{
           separator: {
@@ -96,7 +103,7 @@ export function Setup() {
             display: "flex",
             justifyContent: "center",
             width: "60%",
-            gap:"5px"
+            gap: "5px"
           },
           stepBody: {
             display: "none",
@@ -139,77 +146,156 @@ export function Setup() {
         </Stepper.Step>
 
         <Stepper.Step>
-            <Stack align={"center"} mt={"60"}>
-              <TextInput
-                size="lg"
-                label="Player name"
-                radius={"xs"}
-                value={playerName}
-                onChange={(event) => setPlayerName(event.currentTarget.value)}
-                error={nameError}
-                styles={(theme) => ({
-                  input: {
-                    borderRadius: 0,
-                    backgroundColor: theme.colors[theme.primaryColor][5],
-                    borderColor: theme.colors[theme.primaryColor][3],
-                    color: theme.white,
-                  },
-                  label: {
-                    textAlign: "left",
-                    display: "block",
-                    color: theme.colors[theme.primaryColor][9],
-                  },
-                  error: {
-                    textAlign: "left",
-                    display: "block",
-                    color: "#810000",
-                  },
-                })}/>
+          <Stack align={"center"} mt={"60"}>
+            <TextInput
+              size="lg"
+              label="Player name"
+              radius={"xs"}
+              value={playerName}
+              onChange={(event) => setPlayerName(event.currentTarget.value)}
+              error={nameError}
+              styles={(theme) => ({
+                input: {
+                  borderRadius: 0,
+                  backgroundColor: theme.colors[theme.primaryColor][5],
+                  borderColor: theme.colors[theme.primaryColor][3],
+                  color: theme.white,
+                },
+                label: {
+                  textAlign: "left",
+                  display: "block",
+                  color: theme.colors[theme.primaryColor][9],
+                },
+                error: {
+                  textAlign: "left",
+                  display: "block",
+                  color: "#810000",
+                },
+              })}/>
 
-              {
-                (gameType === 1) && (
-                  <TextInput
-                    size="lg"
-                    label="Game ID"
-                    radius={"xs"}
-                    value={gameId}
-                    onChange={(event) => setGameId(event.currentTarget.value)}
-                    styles={(theme) => ({
-                      input: {
-                        borderRadius: 0,
-                        backgroundColor: theme.colors[theme.primaryColor][5],
-                        borderColor: theme.colors[theme.primaryColor][3],
-                        color: theme.white,
-                      },
-                      label: {
-                        textAlign: "left",
-                        display: "block",
-                        color: theme.colors[theme.primaryColor][9],
-                      },
-                    })}/>
-                )
-              }
+            {
+              (gameType === 1) && (
+                <TextInput
+                  size="lg"
+                  label="Game ID"
+                  radius={"xs"}
+                  value={gameId}
+                  onChange={(event) => setGameId(event.currentTarget.value)}
+                  styles={(theme) => ({
+                    input: {
+                      borderRadius: 0,
+                      backgroundColor: theme.colors[theme.primaryColor][5],
+                      borderColor: theme.colors[theme.primaryColor][3],
+                      color: theme.white,
+                    },
+                    label: {
+                      textAlign: "left",
+                      display: "block",
+                      color: theme.colors[theme.primaryColor][9],
+                    },
+                  })}/>
+              )
+            }
 
-              <ActionIcon onClick={handleNameNextClick}
-                          variant={"light"}
-                          size={"xl"}
-                          radius={"xs"}>
-                <img src={arrow_right_icon} alt="Next step"/>
-              </ActionIcon>
-            </Stack>
-
-        </Stepper.Step>
-
-        <Stepper.Step>
+            <ActionIcon onClick={handleNameNextClick}
+                        variant={"light"}
+                        size={"xl"}
+                        radius={"xs"}>
+              <img src={arrow_right_icon} alt="Next step"/>
+            </ActionIcon>
+          </Stack>
 
         </Stepper.Step>
 
         <Stepper.Step>
+          <Carousel slideGap="md"
+                    controlSize={40}
+                    w={"100%"}
+                    h={"100%"}
+                    mt={"20px"}
+          >
+            <Carousel.Slide>
+              <Flex w={"100%"} justify={"center"}>
+                <Box pos="relative" w={"700px"} h={"450px"}>
+                  <Image bg={"transparent"}
+                         fit={"contain"}
+                         radius={"lg"}
+                         w="100%"
+                         h="400px"
+                         src="http://localhost:8080/characters/muaddib.jpg" alt="Card">
+                  </Image>
 
+                  <Group pos="absolute"
+                         bottom={10}
+                         right={70}
+                         gap={"md"}>
+
+                    <Button
+                      size="xs"
+                      radius="xl"
+                      variant="filled">
+                      Flip Card
+                    </Button>
+
+                    <Button
+                      size="xs"
+                      radius="xl"
+                      variant="filled">
+                      Select
+                    </Button>
+                  </Group>
+                </Box>
+              </Flex>
+            </Carousel.Slide>
+
+            <Carousel.Slide>
+              <Flex w={"100%"} justify={"center"}>
+                <Box pos="relative" w={"700px"} h={"450px"}>
+                  <Image bg={"transparent"}
+                         fit={"contain"}
+                         radius={"lg"}
+                         w="100%"
+                         h="400px"
+                         src="http://localhost:8080/characters/muaddib.jpg" alt="Card">
+                  </Image>
+
+                  <Group pos="absolute"
+                         bottom={10}
+                         right={70}
+                         gap={"md"}>
+
+                    <Button
+                      size="xs"
+                      radius="xl"
+                      variant="filled">
+                      Flip Card
+                    </Button>
+
+                    <Button
+                      size="xs"
+                      radius="xl"
+                      variant="filled">
+                      Select
+                    </Button>
+                  </Group>
+                </Box>
+              </Flex>
+            </Carousel.Slide>
+          </Carousel>
+        </Stepper.Step>
+
+
+        <Stepper.Step>
         </Stepper.Step>
       </Stepper>
-
-      <Text style={{ color: 'white' }} hidden={gameId === ""}>
+      <Text p={"10px"}
+            bg="#B0A19999"
+            w={"100%"}
+            hidden={gameId === ""}
+            style={{
+              color: 'white',
+              textAlign: 'left'
+            }}>
         Game ID: {gameId}
       </Text>
     </Flex>
