@@ -49,7 +49,7 @@ function Content() {
 
 function App() {
   const wsRef = useRef<WebSocket>(null);
-  const [gameStarted, setGameStarted] = useState(false);
+  const [gameStarted, setGameStarted] = useState(true);
   const [gameId, setGameId] = useState("");
   const [players, setPlayers] = useState<PlayerModel[]>([]);
 
