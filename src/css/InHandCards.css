@@ -1,0 +1,19 @@
+.in-hand-cards-row {
+  position: fixed;
+  max-width: 75%;
+  width: 75%;
+  bottom: 0;
+  left: 0;
+  transform: translateY(70%);
+}
+
+.in-hand-card {
+  min-width: auto;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.in-hand-card:hover {
+  transform: translateY(-80%) scale(1.1);
+  z-index: 10;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}

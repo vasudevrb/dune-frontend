@@ -10,6 +10,7 @@ import {useRef, useState} from "react";
 import type {PlayerModel} from "../model/Player.tsx";
 import {sendMessage} from "../const/Util.tsx";
 import {START_GAME} from "../const/Actions.tsx";
+import {InHandCards} from "./InHandCards.tsx";
 
 function Content() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -30,13 +31,18 @@ function Content() {
       <ImperiumRow />
     </Drawer>
 
-    <div className="game-board">
-      <Button className="text-button"
-              radius="xs"
-              variant="filled"
-              onClick={open}>
-        Imperium Row
-      </Button>
+    <div className="board-area">
+      <div className="game-board">
+        <Button className="text-button"
+                radius="xs"
+                variant="filled"
+                onClick={open}>
+          Imperium Row
+        </Button>
+      </div>
+
+      <InHandCards />
+
     </div>
 
 
