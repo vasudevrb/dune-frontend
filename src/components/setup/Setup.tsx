@@ -1,9 +1,11 @@
-import {ActionIcon, Box, Button, Flex, Group, Image, Stack, Stepper, Table, Text, TextInput, Title} from "@mantine/core";
+import {ActionIcon, Box, Button, Flex, Group, Image, Stack, Stepper, Table, Text, TextInput} from "@mantine/core";
 import '../../css/Setup.css'
 import {type RefObject, useState} from "react";
 import arrow_right_icon from "../../assets/arrow_right.svg";
 import {Carousel} from "@mantine/carousel";
 import type {PlayerModel} from "../../model/Player.tsx";
+import { sendMessage } from "../../const/Util.tsx";
+import {ADD_TO_GAME, GET_CHARACTER_READY_STATES, START_GAME} from "../../const/Actions.tsx";
 
 export interface Character {
   characterName: string;
@@ -21,14 +23,14 @@ export interface PlayerInfo {
 
 export function Setup(props: {
   webSocketRetriever: (gameId: string) => RefObject<WebSocket>,
-  gameStartHandler: (gameId: string, players: PlayerModel[]) => void
+  gameStartHandler: (gameId: string, isHostPlayer: boolean, players: PlayerModel[]) => void
 }) {
   const [active, setActive] = useState(0);
   const [playerName, setPlayerName] = useState("");
   const [nameError, setNameError] = useState("");
   const [gameType, setGameType] = useState(-1); // 0 for create; 1 for join
   const [gameId, setGameId] = useState("");
-  const [selectedCharacter, setSelectedCharacter] = useState<Character>();
+  const [, setSelectedCharacter] = useState<Character>();
   const [firstChar, setFirstChar] = useState<Character>({
     characterName: "",
     urls: [],
@@ -43,7 +45,6 @@ export function Setup(props: {
   const [players, setPlayers] = useState<PlayerInfo[]>([]);
 
   const nextStep = () => setActive((current) => (current < 3 ? current + 1 : current));
-  const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
 
   const handleCreateGameClick = () => {
     setGameType(0);
@@ -64,14 +65,14 @@ export function Setup(props: {
         setGameId(newId)
         console.log(`Game id is ${newId}`)
         nextStep()
-        getCharacters()
+        getCharacters(newId)
       }
     } else {
       const joinResponse = await joinGame(gameId)
       if (joinResponse == 200) {
         console.log(`Joined game with id ${gameId}`)
         nextStep()
-        getCharacters()
+        getCharacters(gameId)
       }
     }
   }
@@ -107,7 +108,7 @@ export function Setup(props: {
     }
   }
 
-  const getCharacters = async () => {
+  const getCharacters = async (newGameId: string) => {
     try {
       const response = await fetch(`http://localhost:8080/characters`, {
         method: "POST",
@@ -116,6 +117,7 @@ export function Setup(props: {
         },
         body: JSON.stringify({
           playerName: playerName,
+          gameId: newGameId
         })
       }).then(res => res.json())
       console.log(response)
@@ -140,49 +142,46 @@ export function Setup(props: {
     }
   }
 
-  // @ts-expect-error msg can be any
-  const sendMessage = (wsRef: RefObject<WebSocket | null>, msg) => {
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      wsRef.current.send(msg);
-    } else {
-      console.warn("WebSocket is not open");
-    }
-  };
+  const handlePlayerInfoResponse = (data: { body: PlayerInfo[]; }) => {
+    const p = data.body.map((item: PlayerInfo, index: number) => {
+      return {
+        id: index,
+        name: item.name,
+        characterName: item.characterName,
+        color: item.color,
+        status: item.status,
+      }
+    })
+    setPlayers(p)
+  }
 
   const openWebSocket = () => {
     const wsRef = props.webSocketRetriever(gameId);
     wsRef.current.onmessage = (event: { data: string; }) => {
       console.log(`Message received: ${event.data}`);
       const data = JSON.parse(event.data)
-      if (data.action === "GET_CHARACTER_READY_STATES") {
-        const p = data.body.map((item: PlayerInfo, index: number) => {
-          return {
-            id: index,
-            name: item.name,
-            characterName: item.characterName,
-            color: item.color,
-            status: item.status,
-          }
-        })
-        setPlayers(p)
+      if (data.action === GET_CHARACTER_READY_STATES) {
+        handlePlayerInfoResponse(data)
+      } else if (data.action === START_GAME) {
+        handleStartGameClick(false)
       }
     };
     wsRef.current.onopen = () => {
-      sendMessage(wsRef, JSON.stringify(
+      sendMessage(wsRef,
         {
-          action: "ADD_TO_GAME",
+          action: ADD_TO_GAME,
           body: {
             gameId: gameId,
             playerName: playerName,
           }
         }
-      ))
+      )
 
-      sendMessage(wsRef, JSON.stringify(
+      sendMessage(wsRef,
         {
-          action: "GET_CHARACTER_READY_STATES"
+          action: GET_CHARACTER_READY_STATES
         }
-      ))
+      )
     }
   }
 
@@ -208,8 +207,8 @@ export function Setup(props: {
     openWebSocket()
   }
 
-  const handleStartGameClick = () => {
-    props.gameStartHandler(gameId, players.map(pi => ({
+  const handleStartGameClick = (isHostPlayer: boolean) => {
+    props.gameStartHandler(gameId, isHostPlayer, players.map(pi => ({
       name: pi.name,
       character: pi.characterName,
       color: pi.color
@@ -470,10 +469,10 @@ export function Setup(props: {
             </Table>
 
             {
-              (gameType === 0 && players.length >= 3 && players.map(p => p.status).every(s => s === "Ready")) &&
+              (gameType === 0 && players.length >= 2 && players.map(p => p.status).every(s => s === "Ready")) &&
               <Button
                 mt={"40px"}
-                onClick={() => handleStartGameClick()}
+                onClick={() => handleStartGameClick(true)}
                 size="xs"
                 radius="xl"
                 variant="filled">

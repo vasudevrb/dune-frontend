@@ -8,6 +8,8 @@ import {Players} from "./Players.tsx";
 import {Setup} from "./setup/Setup.tsx";
 import {useRef, useState} from "react";
 import type {PlayerModel} from "../model/Player.tsx";
+import {sendMessage} from "../const/Util.tsx";
+import {START_GAME} from "../const/Actions.tsx";
 
 function Content() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -51,9 +53,25 @@ function App() {
   const [gameId, setGameId] = useState("");
   const [players, setPlayers] = useState<PlayerModel[]>([]);
 
-  const gameStartHandler = (gameId: string, players: PlayerModel[]) => {
+  const gameStartHandler = (gameId: string, isHostPlayer: boolean, players: PlayerModel[]) => {
     setGameId(gameId);
     setPlayers(players);
+
+    wsRef.current.onmessage = (event: { data: string; }) => {
+      console.log(`Message received: ${event.data}`);
+      const data = JSON.parse(event.data)
+      if (data.action === START_GAME) {
+        setGameStarted(true);
+      }
+    };
+
+    if (isHostPlayer) {
+      sendMessage(wsRef, {
+        action: START_GAME
+      })
+    } else {
+      setGameStarted(true);
+    }
   }
 
   const createWebSocket = (gameId: string) => {
@@ -70,10 +88,14 @@ function App() {
     },
     primaryColor: 'dune-brown'
   }} >
-    <Setup
-    webSocketRetriever={(gameId: string) => createWebSocket(gameId)}
-    gameStartHandler = {(gameId: string, players: PlayerModel[]) => gameStartHandler(gameId, players)}
-    />
+    { !gameStarted &&
+      (<Setup
+        webSocketRetriever={(gameId: string) => createWebSocket(gameId)}
+        gameStartHandler = {(gameId: string, isHostPlayer: boolean, players: PlayerModel[]) => gameStartHandler(gameId, isHostPlayer, players)}
+      />)
+    }
+
+    { gameStarted && <Content />}
   </MantineProvider>
 }
 
