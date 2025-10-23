@@ -22,11 +22,11 @@ export function Player(props: { first_player: boolean }) {
 
         <Stack align="stretch">
           <Group align="center" gap={"5"}>
-            <Text ta="left" fw={500} size={"1.8rem"}>
+            <Text ta="left" fw={500} size={"1.1rem"}>
               Feyd Rautha
             </Text>
             <Tooltip label="First player">
-              <img width={30}
+              <img width={20}
                    src={first_player_icon}
                    alt="First player"
                    hidden={!props.first_player}/>

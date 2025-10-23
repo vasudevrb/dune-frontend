@@ -1,12 +1,12 @@
 import '../css/InHandCards.css'
 import {Card} from "./Card.tsx";
-import {Box, Divider, Group, ScrollArea} from "@mantine/core";
+import {Box, Divider, ScrollArea} from "@mantine/core";
 
 export function InHandCards() {
   return (
     <ScrollArea className={"in-hand-card in-hand-cards-row"} w={"100%"} offsetScrollbars={false} type={"never"} scrollbars="x">
     <div style={{ display: 'flex', gap: 16, padding: "16px" }}>
-      <Box className={"photo-stack"}>
+      <Box className={"photo-stack"} ml={20}>
         <Card className="reserve-row" src="https://api.dunecardshub.com/uploads/images/68.png"/>
         <Card className="reserve-row" src="https://api.dunecardshub.com/uploads/images/68.png"/>
         <Card className="reserve-row" src="https://api.dunecardshub.com/uploads/images/68.png"/>
@@ -15,11 +15,13 @@ export function InHandCards() {
 
       <Divider orientation="vertical" color={"gray"} />
 
-      <div style={{ display: 'flex', gap: 16 }}>
-        <Card src="https://api.dunecardshub.com/uploads/images/68.png"/>
-        <Card src="https://api.dunecardshub.com/uploads/images/68.png" />
-        <Card src="https://api.dunecardshub.com/uploads/images/68.png" />
-        <Card src="https://api.dunecardshub.com/uploads/images/68.png" />
+      <div style={{ display: 'flex', gap: 8, paddingRight: "16px" }}>
+        <Card src="https://api.dunecardshub.com/uploads/images/33.png"/>
+        <Card src="https://api.dunecardshub.com/uploads/images/30.png" />
+        <Card src="https://api.dunecardshub.com/uploads/images/48.png" />
+        <Card src="https://api.dunecardshub.com/uploads/images/63.png" />
+        <Card src="https://api.dunecardshub.com/uploads/images/35.png" />
+        <Card src="https://api.dunecardshub.com/uploads/images/47.png" />
       </div>
     </div>
     </ScrollArea>
