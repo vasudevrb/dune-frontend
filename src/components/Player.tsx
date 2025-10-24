@@ -5,12 +5,15 @@ import spice_icon from '../assets/spice.svg';
 import solari_icon from '../assets/solari.svg';
 import plus_icon from '../assets/plus.svg';
 import minus_icon from '../assets/minus.svg';
+import agent_icon from '../assets/agent_icon_2.svg';
 import first_player_icon from '../assets/first_player_token.png';
+import discard_icon from '../assets/icon_discard.png';
+import draw_icon from '../assets/draw_icon.png';
+import hand_icon from '../assets/hand_icon.png';
 
 export function Player(props: { first_player: boolean }) {
   return (
     <Stack className="current-player-container"
-           align={"ce"}
            gap={"5"}>
       <Group align="flex-start">
         <Stack align={"center"} gap={"5"}>
@@ -22,7 +25,7 @@ export function Player(props: { first_player: boolean }) {
 
         <Stack align="stretch">
           <Group align="center" gap={"5"}>
-            <Text ta="left" fw={500} size={"1.1rem"}>
+            <Text ta="left" fw={500} size={"1.1rem"} className={"player-container-text"}>
               Feyd Rautha
             </Text>
             <Tooltip label="First player">
@@ -35,17 +38,34 @@ export function Player(props: { first_player: boolean }) {
 
           <Group align="center" gap={"xs"}>
             <Group align="center" gap={"5"}>
-              <Text size="md">5</Text>
-              <img width={20} src={water_icon} alt="Water drop icon"/>
+              <Text size="md" className={"player-container-text"}>5</Text>
+              <img width={20} src={hand_icon} alt="Water drop icon"/>
             </Group>
 
             <Divider orientation="vertical" m={"0"} color={"#363636"}/>
 
             <Group align="center" gap={"5"}>
-              <Text size="md">3</Text>
-              <img width={20} src={spice_icon} alt="Spice icon"/>
+              <Text size="md" className={"player-container-text"}>3</Text>
+              <img width={20} src={discard_icon} alt="Spice icon"/>
+            </Group>
+
+            <Divider orientation="vertical" m={"0"} color={"#363636"}/>
+
+            <Group align="center" gap={"5"}>
+              <Text size="md" className={"player-container-text"}>2</Text>
+              <img width={20} src={draw_icon} alt="Solari icon"/>
             </Group>
           </Group>
+        </Stack>
+
+        <Stack align="stretch">
+          <img width={45} src={agent_icon} alt="Agent icon" style={{
+            filter: `
+          drop-shadow(3px 3px 6px rgba(0,0,0,0.5))
+          drop-shadow(0px 0 0 #94664d)
+      `
+          }}/>
+          <img width={45} src={agent_icon} alt="Agent icon" className={"agent-icon"}/>
         </Stack>
       </Group>
 
@@ -58,7 +78,7 @@ export function Player(props: { first_player: boolean }) {
             <ActionIcon>
               <img width={30} src={minus_icon} alt="Add water icon"/>
             </ActionIcon>
-            <Text size="xl">1</Text>
+            <Text size="xl" className={"player-container-text"}>1</Text>
             <ActionIcon>
               <img width={30} src={plus_icon} alt="Add water icon"/>
             </ActionIcon>
@@ -71,7 +91,7 @@ export function Player(props: { first_player: boolean }) {
             <ActionIcon>
               <img width={30} src={minus_icon} alt="Add water icon"/>
             </ActionIcon>
-            <Text size="xl">1</Text>
+            <Text size="xl" className={"player-container-text"}>1</Text>
             <ActionIcon>
               <img width={30} src={plus_icon} alt="Add water icon"/>
             </ActionIcon>
@@ -84,7 +104,7 @@ export function Player(props: { first_player: boolean }) {
             <ActionIcon>
               <img width={30} src={minus_icon} alt="Add water icon"/>
             </ActionIcon>
-            <Text size="xl">1</Text>
+            <Text size="xl" className={"player-container-text"}>1</Text>
             <ActionIcon>
               <img width={30} src={plus_icon} alt="Add water icon"/>
             </ActionIcon>

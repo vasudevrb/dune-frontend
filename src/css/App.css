@@ -6,7 +6,7 @@
   text-align: center;
   background-size: cover;
   /*background-color: #c3c3c3;*/
-  background-image: url("https://i.redd.it/swyv5mdb58nc1.jpg");
+  background-image: url("https://i.postimg.cc/L5kVWGjs/bg.png");
   background-position: center;
   background-repeat: no-repeat;
   backdrop-filter: blur(20px);
@@ -46,8 +46,8 @@
 }
 
 .board-area {
-  flex: 0 0 75%;
-  max-width: 75%;
+  flex: 0 0 50%;
+  max-width: 50%;
 }
 
 .game-board {
@@ -58,6 +58,6 @@
 }
 
 .players {
-  flex: 0 0 25%;
-  max-width: 25%;
+  flex: 0 0 50%;
+  max-width: 50%;
 }

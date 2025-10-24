@@ -1,14 +1,14 @@
-.player-container	 {
+.player-container {
   width: 100%;
   padding: 15px;
   margin-bottom: 15px;
   background-size: cover;
   background: linear-gradient(
     to right,
-    rgba(255, 255, 255, 0.25) 0%,
-    rgba(255, 255, 255, 0.20) 20%,
-    rgba(255, 255, 255, 0.15) 40%,
-    rgba(255, 255, 255, 0) 80%
+    rgba(209, 152, 136, 0.25) 0%,
+    rgba(209, 152, 136, 0.20) 20%,
+    rgba(209, 152, 136, 0.15) 40%,
+    rgba(209, 152, 136, 0) 80%
   ) no-repeat;
   clip-path: polygon(0% 85%, 5% 100%, 100% 100%, 100% 0%, 0% 0%);
   backdrop-filter: blur(10px);
@@ -27,10 +27,10 @@
   background-size: cover;
   background: linear-gradient(
     to right,
-    rgba(255, 255, 255, 0.25) 0%,
-    rgba(255, 255, 255, 0.20) 20%,
-    rgba(255, 255, 255, 0.15) 40%,
-    rgba(255, 255, 255, 0) 80%
+    rgba(209, 152, 136, 0.25) 0%,
+    rgba(209, 152, 136, 0.20) 20%,
+    rgba(209, 152, 136, 0.15) 40%,
+    rgba(209, 152, 136, 0) 80%
   ) no-repeat;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -39,4 +39,13 @@
 .player-info {
   display: flex;
   width: 100%;
+}
+
+.player-container-text {
+  color: #fafafa
+}
+
+.agent-icon {
+  margin-top: -180%;
+  filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.5)) drop-shadow(0px 0 0 #94664d)
 }
