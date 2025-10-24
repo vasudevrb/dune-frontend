@@ -3,8 +3,8 @@ import '../../css/Setup.css'
 import {type RefObject, useState} from "react";
 import arrow_right_icon from "../../assets/arrow_right.svg";
 import {Carousel} from "@mantine/carousel";
-import type {PlayerModel} from "../../model/Player.tsx";
-import { sendMessage } from "../../const/Util.tsx";
+import {CharacterModel, PlayerModel} from "../../model/Player.tsx";
+import {sendMessage} from "../../const/Util.tsx";
 import {ADD_TO_GAME, GET_CHARACTER_READY_STATES, START_GAME} from "../../const/Actions.tsx";
 
 export interface Character {
@@ -17,6 +17,7 @@ export interface PlayerInfo {
   id: number,
   name: string;
   characterName: string;
+  characterUrls: string[];
   color: string;
   status: string;
 }
@@ -148,6 +149,7 @@ export function Setup(props: {
         id: index,
         name: item.name,
         characterName: item.characterName,
+        characterUrls: item.characterUrls,
         color: item.color,
         status: item.status,
       }
@@ -208,11 +210,11 @@ export function Setup(props: {
   }
 
   const handleStartGameClick = (isHostPlayer: boolean) => {
-    props.gameStartHandler(gameId, isHostPlayer, players.map(pi => ({
-      name: pi.name,
-      character: pi.characterName,
-      color: pi.color
-    })))
+    const playerModels = players.map(pi => {
+      const characterModel = new CharacterModel(pi.characterName, pi.characterUrls)
+      return new PlayerModel(pi.name, characterModel, pi.color, playerName === pi.name)
+    })
+    props.gameStartHandler(gameId, isHostPlayer, playerModels)
   }
 
   return (

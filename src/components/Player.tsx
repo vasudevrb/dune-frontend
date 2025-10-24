@@ -5,7 +5,7 @@ import spice_icon from '../assets/spice.svg';
 import solari_icon from '../assets/solari.svg';
 import plus_icon from '../assets/plus.svg';
 import minus_icon from '../assets/minus.svg';
-import agent_icon from '../assets/agent_icon_2.svg';
+import agent_icon from '../assets/agent_icon.svg';
 import first_player_icon from '../assets/first_player_token.png';
 import discard_icon from '../assets/icon_discard.png';
 import draw_icon from '../assets/draw_icon.png';
@@ -23,7 +23,7 @@ export function Player(props: { first_player: boolean }) {
                   src="https://i.postimg.cc/MTykNx6w/DIUDesign-Diary5-Hero-1200x675-1024x576.jpg"/>
         </Stack>
 
-        <Stack align="stretch">
+        <Stack align="stretch" style={{ flex: 1, textAlign: 'center' }}>
           <Group align="center" gap={"5"}>
             <Text ta="left" fw={500} size={"1.1rem"} className={"player-container-text"}>
               Feyd Rautha
@@ -58,7 +58,7 @@ export function Player(props: { first_player: boolean }) {
           </Group>
         </Stack>
 
-        <Stack align="stretch">
+        <Stack align="stretch" style={{ marginLeft: 'auto' }}>
           <img width={45} src={agent_icon} alt="Agent icon" style={{
             filter: `
           drop-shadow(3px 3px 6px rgba(0,0,0,0.5))

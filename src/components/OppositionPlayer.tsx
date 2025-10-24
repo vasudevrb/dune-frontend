@@ -4,15 +4,28 @@ import water_icon from '../assets/water.svg';
 import spice_icon from '../assets/spice.svg';
 import solari_icon from '../assets/solari.svg';
 import first_player_icon from '../assets/first_player_token.png';
-import agent_icon from '../assets/agent_icon_2.svg';
+import agent_icon_disabled from '../assets/agent_icon_disabled.svg';
+import agent_icon_red from '../assets/agent_icon_red.svg';
+import agent_icon_blue from '../assets/agent_icon_blue.svg';
+import agent_icon_green from '../assets/agent_icon_green.svg';
+import agent_icon_gold from '../assets/agent_icon_gold.svg';
 import vp_icon from '../assets/vp_icon.png';
 import discard_icon from '../assets/icon_discard.png';
 import draw_icon from '../assets/draw_icon.png';
 import hand_icon from '../assets/hand_icon.png';
 
 export function OppositionPlayer(props: { first_player: boolean; }) {
+
+  const getAgentIcon = (id) => {
+    if (id === 0) return agent_icon_red;
+    else if (id === 1) return agent_icon_blue;
+    else if (id === 2) return agent_icon_gold;
+    else if (id === 3) return agent_icon_green;
+  }
+
   return (
     <Group className="player-container" align="flex-start">
+
       <Stack align={"center"} gap={"5"}>
       <Avatar className={"player-avatar"}
               radius="xs"
@@ -25,8 +38,7 @@ export function OppositionPlayer(props: { first_player: boolean; }) {
         </Group>
       </Stack>
 
-      <Stack align="stretch">
-
+      <Stack align="stretch" style={{ flex: 1, textAlign: 'center' }}>
         <Group align="center" gap={"5"}>
           <Text ta="left" fw={500} size={"1.1rem"} className={"player-container-text"}>
             Feyd Rautha
@@ -80,17 +92,17 @@ export function OppositionPlayer(props: { first_player: boolean; }) {
             <img width={20} src={draw_icon} alt="Spice icon"/>
           </Group>
         </Group>
-
       </Stack>
 
-      <Stack align="stretch">
-        <img width={45} src={agent_icon} alt="Agent icon" style={{
+      <Stack align="stretch" style={{ marginLeft: 'auto' }}>
+        <img width={45} src={agent_icon_disabled} alt="Agent icon" style={{
           filter: `
           drop-shadow(3px 3px 6px rgba(0,0,0,0.5))
           drop-shadow(0px 0 0 #94664d)
       `
         }}/>
-        <img width={45} src={agent_icon} alt="Agent icon" className={"agent-icon"}/>
+        <img width={45} src={getAgentIcon(0)} alt="Agent icon" className={"agent-icon"}/>
+        <img width={45} src={getAgentIcon(0)} alt="Agent icon" className={"agent-icon"}/>
       </Stack>
 
     </Group>
