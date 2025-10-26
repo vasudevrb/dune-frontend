@@ -78,6 +78,49 @@ export function Player(props: { playerModel: PlayerModel; }) {
     )
   }
 
+  const getResourcesDisplayElements = () => {
+    const getIcon = (resourceType: ResourceType) => {
+      switch (resourceType) {
+        case ResourceType.Water: return water_icon;
+        case ResourceType.Spice: return spice_icon;
+        default: return solari_icon
+      }
+    }
+    const getResource = (resourceType: ResourceType) => {
+      const text = props.playerModel.resources.get(resourceType);
+      const icon = getIcon(resourceType);
+      return (
+        <Group align="center" gap={"5"}>
+          <Text size="md" className={"player-container-text"}>{text}</Text>
+          <img width={20} src={icon} alt="Resource icon"/>
+        </Group>
+      )
+    }
+    const divider = () => {
+      return <Divider orientation="vertical" m={"0"} color={"#cacaca"}/>
+    }
+
+    return (
+      <Group align="center" gap={"xs"}>
+        {getResource(ResourceType.Water)}
+        {divider()}
+        {getResource(ResourceType.Spice)}
+        {divider()}
+        {getResource(ResourceType.Solari)}
+      </Group>
+    )
+  }
+
+  const getCardElements = () => {
+    return (
+      <Group align="center" gap={"xs"}>
+        <img width={20} src={hand_icon} alt="Water drop icon"/>
+        <Divider orientation="vertical" m={"0"} color={"#363636"}/>
+        <img width={20} src={objective_card_icon} alt="Spice icon"/>
+      </Group>
+    )
+  }
+
   const getNameAndResources = () => {
     return (
       <Stack align="stretch" style={{flex: 1, textAlign: 'center'}} gap={"xs"}>
@@ -88,43 +131,13 @@ export function Player(props: { playerModel: PlayerModel; }) {
           <Tooltip label="First player">
             <img width={20}
                  src={first_player_icon}
-                 alt="First player"
+                 alt="First player token"
                  hidden={!props.playerModel.firstPlayer}/>
           </Tooltip>
         </Group>
 
-        <Group align="center" gap={"xs"}>
-          <Group align="center" gap={"5"}>
-            <Text size="md" className={"player-container-text"}>
-              {props.playerModel.resources.get(ResourceType.Water)}
-            </Text>
-            <img width={20} src={water_icon} alt="Water drop icon"/>
-          </Group>
-
-          <Divider orientation="vertical" m={"0"} color={"#363636"}/>
-
-          <Group align="center" gap={"5"}>
-            <Text size="md" className={"player-container-text"}>
-              {props.playerModel.resources.get(ResourceType.Spice)}
-            </Text>
-            <img width={20} src={spice_icon} alt="Spice icon"/>
-          </Group>
-
-          <Divider orientation="vertical" m={"0"} color={"#363636"}/>
-
-          <Group align="center" gap={"5"}>
-            <Text size="md" className={"player-container-text"}>
-              {props.playerModel.resources.get(ResourceType.Solari)}
-            </Text>
-            <img width={20} src={solari_icon} alt="Solari icon"/>
-          </Group>
-        </Group>
-
-        <Group align="center" gap={"xs"}>
-          <img width={20} src={hand_icon} alt="Water drop icon"/>
-          <Divider orientation="vertical" m={"0"} color={"#363636"}/>
-          <img width={20} src={objective_card_icon} alt="Spice icon"/>
-        </Group>
+        {getResourcesDisplayElements()}
+        {getCardElements()}
       </Stack>
     )
   }
