@@ -7,10 +7,11 @@ import {ImperiumRow} from "./ImperiumRow.tsx";
 import {Players} from "./Players.tsx";
 import {Setup} from "./setup/Setup.tsx";
 import {useEffect, useState} from "react";
-import  {type PlayerModel} from "../model/Player.tsx";
+import  {PlayerModel} from "../model/Player.tsx";
 import {START_GAME} from "../const/Actions.tsx";
 import {InHandCards} from "./InHandCards.tsx";
 import {useWebSocket, WebSocketProvider} from "./WebSocketContext.tsx";
+import {EMPEROR_SHADDAM, GURNEY_HALLECK, MUAD_DIB, PRINCESS_IRULAN} from "../const/Util.tsx";
 
 
 function Content(props: {
@@ -61,9 +62,14 @@ function Game(props: {
 }) {
   const {subscribe, unsubscribe, sendMessage} = useWebSocket();
 
-  const [gameStarted, setGameStarted] = useState(false);
+  const [gameStarted, setGameStarted] = useState(true);
   const [, setGameId] = useState("");
-  const [players, setPlayers] = useState<PlayerModel[]>([]);
+  const [players, setPlayers] = useState<PlayerModel[]>([
+    new PlayerModel("p1", PRINCESS_IRULAN, "RED", false),
+    new PlayerModel("p2", MUAD_DIB, "BLUE", false),
+    new PlayerModel("p3", EMPEROR_SHADDAM, "GOLD", true),
+    new PlayerModel("p4", GURNEY_HALLECK, "GREEN", false)
+  ]);
 
   const setGlobalGameId = (gameId: string) => {
     props.useGameId(gameId);
@@ -76,7 +82,7 @@ function Game(props: {
   }
 
   useEffect(() => {
-    const componentName = "content_component";
+    const componentName = "game_component";
     console.log(`In ${componentName}. Subscribing to WS messages`)
 
     const actions = [START_GAME]

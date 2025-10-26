@@ -6,7 +6,11 @@ export class PlayerModel {
 
   victoryPoints: number = 0;
   numCards: NumCardsModel = new NumCardsModel();
-  resources: Map<string, number> = new Map()
+  resources: Map<ResourceType, number> = new Map([
+    [ResourceType.Water, 0],
+    [ResourceType.Spice, 0],
+    [ResourceType.Solari, 0]
+  ])
   numAgentsAvailable: number = 2;
   numAgentsUsed: number = 0;
   swordmasterUnlocked: boolean = false;
@@ -19,6 +23,14 @@ export class PlayerModel {
     this.isThisPlayer = isThisPlayer;
   }
 }
+
+export const ResourceType = {
+  Water: "Water",
+  Spice: "Spice",
+  Solari: "Solari",
+} as const;
+
+export type ResourceType = keyof typeof ResourceType;
 
 export class CharacterModel {
   name: string;
