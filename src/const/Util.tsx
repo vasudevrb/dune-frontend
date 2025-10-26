@@ -27,3 +27,6 @@ export const EMPEROR_SHADDAM = new CharacterModel
   ["http://localhost:8080/characters/shaddam_corrino.jpg"],
   "http://localhost:8080/avatars/shaddam_corrino.jpg"
 )
+
+export const range = (start: number, end: number): number[] =>
+  Array.from({ length: end - start + 1 }, (_, i) => start + i);

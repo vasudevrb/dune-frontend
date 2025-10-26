@@ -3,7 +3,6 @@ export class PlayerModel {
   character: CharacterModel;
   color: string;
   isThisPlayer: boolean;
-
   victoryPoints: number = 0;
   numCards: NumCardsModel = new NumCardsModel();
   resources: Map<ResourceType, number> = new Map([
@@ -11,7 +10,7 @@ export class PlayerModel {
     [ResourceType.Spice, 0],
     [ResourceType.Solari, 0]
   ])
-  numAgentsAvailable: number = 2;
+  numAgentsAvailable: number = 3;
   numAgentsUsed: number = 0;
   swordmasterUnlocked: boolean = false;
   firstPlayer: boolean = false;
