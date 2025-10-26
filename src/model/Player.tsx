@@ -11,7 +11,7 @@ export class PlayerModel {
     [ResourceType.Solari, 0]
   ])
   numAgentsAvailable: number = 3;
-  numAgentsUsed: number = 0;
+  numAgentsUsed: number = 1;
   swordmasterUnlocked: boolean = false;
   firstPlayer: boolean = false;
 

@@ -1,5 +1,5 @@
 import '../css/Player.css'
-import {ActionIcon, Avatar, Divider, Group, Space, Stack, Text, Tooltip} from "@mantine/core";
+import {ActionIcon, Avatar, Box, Center, Divider, Group, Space, Stack, Text, Tooltip} from "@mantine/core";
 import water_icon from '../assets/water.svg';
 import spice_icon from '../assets/spice.svg';
 import solari_icon from '../assets/solari.svg';
@@ -78,17 +78,18 @@ export function Player(props: { playerModel: PlayerModel; }) {
     )
   }
 
-  const getResourcesDisplayElements = () => {
-    const getIcon = (resourceType: ResourceType) => {
-      switch (resourceType) {
-        case ResourceType.Water: return water_icon;
-        case ResourceType.Spice: return spice_icon;
-        default: return solari_icon
-      }
+  const getResourceIconByType = (resourceType: ResourceType) => {
+    switch (resourceType) {
+      case ResourceType.Water: return water_icon;
+      case ResourceType.Spice: return spice_icon;
+      default: return solari_icon
     }
+  }
+
+  const getResourcesDisplayElements = () => {
     const getResource = (resourceType: ResourceType) => {
       const text = props.playerModel.resources.get(resourceType);
-      const icon = getIcon(resourceType);
+      const icon = getResourceIconByType(resourceType);
       return (
         <Group align="center" gap={"5"}>
           <Text size="md" className={"player-container-text"}>{text}</Text>
@@ -142,47 +143,64 @@ export function Player(props: { playerModel: PlayerModel; }) {
     )
   }
 
-  const getResourceModifiers = () => {
+  const getResourceModifierElements = () => {
+    const getButton = (icon: string) => {
+      return (
+        <ActionIcon
+          className={"player-resource-modifier-button"}
+          variant={"outline"}
+          radius={"0"}>
+          <img width={30} src={icon} alt="Resource modifier button"/>
+        </ActionIcon>
+      )
+    }
+    const getLabelElement = (icon: string, text: number | undefined) => {
+      return (
+        <Box pos={"relative"} w={50} h={50}>
+          <img width={50} src={icon} alt="Resource icon"/>
+          <Text size="1.4em" className={"player-resource-modifier-text"}>{text}</Text>
+        </Box>
+      )
+    }
+    const getResourceLabel = (resourceType: ResourceType) => {
+      const text = props.playerModel.resources.get(resourceType)
+      const icon = getResourceIconByType(resourceType)
+      return getLabelElement(icon, text)
+    }
+
+    const getResourceModifier = (resourceType: ResourceType) => {
+      return (
+        <Stack align="center" gap={"xs"}>
+          {getButton(plus_icon)}
+          {getResourceLabel(resourceType)}
+          {getButton(minus_icon)}
+        </Stack>
+      )
+    }
+    const getVictoryPointModifier = () => {
+      const text = props.playerModel.victoryPoints
+      const icon = vp_icon
+
+      return (
+        <Stack align="center" gap={"xs"}>
+          {getButton(plus_icon)}
+          {getLabelElement(icon, text)}
+          {getButton(minus_icon)}
+        </Stack>
+      )
+    }
+    const divider = () => {
+      return <Divider orientation="vertical" color={"#31313123"}/>
+    }
     return (
       <Group w={"100%"} justify="center" gap={"xs"}>
-        <Stack align="center">
-          <img width={50} src={water_icon} alt="Water drop icon"/>
-          <Group align="center" gap={"xs"}>
-            <ActionIcon>
-              <img width={30} src={minus_icon} alt="Add water icon"/>
-            </ActionIcon>
-            <Text size="xl" className={"player-container-text"}>1</Text>
-            <ActionIcon>
-              <img width={30} src={plus_icon} alt="Add water icon"/>
-            </ActionIcon>
-          </Group>
-        </Stack>
-
-        <Stack align="center">
-          <img width={50} src={spice_icon} alt="Water drop icon"/>
-          <Group align="center" gap={"xs"}>
-            <ActionIcon>
-              <img width={30} src={minus_icon} alt="Add water icon"/>
-            </ActionIcon>
-            <Text size="xl" className={"player-container-text"}>1</Text>
-            <ActionIcon>
-              <img width={30} src={plus_icon} alt="Add water icon"/>
-            </ActionIcon>
-          </Group>
-        </Stack>
-
-        <Stack align="center">
-          <img width={50} src={solari_icon} alt="Water drop icon"/>
-          <Group align="center" gap={"xs"}>
-            <ActionIcon>
-              <img width={30} src={minus_icon} alt="Add water icon"/>
-            </ActionIcon>
-            <Text size="xl" className={"player-container-text"}>1</Text>
-            <ActionIcon>
-              <img width={30} src={plus_icon} alt="Add water icon"/>
-            </ActionIcon>
-          </Group>
-        </Stack>
+        {getResourceModifier(ResourceType.Water)}
+        {divider()}
+        {getResourceModifier(ResourceType.Spice)}
+        {divider()}
+        {getResourceModifier(ResourceType.Solari)}
+        {divider()}
+        {getVictoryPointModifier()}
       </Group>
     )
   }
@@ -206,7 +224,7 @@ export function Player(props: { playerModel: PlayerModel; }) {
           {getAgents()}
         </Group>
         <Space h={"md"}/>
-        {getResourceModifiers()}
+        {getResourceModifierElements()}
       </Stack>
     )
   }
