@@ -22,11 +22,13 @@ export class PlayerModel {
 
 export class CharacterModel {
   name: string;
-  urls: string[]
+  urls: string[];
+  avatarUrl: string;
 
-  constructor(name: string, urls: string[]) {
+  constructor(name: string, urls: string[], avatarUrl: string) {
     this.name = name;
     this.urls = urls;
+    this.avatarUrl = avatarUrl;
   }
 }
 

@@ -1,11 +1,11 @@
 import {ActionIcon, Box, Button, Flex, Group, Image, Stack, Stepper, Table, Text, TextInput} from "@mantine/core";
 import '../../css/Setup.css'
-import {type RefObject, useState} from "react";
+import {useEffect, useState} from "react";
 import arrow_right_icon from "../../assets/arrow_right.svg";
 import {Carousel} from "@mantine/carousel";
 import {CharacterModel, PlayerModel} from "../../model/Player.tsx";
-import {sendMessage} from "../../const/Util.tsx";
 import {ADD_TO_GAME, GET_CHARACTER_READY_STATES, START_GAME} from "../../const/Actions.tsx";
+import {useWebSocket} from "../WebSocketContext.tsx";
 
 export interface Character {
   characterName: string;
@@ -18,14 +18,17 @@ export interface PlayerInfo {
   name: string;
   characterName: string;
   characterUrls: string[];
+  avatarUrl: string;
   color: string;
   status: string;
 }
 
 export function Setup(props: {
-  webSocketRetriever: (gameId: string) => RefObject<WebSocket>,
-  gameStartHandler: (gameId: string, isHostPlayer: boolean, players: PlayerModel[]) => void
+  useSetGameId: (gameId: string) => void;
+  gameStartHandler: (players: PlayerModel[]) => void
 }) {
+  const { subscribe, unsubscribe, sendMessage } = useWebSocket();
+
   const [active, setActive] = useState(0);
   const [playerName, setPlayerName] = useState("");
   const [nameError, setNameError] = useState("");
@@ -47,6 +50,25 @@ export function Setup(props: {
 
   const nextStep = () => setActive((current) => (current < 3 ? current + 1 : current));
 
+  useEffect(() => {
+    const componentName = "setup_component";
+    console.log(`In ${componentName}. Subscribing to WS messages`)
+
+    const actions = [ADD_TO_GAME, GET_CHARACTER_READY_STATES, START_GAME]
+    subscribe(actions, componentName, {
+      onMessage: (action: string, body: any) => {
+        console.log(`Message received: ${body}`);
+        if (action === GET_CHARACTER_READY_STATES) {
+          handlePlayerInfoResponse(body)
+        } else if (action === START_GAME) {
+          handleStartGameClick(false)
+        }
+      }
+    });
+
+    return () => { unsubscribe(actions, componentName) }
+  })
+
   const handleCreateGameClick = () => {
     setGameType(0);
     nextStep()
@@ -63,7 +85,7 @@ export function Setup(props: {
     } else if (gameId.trim() === "") {
       const newId = await getGameId()
       if (newId) {
-        setGameId(newId)
+        setAndUpdateGameId(newId)
         console.log(`Game id is ${newId}`)
         nextStep()
         getCharacters(newId)
@@ -73,9 +95,14 @@ export function Setup(props: {
       if (joinResponse == 200) {
         console.log(`Joined game with id ${gameId}`)
         nextStep()
-        getCharacters(gameId)
+        await getCharacters(gameId)
       }
     }
+  }
+
+  const setAndUpdateGameId = (gameId: string) => {
+    setGameId(gameId);
+    props.useSetGameId(gameId);
   }
 
   const getGameId = async () => {
@@ -143,48 +170,19 @@ export function Setup(props: {
     }
   }
 
-  const handlePlayerInfoResponse = (data: { body: PlayerInfo[]; }) => {
-    const p = data.body.map((item: PlayerInfo, index: number) => {
+  const handlePlayerInfoResponse = (body: PlayerInfo[]) => {
+    const p = body.map((item: PlayerInfo, index: number) => {
       return {
         id: index,
         name: item.name,
         characterName: item.characterName,
         characterUrls: item.characterUrls,
+        avatarUrl: item.avatarUrl,
         color: item.color,
         status: item.status,
       }
     })
     setPlayers(p)
-  }
-
-  const openWebSocket = () => {
-    const wsRef = props.webSocketRetriever(gameId);
-    wsRef.current.onmessage = (event: { data: string; }) => {
-      console.log(`Message received: ${event.data}`);
-      const data = JSON.parse(event.data)
-      if (data.action === GET_CHARACTER_READY_STATES) {
-        handlePlayerInfoResponse(data)
-      } else if (data.action === START_GAME) {
-        handleStartGameClick(false)
-      }
-    };
-    wsRef.current.onopen = () => {
-      sendMessage(wsRef,
-        {
-          action: ADD_TO_GAME,
-          body: {
-            gameId: gameId,
-            playerName: playerName,
-          }
-        }
-      )
-
-      sendMessage(wsRef,
-        {
-          action: GET_CHARACTER_READY_STATES
-        }
-      )
-    }
   }
 
   const selectCharacter = async (character: Character) => {
@@ -206,15 +204,20 @@ export function Setup(props: {
       console.log(`Error when picking character: ${err}`)
     }
     nextStep()
-    openWebSocket()
+    sendMessage({
+      action: ADD_TO_GAME,
+      body: {gameId: gameId, playerName: playerName}
+    })
+
+    sendMessage({action: GET_CHARACTER_READY_STATES})
   }
 
   const handleStartGameClick = (isHostPlayer: boolean) => {
     const playerModels = players.map(pi => {
-      const characterModel = new CharacterModel(pi.characterName, pi.characterUrls)
+      const characterModel = new CharacterModel(pi.characterName, pi.characterUrls, pi.avatarUrl)
       return new PlayerModel(pi.name, characterModel, pi.color, playerName === pi.name)
     })
-    props.gameStartHandler(gameId, isHostPlayer, playerModels)
+    props.gameStartHandler(playerModels)
   }
 
   return (
@@ -324,7 +327,7 @@ export function Setup(props: {
                   label="Game ID"
                   radius={"xs"}
                   value={gameId}
-                  onChange={(event) => setGameId(event.currentTarget.value)}
+                  onChange={(event) => setAndUpdateGameId(event.currentTarget.value)}
                   styles={(theme) => ({
                     input: {
                       borderRadius: 0,

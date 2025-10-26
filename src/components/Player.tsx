@@ -10,8 +10,9 @@ import first_player_icon from '../assets/first_player_token.png';
 import discard_icon from '../assets/icon_discard.png';
 import draw_icon from '../assets/draw_icon.png';
 import hand_icon from '../assets/hand_icon.png';
+import type {PlayerModel} from "../model/Player.tsx";
 
-export function Player(props: { first_player: boolean }) {
+export function Player(props: { playerModel: PlayerModel; }) {
   return (
     <Stack className="current-player-container"
            gap={"5"}>
@@ -32,7 +33,7 @@ export function Player(props: { first_player: boolean }) {
               <img width={20}
                    src={first_player_icon}
                    alt="First player"
-                   hidden={!props.first_player}/>
+                   hidden={!props.playerModel.firstPlayer}/>
             </Tooltip>
           </Group>
 

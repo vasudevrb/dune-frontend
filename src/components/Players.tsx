@@ -2,14 +2,21 @@ import '../css/Players.css'
 import {Box} from "@mantine/core";
 import {OppositionPlayer} from "./OppositionPlayer.tsx";
 import {Player} from "./Player.tsx";
+import type {PlayerModel} from "../model/Player.tsx";
 
-export function Players() {
+export function Players(props: { playerList: PlayerModel[] }) {
   return (
     <Box mt="10" h={"100%"}>
-      <OppositionPlayer first_player={false}/>
-      <OppositionPlayer first_player={true}/>
-      <OppositionPlayer first_player={false}/>
-      <Player first_player={false}/>
+      {
+        props.playerList
+          .filter(player => !player.isThisPlayer)
+          .map(player => (<OppositionPlayer playerModel={player}/>))
+      }
+      {
+        props.playerList
+          .filter(player => player.isThisPlayer)
+          .map(player => (<Player playerModel={player}/>))
+      }
     </Box>
   )
 }
