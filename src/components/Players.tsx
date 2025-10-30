@@ -1,5 +1,5 @@
 import '../css/Players.css'
-import {Box} from "@mantine/core";
+import {ScrollArea} from "@mantine/core";
 import {Player} from "./Player.tsx";
 import type {PlayerModel} from "../model/Player.tsx";
 
@@ -16,9 +16,9 @@ export function Players(props: { playerList: PlayerModel[] }) {
   }
 
   return (
-    <Box mt="10" h={"100%"}>
+    <ScrollArea h={"100%"} offsetScrollbars={false} type={"never"} scrollbars="y">
       {getPlayerElements(p => !p.isThisPlayer)}
       {getPlayerElements(p => p.isThisPlayer)}
-    </Box>
+    </ScrollArea>
   )
 }

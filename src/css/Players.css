@@ -2,3 +2,7 @@
   display: flex;
   width: 100%;
 }
+
+.mantine-ScrollArea-viewport {
+  padding-top: 10px;
+}

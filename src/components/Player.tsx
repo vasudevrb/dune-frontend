@@ -12,7 +12,7 @@ import agent_icon_gold from '../assets/agent_icon_gold.svg';
 import vp_icon from '../assets/vp_icon.png';
 import objective_card_icon from '../assets/objective_icon.png'
 import hand_icon from '../assets/hand_icon.png';
-import {type PlayerModel, ResourceType} from "../model/Player.tsx";
+import {CombatModifierType, type PlayerModel, ResourceType} from "../model/Player.tsx";
 import type {JSX} from "react";
 import {range} from "../const/Util.tsx";
 import minus_icon from "../assets/minus.svg";
@@ -35,8 +35,7 @@ export function Player(props: { playerModel: PlayerModel; }) {
       const totalNumUsableAgents = playerModel.swordmasterUnlocked ? 3 : 2;
       const agentAvailability = range(0, totalNumUsableAgents)
         .map(i => {
-          if (i === 0) return playerModel.swordmasterUnlocked;
-          else return true;
+          return i === 0 ? playerModel.swordmasterUnlocked : true;
         });
 
       if (!agentAvailability[index]) return getAgentIcon("GRAY")
@@ -50,7 +49,7 @@ export function Player(props: { playerModel: PlayerModel; }) {
     const elements: JSX.Element[] = [];
     for (let i = 0; i < props.playerModel.numAgentsAvailable; i++) {
       elements.push(
-        <img key={i} width={45} src={getAgentColor(i)} alt="Agent icon" className={"agent-icon"}/>
+        <img key={i} width={40} src={getAgentColor(i)} alt="Agent icon" className={"agent-icon"}/>
       );
     }
     return (
@@ -65,14 +64,14 @@ export function Player(props: { playerModel: PlayerModel; }) {
       <Stack align={"center"} gap={"5"}>
         <Avatar className={"player-avatar"}
                 radius="xs"
-                size="xl"
+                size="lg"
                 src={props.playerModel.character.avatarUrl}/>
 
         <Group align="center" gap={"5"}>
-          <Text fw="700" size="lg" className={"player-container-text"}>
+          <Text fw="700" size="md" className={"player-container-text"}>
             {props.playerModel.victoryPoints}
           </Text>
-          <img width={25} src={vp_icon} alt="Victory points"/>
+          <img width={15} src={vp_icon} alt="Victory points"/>
         </Group>
       </Stack>
     )
@@ -93,7 +92,7 @@ export function Player(props: { playerModel: PlayerModel; }) {
       return (
         <Group align="center" gap={"5"}>
           <Text size="md" className={"player-container-text"}>{text}</Text>
-          <img width={20} src={icon} alt="Resource icon"/>
+          <img width={15} src={icon} alt="Resource icon"/>
         </Group>
       )
     }
@@ -124,9 +123,9 @@ export function Player(props: { playerModel: PlayerModel; }) {
 
   const getNameAndResources = () => {
     return (
-      <Stack align="stretch" style={{flex: 1, textAlign: 'center'}} gap={"xs"}>
+      <Stack align="stretch" style={{flex: 1, textAlign: 'center'}} gap={5}>
         <Group align="center" gap={"5"}>
-          <Text ta="left" fw={500} size={"1.1rem"} className={"player-container-text"}>
+          <Text ta="left" fw={500} className={"player-container-text"}>
             {props.playerModel.character.name}
           </Text>
           <Tooltip label="First player">
@@ -143,31 +142,33 @@ export function Player(props: { playerModel: PlayerModel; }) {
     )
   }
 
+  const getButton = (icon: string) => {
+    return (
+      <ActionIcon
+        className={"player-resource-modifier-button"}
+        variant={"outline"}
+        radius={"0"}>
+        <img width={30} src={icon} alt="Resource modifier button"/>
+      </ActionIcon>
+    )
+  }
+  const getLabelElement = (icon: string, text: number | undefined) => {
+    return (
+      <Box pos={"relative"} w={50} h={50}>
+        <img width={50} src={icon} alt="Resource icon"/>
+        <Text size="1.4em" className={"player-resource-modifier-text"}>{text}</Text>
+      </Box>
+    )
+  }
+  const resourceModifierDivider = () => {
+    return <Divider orientation="vertical" color={"#31313123"}/>
+  }
   const getResourceModifierElements = () => {
-    const getButton = (icon: string) => {
-      return (
-        <ActionIcon
-          className={"player-resource-modifier-button"}
-          variant={"outline"}
-          radius={"0"}>
-          <img width={30} src={icon} alt="Resource modifier button"/>
-        </ActionIcon>
-      )
-    }
-    const getLabelElement = (icon: string, text: number | undefined) => {
-      return (
-        <Box pos={"relative"} w={50} h={50}>
-          <img width={50} src={icon} alt="Resource icon"/>
-          <Text size="1.4em" className={"player-resource-modifier-text"}>{text}</Text>
-        </Box>
-      )
-    }
     const getResourceLabel = (resourceType: ResourceType) => {
       const text = props.playerModel.resources.get(resourceType)
       const icon = getResourceIconByType(resourceType)
       return getLabelElement(icon, text)
     }
-
     const getResourceModifier = (resourceType: ResourceType) => {
       return (
         <Stack align="center" gap={"xs"}>
@@ -189,18 +190,56 @@ export function Player(props: { playerModel: PlayerModel; }) {
         </Stack>
       )
     }
-    const divider = () => {
-      return <Divider orientation="vertical" color={"#31313123"}/>
-    }
     return (
       <Group w={"100%"} justify="center" gap={"xs"}>
         {getResourceModifier(ResourceType.Water)}
-        {divider()}
+        {resourceModifierDivider()}
         {getResourceModifier(ResourceType.Spice)}
-        {divider()}
+        {resourceModifierDivider()}
         {getResourceModifier(ResourceType.Solari)}
-        {divider()}
+        {resourceModifierDivider()}
         {getVictoryPointModifier()}
+      </Group>
+    )
+  }
+
+  const getCombatModifierElements = () => {
+    const getCombatModifierIconByType = (modifierType: CombatModifierType) => {
+      switch (modifierType) {
+        case CombatModifierType.Troop: return water_icon;
+        case CombatModifierType.Worm: return spice_icon;
+        default: return solari_icon
+      }
+    }
+    const getCombatModifierText = (modifierType: CombatModifierType) => {
+      switch (modifierType) {
+        case CombatModifierType.Troop: return props.playerModel.combat.troopsInCombat;
+        case CombatModifierType.Worm: return props.playerModel.combat.wormsInCombat;
+        case CombatModifierType.Strength: return props.playerModel.combat.strength;
+      }
+    }
+    const getCombatLabel = (modifierType: CombatModifierType) => {
+      const text = getCombatModifierText(modifierType)
+      const icon = getCombatModifierIconByType(modifierType)
+      return getLabelElement(icon, text)
+    }
+    const getCombatModifier = (modifierType: CombatModifierType) => {
+      return (
+        <Stack align="center" gap={"xs"}>
+          {getButton(plus_icon)}
+          {getCombatLabel(modifierType)}
+          {getButton(minus_icon)}
+        </Stack>
+      )
+    }
+
+    return (
+      <Group w={"100%"} justify="center" gap={"xs"}>
+        {getCombatModifier(CombatModifierType.Troop)}
+        {resourceModifierDivider()}
+        {getCombatModifier(CombatModifierType.Worm)}
+        {resourceModifierDivider()}
+        {getCombatModifier(CombatModifierType.Strength)}
       </Group>
     )
   }
@@ -225,6 +264,8 @@ export function Player(props: { playerModel: PlayerModel; }) {
         </Group>
         <Space h={"md"}/>
         {getResourceModifierElements()}
+        <Divider orientation={"horizontal"} m={"md"} color={"#313131ff"}/>
+        {getCombatModifierElements()}
       </Stack>
     )
   }

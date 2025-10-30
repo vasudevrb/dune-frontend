@@ -32,6 +32,14 @@ export const ResourceType = {
 
 export type ResourceType = keyof typeof ResourceType;
 
+export const CombatModifierType = {
+  Troop: "Troop",
+  Worm: "Worm",
+  Strength: "Strength",
+} as const;
+
+export type CombatModifierType = keyof typeof CombatModifierType;
+
 export class CharacterModel {
   name: string;
   urls: string[];

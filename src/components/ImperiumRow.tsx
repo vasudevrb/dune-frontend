@@ -4,15 +4,20 @@ import {Card} from "./Card.tsx";
 
 export function ImperiumRow() {
   return (
-    <ScrollArea className="scrollarea-imperium-row" w={"100%"} offsetScrollbars={false} type={"never"} scrollbars="x">
-      <div style={{ display: 'flex', gap: 16, padding: 16 }}>
+    <ScrollArea
+      className="scrollarea-imperium-row"
+      w={"100%"}
+      offsetScrollbars={false}
+      type={"never"}
+      scrollbars="x">
+      <div style={{display: 'flex', gap: 16, padding: 16}}>
         <Card src="https://api.dunecardshub.com/uploads/images/68.png"/>
         <Card src="https://api.dunecardshub.com/uploads/images/68.png"/>
         <Card src="https://api.dunecardshub.com/uploads/images/68.png"/>
         <Card src="https://api.dunecardshub.com/uploads/images/68.png"/>
         <Card src="https://api.dunecardshub.com/uploads/images/68.png"/>
 
-        <Divider orientation="vertical" color={"gray"} />
+        <Divider orientation="vertical" color={"gray"}/>
 
         <Box className={"photo-stack"} mr={"16"}>
           <Card className="reserve-row" src="https://i.postimg.cc/90wJzHB8/Main-Deck-The-Spice-Must-Flow.jpg"/>

@@ -3,8 +3,8 @@
 
 .photo-stack {
   position: relative;
-  height: 325px;
-  width: 225px;
+  height: 270px;
+  width: 190px;
   flex-shrink: 0;
 }
 

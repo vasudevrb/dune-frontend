@@ -7,8 +7,8 @@ export function Card(props: { className?: string, src: string, ml?: MantineSpaci
            style={props.style}
            bg={"transparent"}
            w={"auto"}
-           mah={"325"}
-           maw={"225"}
+           mah={"270"}
+           maw={"190"}
            ml={props.ml}
            fit={"cover"}
            radius={"lg"}

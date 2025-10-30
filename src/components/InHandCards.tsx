@@ -5,8 +5,8 @@ import {Box, Divider, ScrollArea} from "@mantine/core";
 export function InHandCards() {
   return (
     <ScrollArea className={"in-hand-card in-hand-cards-row"} w={"100%"} offsetScrollbars={false} type={"never"} scrollbars="x">
-    <div style={{ display: 'flex', gap: 16, padding: "16px" }}>
-      <Box className={"photo-stack"} ml={20}>
+    <div style={{ display: 'flex', gap: 8, padding: "16px" }}>
+      <Box className={"photo-stack"} ml={8}>
         <Card className="reserve-row" src="https://api.dunecardshub.com/uploads/images/68.png"/>
         <Card className="reserve-row" src="https://api.dunecardshub.com/uploads/images/68.png"/>
         <Card className="reserve-row" src="https://api.dunecardshub.com/uploads/images/68.png"/>
@@ -15,7 +15,7 @@ export function InHandCards() {
 
       <Divider orientation="vertical" color={"gray"} />
 
-      <div style={{ display: 'flex', gap: 8, paddingRight: "16px" }}>
+      <div style={{ display: 'flex', gap: 8, paddingRight: 8 }}>
         <Card src="https://api.dunecardshub.com/uploads/images/33.png"/>
         <Card src="https://api.dunecardshub.com/uploads/images/30.png" />
         <Card src="https://api.dunecardshub.com/uploads/images/48.png" />
