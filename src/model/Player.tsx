@@ -14,6 +14,7 @@ export class PlayerModel {
   numAgentsUsed: number = 1;
   swordmasterUnlocked: boolean = false;
   firstPlayer: boolean = false;
+  combat: CombatModel = new CombatModel();
 
   constructor(name: string, character: CharacterModel, color: string, isThisPlayer: boolean) {
     this.name = name;
@@ -41,6 +42,13 @@ export class CharacterModel {
     this.urls = urls;
     this.avatarUrl = avatarUrl;
   }
+}
+
+export class CombatModel {
+  troopsInGarrison: number = 3;
+  troopsInCombat: number = 0;
+  wormsInCombat: number = 0;
+  strength: number = 0
 }
 
 export class NumCardsModel {

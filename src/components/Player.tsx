@@ -1,5 +1,5 @@
 import '../css/Player.css'
-import {ActionIcon, Avatar, Box, Center, Divider, Group, Space, Stack, Text, Tooltip} from "@mantine/core";
+import {ActionIcon, Avatar, Box, Divider, Group, Space, Stack, Text, Tooltip} from "@mantine/core";
 import water_icon from '../assets/water.svg';
 import spice_icon from '../assets/spice.svg';
 import solari_icon from '../assets/solari.svg';

@@ -1,7 +1,7 @@
 import '@mantine/core/styles.css'
 import '@mantine/carousel/styles.css';
 import '../css/App.css'
-import {Button, Drawer, MantineProvider, type MantineThemeOverride} from '@mantine/core';
+import {Drawer, MantineProvider, type MantineThemeOverride, Stack} from '@mantine/core';
 import {useDisclosure} from "@mantine/hooks";
 import {ImperiumRow} from "./ImperiumRow.tsx";
 import {Players} from "./Players.tsx";
@@ -12,6 +12,7 @@ import {START_GAME} from "../const/Actions.tsx";
 import {InHandCards} from "./InHandCards.tsx";
 import {useWebSocket, WebSocketProvider} from "./WebSocketContext.tsx";
 import {EMPEROR_SHADDAM, GURNEY_HALLECK, MUAD_DIB, PRINCESS_IRULAN} from "../const/Util.tsx";
+import {GameBoard} from "./GameBoard.tsx";
 
 
 function Content(props: {
@@ -35,24 +36,12 @@ function Content(props: {
       <ImperiumRow/>
     </Drawer>
 
-    <div className="board-area">
-      <div className="game-board">
-        <Button className="text-button"
-                radius="xs"
-                variant="filled"
-                onClick={open}>
-          Imperium Row
-        </Button>
-      </div>
-
+    <Stack className="board-area">
+      <GameBoard players={props.players}/>
       <InHandCards/>
+    </Stack>
 
-    </div>
-
-
-    <div className="players">
-      <Players playerList={props.players}/>
-    </div>
+    <div className="players"><Players playerList={props.players}/></div>
   </div>
 }
 
@@ -110,19 +99,22 @@ function Game(props: {
     primaryColor: 'dune-brown',
   };
 
+  const setupComponent = () => {
+    return (
+      <Setup
+        useSetGameId={(gameId: string) => setGlobalGameId(gameId)}
+        gameStartHandler={(players: PlayerModel[]) => gameStartHandler(players)}
+      />
+    )
+  }
+
+  const contentComponent = () => {
+    return <Content players={players}/>
+  }
+
   return (
     <MantineProvider theme={duneTheme}>
-      {!gameStarted &&
-        (<Setup
-          useSetGameId={(gameId: string) => setGlobalGameId(gameId)}
-          gameStartHandler={(players: PlayerModel[]) => gameStartHandler(players)}
-        />)
-      }
-
-      {
-        gameStarted &&
-        <Content players={players}/>
-      }
+      {gameStarted ? contentComponent() : setupComponent()}
     </MantineProvider>
   )
 }
