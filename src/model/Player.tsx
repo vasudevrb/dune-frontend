@@ -4,6 +4,10 @@ export class PlayerModel {
   color: string;
   isThisPlayer: boolean;
   victoryPoints: number = 0;
+  objectives: ObjectiveType[] = [
+    ObjectiveType.DesertMouse,
+    ObjectiveType.Any,
+  ];
   numCards: NumCardsModel = new NumCardsModel();
   resources: Map<ResourceType, number> = new Map([
     [ResourceType.Water, 0],
@@ -40,6 +44,15 @@ export const CombatModifierType = {
 
 export type CombatModifierType = keyof typeof CombatModifierType;
 
+export const ObjectiveType = {
+  DesertMouse: "DesertMouse",
+  Crysknife: "Crysknife",
+  Ornithopter: "Ornithopter",
+  Any: "Any",
+} as const;
+
+export type ObjectiveType = keyof typeof ObjectiveType;
+
 export class CharacterModel {
   name: string;
   urls: string[];
@@ -64,4 +77,5 @@ export class NumCardsModel {
   inPlay: number = 0;
   inDiscardPile: number = 0;
   inDrawPile: number = 0;
+  intrigues: number = 0;
 }

@@ -71,3 +71,10 @@
   filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.5))
   drop-shadow(0px 0 0 #94664d)
 }
+
+.cards-popover {
+  border: none;
+  background: rgba(209, 152, 136, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}

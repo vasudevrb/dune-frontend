@@ -104,7 +104,7 @@ export function GameBoard(props: {players: PlayerModel[]}) {
             }}
             alt="Combat icon"/>
         </Flex>
-        <Box w={"75%"} h={"100%"} bg={"#413A3760"} style={{flex: 1}} pos={"relative"}>
+        <Box className={"combat-container"} w={"75%"} h={"100%"} style={{flex: 1}} pos={"relative"}>
           <Divider h={"20%"} orientation={"vertical"} style={{opacity: "0.3", position: "absolute", left: "50%"}}/>
           <Divider h={"20%"} orientation={"vertical"} style={{opacity: "0.3", position: "absolute", bottom: 0, left: "50%"}}/>
           <Divider w={"20%"} orientation={"horizontal"} style={{opacity: "0.3", position: "absolute", bottom: "50%"}}/>

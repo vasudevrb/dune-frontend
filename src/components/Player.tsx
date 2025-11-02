@@ -1,5 +1,5 @@
 import '../css/Player.css'
-import {ActionIcon, Avatar, Box, Divider, Group, Space, Stack, Text, Tooltip} from "@mantine/core";
+import {ActionIcon, Avatar, Box, Divider, Group, Popover, Space, Stack, Text, Tooltip} from "@mantine/core";
 import water_icon from '../assets/water.svg';
 import spice_icon from '../assets/spice.svg';
 import solari_icon from '../assets/solari.svg';
@@ -15,13 +15,16 @@ import agent_icon_gold from '../assets/agent_icon_gold.svg';
 import vp_icon from '../assets/vp_icon.png';
 import objective_card_icon from '../assets/objective_icon.png'
 import hand_icon from '../assets/hand_icon.png';
-import {CombatModifierType, type PlayerModel, ResourceType} from "../model/Player.tsx";
-import type {JSX} from "react";
+import {CombatModifierType, ObjectiveType, type PlayerModel, ResourceType} from "../model/Player.tsx";
+import type {JSX, MouseEventHandler, ReactElement} from "react";
 import {range} from "../const/Util.tsx";
 import minus_icon from "../assets/minus.svg";
 import plus_icon from "../assets/plus.svg";
+import {useDisclosure} from "@mantine/hooks";
 
 export function Player(props: { playerModel: PlayerModel; }) {
+  const [inHandCardsPopoverOpened, setInHandCardsPopoverState] = useDisclosure(false);
+  const [objectivesPopoverOpened, setObjectivesPopoverState] = useDisclosure(false);
 
   const getAgents = () => {
     const playerModel = props.playerModel;
@@ -85,9 +88,12 @@ export function Player(props: { playerModel: PlayerModel; }) {
 
   const getResourceIconByType = (resourceType: ResourceType) => {
     switch (resourceType) {
-      case ResourceType.Water: return water_icon;
-      case ResourceType.Spice: return spice_icon;
-      default: return solari_icon
+      case ResourceType.Water:
+        return water_icon;
+      case ResourceType.Spice:
+        return spice_icon;
+      default:
+        return solari_icon
     }
   }
 
@@ -117,12 +123,90 @@ export function Player(props: { playerModel: PlayerModel; }) {
     )
   }
 
+  const getIconPopover = (
+    targetIcon: string,
+    dropdown: ReactElement,
+    popoverOpened: boolean,
+    setPopoverState: { open: MouseEventHandler; close: MouseEventHandler; }
+  ) => {
+    return (
+      <Popover radius={"0"} position="top" shadow="md" opened={popoverOpened}>
+        <Popover.Target>
+          <img width={20}
+               onMouseEnter={setPopoverState.open}
+               onMouseLeave={setPopoverState.close}
+               src={targetIcon}
+               alt="Popover"/>
+        </Popover.Target>
+        <Popover.Dropdown className="cards-popover" style={{pointerEvents: 'none'}}>
+          {dropdown}
+        </Popover.Dropdown>
+      </Popover>
+    )
+  }
+
+  const getCardStats = () => {
+    const getCardStat = (cardType: string, num: number) => {
+      return (
+        <Stack align="center" gap={"0"}>
+          <Text size="md" c={"#fafafa"}>{num}</Text>
+          <Text size="xs" c={"#fafafa"}>{cardType}</Text>
+        </Stack>
+      )
+    }
+    return (
+      <Group align="center" justify={"center"} gap={"5"}>
+        {getCardStat("In hand", props.playerModel.numCards.inHand)}
+        <Divider orientation="vertical" m={"0"} color={"#cacaca55"}/>
+        {getCardStat("In discard", props.playerModel.numCards.inDiscardPile)}
+        <Divider orientation="vertical" m={"0"} color={"#cacaca55"}/>
+        {getCardStat("In draw", props.playerModel.numCards.inDrawPile)}
+        <Divider orientation="vertical" m={"0"} color={"#cacaca55"}/>
+        {getCardStat("Intrigues", props.playerModel.numCards.intrigues)}
+      </Group>
+    )
+  }
+
+  const getObjectiveStats = () => {
+    const getObjectiveImage = (objectiveType: ObjectiveType) => {
+      switch (objectiveType) {
+        case ObjectiveType.DesertMouse: return water_icon;
+        case ObjectiveType.Crysknife: return solari_icon;
+        case ObjectiveType.Ornithopter: return spice_icon;
+        default: return solari_icon;
+      }
+    }
+    return (
+      <Group align="center" justify={"center"} gap={"xs"}>
+        {
+          props.playerModel.objectives.map((obj, index) =>
+            <img key={index} width={20} src={getObjectiveImage(obj)} alt="Objective"/>
+          )
+        }
+      </Group>
+    )
+  }
+
   const getCardElements = () => {
     return (
       <Group align="center" gap={"xs"}>
-        <img width={20} src={hand_icon} alt="Water drop icon"/>
+        {
+          getIconPopover(
+            hand_icon,
+            getCardStats(),
+            inHandCardsPopoverOpened,
+            setInHandCardsPopoverState
+          )
+        }
         <Divider orientation="vertical" m={"0"} color={"#363636"}/>
-        <img width={20} src={objective_card_icon} alt="Spice icon"/>
+        {
+          getIconPopover(
+            objective_card_icon,
+            getObjectiveStats(),
+            objectivesPopoverOpened,
+            setObjectivesPopoverState
+          )
+        }
       </Group>
     )
   }
