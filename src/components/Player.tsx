@@ -3,6 +3,9 @@ import {ActionIcon, Avatar, Box, Divider, Group, Space, Stack, Text, Tooltip} fr
 import water_icon from '../assets/water.svg';
 import spice_icon from '../assets/spice.svg';
 import solari_icon from '../assets/solari.svg';
+import troop_icon from '../assets/troop_icon.png';
+import strength_icon from '../assets/strength_icon.png';
+import worm_icon from '../assets/worm_icon.png';
 import first_player_icon from '../assets/first_player_token.png';
 import agent_icon_disabled from '../assets/agent_icon_disabled.svg';
 import agent_icon_red from '../assets/agent_icon_red.svg';
@@ -67,12 +70,15 @@ export function Player(props: { playerModel: PlayerModel; }) {
                 size="lg"
                 src={props.playerModel.character.avatarUrl}/>
 
-        <Group align="center" gap={"5"}>
-          <Text fw="700" size="md" className={"player-container-text"}>
-            {props.playerModel.victoryPoints}
-          </Text>
-          <img width={15} src={vp_icon} alt="Victory points"/>
-        </Group>
+        {
+          !props.playerModel.isThisPlayer &&
+          <Group align="center" gap={"5"}>
+            <Text fw="700" size="md" className={"player-container-text"}>
+              {props.playerModel.victoryPoints}
+            </Text>
+            <img width={15} src={vp_icon} alt="Victory points"/>
+          </Group>
+        }
       </Stack>
     )
   }
@@ -152,7 +158,7 @@ export function Player(props: { playerModel: PlayerModel; }) {
       </ActionIcon>
     )
   }
-  const getLabelElement = (icon: string, text: number | undefined) => {
+  const getLabelElement = (icon: string, text?: number) => {
     return (
       <Box pos={"relative"} w={50} h={50}>
         <img width={50} src={icon} alt="Resource icon"/>
@@ -206,22 +212,14 @@ export function Player(props: { playerModel: PlayerModel; }) {
   const getCombatModifierElements = () => {
     const getCombatModifierIconByType = (modifierType: CombatModifierType) => {
       switch (modifierType) {
-        case CombatModifierType.Troop: return water_icon;
-        case CombatModifierType.Worm: return spice_icon;
-        default: return solari_icon
-      }
-    }
-    const getCombatModifierText = (modifierType: CombatModifierType) => {
-      switch (modifierType) {
-        case CombatModifierType.Troop: return props.playerModel.combat.troopsInCombat;
-        case CombatModifierType.Worm: return props.playerModel.combat.wormsInCombat;
-        case CombatModifierType.Strength: return props.playerModel.combat.strength;
+        case CombatModifierType.Troop: return troop_icon;
+        case CombatModifierType.Worm: return worm_icon;
+        default: return strength_icon;
       }
     }
     const getCombatLabel = (modifierType: CombatModifierType) => {
-      const text = getCombatModifierText(modifierType)
       const icon = getCombatModifierIconByType(modifierType)
-      return getLabelElement(icon, text)
+      return getLabelElement(icon)
     }
     const getCombatModifier = (modifierType: CombatModifierType) => {
       return (

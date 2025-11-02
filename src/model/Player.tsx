@@ -56,7 +56,7 @@ export class CombatModel {
   troopsInGarrison: number = 3;
   troopsInCombat: number = 0;
   wormsInCombat: number = 0;
-  strength: number = 0
+  strength: number = 2
 }
 
 export class NumCardsModel {

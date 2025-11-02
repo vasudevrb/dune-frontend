@@ -1,7 +1,9 @@
 import '../css/GameBoard.css'
 import {Avatar, Box, Divider, Flex, Group, Image, Stack, Text} from "@mantine/core";
 import combat_icon_tinted from '../assets/combat_icon_tinted.png';
-import vp_icon from "../assets/vp_icon.png";
+import troop_icon from '../assets/troop_icon.png';
+import strength_icon from '../assets/strength_icon.png';
+import worm_icon from '../assets/worm_icon.png';
 import type {PlayerModel} from "../model/Player.tsx";
 
 export function GameBoard(props: {players: PlayerModel[]}) {
@@ -17,7 +19,7 @@ export function GameBoard(props: {players: PlayerModel[]}) {
           <Text size="1.3em" className={"player-container-text"}>
             {player.combat.troopsInGarrison}
           </Text>
-          <img width={25} src={vp_icon} alt="Garrissoned troops"/>
+          <img width={25} src={troop_icon} alt="Garrissoned troops"/>
         </Group>
       </Stack>
     }
@@ -27,14 +29,14 @@ export function GameBoard(props: {players: PlayerModel[]}) {
           <Text size="1.5em" className={"player-container-text"}>
             {player.combat.troopsInCombat}
           </Text>
-          <img width={20} src={vp_icon} alt="Troop icon"/>
+          <img width={20} src={troop_icon} alt="Troop icon"/>
 
           <Divider mt="5px" mb="5px" orientation={"vertical"} color={"#ffffff"}/>
 
           <Text size="1.5em" className={"player-container-text"}>
             {player.combat.wormsInCombat}
           </Text>
-          <img width={20} src={vp_icon} alt="Worm icon"/>
+          <img width={20} src={worm_icon} alt="Worm icon"/>
         </Group>
 
         <Divider w="50%" orientation={"horizontal"} color={"#ffffff"}/>
@@ -43,7 +45,7 @@ export function GameBoard(props: {players: PlayerModel[]}) {
           <Text size="1.7em" className={"player-container-text"}>
             {player.combat.strength}
           </Text>
-          <img width={25} src={vp_icon} alt="Total strength"/>
+          <img width={25} src={strength_icon} alt="Total strength"/>
         </Group>
 
       </Stack>
@@ -102,7 +104,7 @@ export function GameBoard(props: {players: PlayerModel[]}) {
             }}
             alt="Combat icon"/>
         </Flex>
-        <Box w={"75%"} h={"100%"} bg={"#94664D50"} style={{flex: 1}} pos={"relative"}>
+        <Box w={"75%"} h={"100%"} bg={"#413A3760"} style={{flex: 1}} pos={"relative"}>
           <Divider h={"20%"} orientation={"vertical"} style={{opacity: "0.3", position: "absolute", left: "50%"}}/>
           <Divider h={"20%"} orientation={"vertical"} style={{opacity: "0.3", position: "absolute", bottom: 0, left: "50%"}}/>
           <Divider w={"20%"} orientation={"horizontal"} style={{opacity: "0.3", position: "absolute", bottom: "50%"}}/>
