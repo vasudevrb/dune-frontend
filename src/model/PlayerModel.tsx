@@ -1,4 +1,8 @@
+import {immerable} from "immer";
+
 export class PlayerModel {
+  [immerable] = true;
+
   name: string;
   character: CharacterModel;
   color: string;
@@ -58,6 +62,8 @@ export const ObjectiveType = {
 export type ObjectiveType = keyof typeof ObjectiveType;
 
 export class CharacterModel {
+  [immerable] = true;
+
   name: string;
   urls: string[];
   avatarUrl: string;
@@ -70,6 +76,8 @@ export class CharacterModel {
 }
 
 export class CombatModel {
+  [immerable] = true;
+
   troopsInGarrison: number = 3;
   troopsInCombat: number = 0;
   wormsInCombat: number = 0;
@@ -77,6 +85,8 @@ export class CombatModel {
 }
 
 export class NumCardsModel {
+  [immerable] = true;
+
   inHand: number = 0;
   inPlay: number = 0;
   inDiscardPile: number = 0;
@@ -85,6 +95,8 @@ export class NumCardsModel {
 }
 
 export class AgentModel {
+  [immerable] = true;
+
   id: string;
   atLocation: number | undefined;
 

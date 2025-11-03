@@ -20,7 +20,7 @@ import desert_mouse from '../assets/objectives/desert_mouse.png';
 import crysknife from '../assets/objectives/crysknife.png';
 import ornithopter from '../assets/objectives/ornothopter.png';
 import objective_any from '../assets/objectives/any.png';
-import {CombatModifierType, ObjectiveType, type PlayerModel, ResourceType} from "../model/PlayerModel.tsx";
+import {AgentModel, CombatModifierType, ObjectiveType, type PlayerModel, ResourceType} from "../model/PlayerModel.tsx";
 import {type JSX, type MouseEventHandler, type ReactElement} from "react";
 import {range} from "../const/Util.tsx";
 import minus_icon from "../assets/minus.svg";
@@ -34,11 +34,10 @@ export function Player(props: { playerModel: PlayerModel; }) {
   const [inHandCardsPopoverOpened, setInHandCardsPopoverState] = useDisclosure(false);
   const [objectivesPopoverOpened, setObjectivesPopoverState] = useDisclosure(false);
 
-  const Agent = (props: {player: PlayerModel, index: number}) => {
+  const Agent = (props: {player: PlayerModel, agentModel: AgentModel, index: number}) => {
     const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
-      id: `draggable#${props.player.name}#${props.index}`,
+      id: props.agentModel.id,
     });
-    console.log(transform);
     const draggedStyle = transform ? {
       transform: CSS.Translate.toString(transform),
       zIndex: 10,
@@ -84,12 +83,15 @@ export function Player(props: { playerModel: PlayerModel; }) {
 
   const getAgents = () => {
     const elements: JSX.Element[] = [];
-    const numAgentsAvailable = props.playerModel.agents.length;
-    for (let i = 0; i < numAgentsAvailable; i++) {
+    props.playerModel.agents.forEach((agentModel, index) => {
       elements.push(
-        <Agent player={props.playerModel} index={i} key={`${props.playerModel.name}#${i}`}/>
+        <Agent
+          player={props.playerModel}
+          agentModel={agentModel}
+          index={index}
+          key={agentModel.id}/>
       );
-    }
+    })
     return (
       <Stack className="players-agent-icon-container" h="100" align="stretch" style={{marginLeft: 'auto'}}>
         {elements}

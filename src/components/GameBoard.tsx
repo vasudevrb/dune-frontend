@@ -5,11 +5,12 @@ import troop_icon from '../assets/combat/troop.png';
 import strength_icon from '../assets/combat/strength.png';
 import worm_icon from '../assets/combat/worm.png';
 import loc_deep_desert from '../assets/locations/deep_desert.png';
-import type {PlayerModel} from "../model/PlayerModel.tsx";
+import {AgentModel, type PlayerModel} from "../model/PlayerModel.tsx";
 import {useDroppable} from "@dnd-kit/core";
-import agent_icon_blue from '../assets/agents/agent_blue.svg';
+import {AgentLocation} from "./AgentLocation.tsx";
+import type {GameModel} from "../model/GameModel.tsx";
 
-export function GameBoard(props: {players: PlayerModel[]}) {
+export function GameBoard(props: {game: GameModel}) {
   const {isOver, setNodeRef} = useDroppable({
     id: 'droppable',
   });
@@ -82,6 +83,7 @@ export function GameBoard(props: {players: PlayerModel[]}) {
       </Group>
     )
   }
+
   return (
     <Box
       mb={"5%"}
@@ -89,36 +91,21 @@ export function GameBoard(props: {players: PlayerModel[]}) {
       className="gameBoard"
       style={{flexGrow: 1}}>
 
-      <Box pos={"absolute"}>
-        <Group
-          className="locations-agent-icon-container"
-          align="center"
-          gap={0}
+      <Box pos={"absolute"} bg={"#ff363645"}>
+        <AgentLocation
+          w={"85%"}
+          h={"63%"}
+          location={props.game.locations[0]}
+          bg={"#ffffff99"}
           style={{
             position: "absolute",
-            top: "42%",
-            left: "25%",
-          }}>
-          <img
-            width={25}
-            src={agent_icon_blue}
-            alt="Agent icon"
-            className={"locations-agent-icon"}/>
-
-          <img
-            width={25}
-            src={agent_icon_blue}
-            alt="Agent icon"
-            className={"locations-agent-icon"}/>
-
-          <img
-            width={25}
-            src={agent_icon_blue}
-            alt="Agent icon"
-            className={"locations-agent-icon"}/>
-        </Group>
-
-
+            top: "28%",
+            left: "10%",
+          }}
+          agentsContainerStyle={{
+            top: "22%",
+            left: "18%",
+        }}/>
         <Image
           ref={setNodeRef}
           maw={"250px"}
@@ -154,8 +141,8 @@ export function GameBoard(props: {players: PlayerModel[]}) {
           <Divider h={"20%"} orientation={"vertical"} style={{opacity: "0.3", position: "absolute", bottom: 0, left: "50%"}}/>
           <Divider w={"20%"} orientation={"horizontal"} style={{opacity: "0.3", position: "absolute", bottom: "50%"}}/>
           <Divider w={"20%"} orientation={"horizontal"} style={{opacity: "0.3", position: "absolute", bottom: "50%", right: 0}}/>
-          {conflictRow(props.players.slice(0, 2), false)}
-          {conflictRow(props.players.slice(2, 4), true)}
+          {conflictRow(props.game.players.slice(0, 2), false)}
+          {conflictRow(props.game.players.slice(2, 4), true)}
 
           <Image
             maw={"100%"}

@@ -15,9 +15,11 @@ import {EMPEROR_SHADDAM, GURNEY_HALLECK, MUAD_DIB, PRINCESS_IRULAN} from "../con
 import {GameBoard} from "./GameBoard.tsx";
 import { DndContext } from "@dnd-kit/core";
 import {restrictToWindowEdges} from '@dnd-kit/modifiers';
+import {GameModel} from "../model/GameModel.tsx";
+import {produce} from "immer";
 
 function Content(props: {
-  players: PlayerModel[]
+  game: GameModel
 }) {
   const [opened, {open, close}] = useDisclosure(false);
 
@@ -38,11 +40,11 @@ function Content(props: {
     </Drawer>
 
     <Stack className="board-area">
-      <GameBoard players={props.players}/>
+      <GameBoard game={props.game}/>
       <InHandCards/>
     </Stack>
 
-    <div className="players"><Players playerList={props.players}/></div>
+    <div className="players"><Players playerList={props.game.players}/></div>
   </div>
 }
 
@@ -53,21 +55,22 @@ function Game(props: {
   const {subscribe, unsubscribe, sendMessage} = useWebSocket();
 
   const [gameStarted, setGameStarted] = useState(true);
-  const [, setGameId] = useState("");
-  const [players, setPlayers] = useState<PlayerModel[]>([
+  const [game, setGame] = useState<GameModel>(new GameModel("", [
     new PlayerModel("p1", PRINCESS_IRULAN, "RED", false),
     new PlayerModel("p2", MUAD_DIB, "BLUE", false),
     new PlayerModel("p3", EMPEROR_SHADDAM, "GOLD", true),
     new PlayerModel("p4", GURNEY_HALLECK, "GREEN", false)
-  ]);
+  ]));
 
   const setGlobalGameId = (gameId: string) => {
     props.useGameId(gameId);
-    setGameId(gameId);
+    const game = new GameModel(gameId, []);
+    setGame(game);
   }
 
   const gameStartHandler = (players: PlayerModel[]) => {
-    setPlayers(players);
+    game.players = players;
+    setGame(game);
     sendMessage({action: START_GAME})
   }
 
@@ -110,11 +113,32 @@ function Game(props: {
   }
 
   const contentComponent = () => {
-    return <Content players={players}/>
+    return <Content game={game}/>
+  }
+
+  function handleDragEnd(event: { over: any; active: any; }) {
+    const { over, active } = event;
+    if (over) {
+      console.log(`${active.id} dropped on ${over.id}`);
+      // Update state here: move draggable into droppable area
+    }
+
+    if (over.id === 'droppable') {
+      setGame(current =>
+        produce(current, draft => {
+          const movedAgent = draft.getAgent(active.id);
+          console.log(`Moved agend ${movedAgent}`);
+          if (movedAgent) {
+            draft.locations[0].placeAgent(movedAgent);
+            movedAgent.atLocation = draft.locations[0].id;
+          }
+        })
+      );
+    }
   }
 
   return (
-    <DndContext modifiers={[restrictToWindowEdges]}>
+    <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToWindowEdges]}>
       <MantineProvider theme={duneTheme}>
         {gameStarted ? contentComponent() : setupComponent()}
       </MantineProvider>
