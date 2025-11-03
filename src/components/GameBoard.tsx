@@ -1,9 +1,9 @@
 import '../css/GameBoard.css'
 import {Avatar, Box, Divider, Flex, Group, Image, Stack, Text} from "@mantine/core";
-import combat_icon_tinted from '../assets/combat_icon_tinted.png';
-import troop_icon from '../assets/troop_icon.png';
-import strength_icon from '../assets/strength_icon.png';
-import worm_icon from '../assets/worm_icon.png';
+import combat_icon_tinted from '../assets/combat/combat_tinted.png';
+import troop_icon from '../assets/combat/troop.png';
+import strength_icon from '../assets/combat/strength.png';
+import worm_icon from '../assets/combat/worm.png';
 import type {PlayerModel} from "../model/Player.tsx";
 
 export function GameBoard(props: {players: PlayerModel[]}) {

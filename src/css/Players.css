@@ -3,6 +3,7 @@
   width: 100%;
 }
 
-.mantine-ScrollArea-viewport {
+.mantine-ScrollArea-content {
   padding-top: 10px;
+    height: 100%;
 }

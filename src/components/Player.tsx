@@ -1,20 +1,24 @@
 import '../css/Player.css'
 import {ActionIcon, Avatar, Box, Divider, Group, Popover, Space, Stack, Text, Tooltip} from "@mantine/core";
-import water_icon from '../assets/water.svg';
-import spice_icon from '../assets/spice.svg';
-import solari_icon from '../assets/solari.svg';
-import troop_icon from '../assets/troop_icon.png';
-import strength_icon from '../assets/strength_icon.png';
-import worm_icon from '../assets/worm_icon.png';
-import first_player_icon from '../assets/first_player_token.png';
-import agent_icon_disabled from '../assets/agent_icon_disabled.svg';
-import agent_icon_red from '../assets/agent_icon_red.svg';
-import agent_icon_blue from '../assets/agent_icon_blue.svg';
-import agent_icon_green from '../assets/agent_icon_green.svg';
-import agent_icon_gold from '../assets/agent_icon_gold.svg';
-import vp_icon from '../assets/vp_icon.png';
-import objective_card_icon from '../assets/objective_icon.png'
-import hand_icon from '../assets/hand_icon.png';
+import water_icon from '../assets/resources/water.png';
+import spice_icon from '../assets/resources/spice.png';
+import solari_icon from '../assets/resources/solari.png';
+import troop_icon from '../assets/combat/troop.png';
+import strength_icon from '../assets/combat/strength.png';
+import worm_icon from '../assets/combat/worm.png';
+import first_player_icon from '../assets/agents/first_player_token.png';
+import agent_icon_disabled from '../assets/agents/agent_disabled.svg';
+import agent_icon_red from '../assets/agents/agent_red.svg';
+import agent_icon_blue from '../assets/agents/agent_blue.svg';
+import agent_icon_green from '../assets/agents/agent_green.svg';
+import agent_icon_gold from '../assets/agents/agent_gold.svg';
+import vp_icon from '../assets/resources/victory_point.png';
+import objective_card_icon from '../assets/cards/objective_card.jpg'
+import hand_icon from '../assets/cards/imperium_card.jpg';
+import desert_mouse from '../assets/objectives/desert_mouse.png';
+import crysknife from '../assets/objectives/crysknife.png';
+import ornithopter from '../assets/objectives/ornothopter.png';
+import objective_any from '../assets/objectives/any.png';
 import {CombatModifierType, ObjectiveType, type PlayerModel, ResourceType} from "../model/Player.tsx";
 import type {JSX, MouseEventHandler, ReactElement} from "react";
 import {range} from "../const/Util.tsx";
@@ -170,10 +174,10 @@ export function Player(props: { playerModel: PlayerModel; }) {
   const getObjectiveStats = () => {
     const getObjectiveImage = (objectiveType: ObjectiveType) => {
       switch (objectiveType) {
-        case ObjectiveType.DesertMouse: return water_icon;
-        case ObjectiveType.Crysknife: return solari_icon;
-        case ObjectiveType.Ornithopter: return spice_icon;
-        default: return solari_icon;
+        case ObjectiveType.DesertMouse: return desert_mouse;
+        case ObjectiveType.Crysknife: return crysknife;
+        case ObjectiveType.Ornithopter: return ornithopter;
+        default: return objective_any;
       }
     }
     return (
@@ -326,6 +330,31 @@ export function Player(props: { playerModel: PlayerModel; }) {
     )
   }
 
+  const getActions = () => {
+    const getActionButton = (icon: string) => {
+      return (
+        <ActionIcon
+          w={35}
+          h={54}
+          className={"player-resource-modifier-button"}
+          variant={"outline"}
+          radius={"0"}>
+          <img src={icon} alt="Action button"/>
+        </ActionIcon>
+      )
+    }
+    return (
+      <Group w={"100%"} justify="stretch" gap={"xs"}>
+        {getActionButton(hand_icon)}
+        {getActionButton(hand_icon)}
+        {getActionButton(hand_icon)}
+        {getActionButton(hand_icon)}
+        {getActionButton(hand_icon)}
+        {getActionButton(hand_icon)}
+      </Group>
+    )
+  }
+
   const getOppositionPlayer = () => {
     return (
       <Group className="player-container" align="flex-start">
@@ -338,7 +367,7 @@ export function Player(props: { playerModel: PlayerModel; }) {
 
   const getThisPlayer = () => {
     return (
-      <Stack className="current-player-container" gap={"5"}>
+      <Stack className="current-player-container" gap={"5"} >
         <Group align={"flex-start"}>
           {getAvatar()}
           {getNameAndResources()}
@@ -348,6 +377,8 @@ export function Player(props: { playerModel: PlayerModel; }) {
         {getResourceModifierElements()}
         <Divider orientation={"horizontal"} m={"md"} color={"#313131ff"}/>
         {getCombatModifierElements()}
+        <Divider orientation={"horizontal"} m={"md"} color={"#313131ff"}/>
+        {getActions()}
       </Stack>
     )
   }
