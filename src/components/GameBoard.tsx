@@ -4,9 +4,16 @@ import combat_icon_tinted from '../assets/combat/combat_tinted.png';
 import troop_icon from '../assets/combat/troop.png';
 import strength_icon from '../assets/combat/strength.png';
 import worm_icon from '../assets/combat/worm.png';
+import loc_deep_desert from '../assets/locations/deep_desert.png';
 import type {PlayerModel} from "../model/Player.tsx";
+import {useDroppable} from "@dnd-kit/core";
+import agent_icon_blue from '../assets/agents/agent_blue.svg';
 
 export function GameBoard(props: {players: PlayerModel[]}) {
+  const {isOver, setNodeRef} = useDroppable({
+    id: 'droppable',
+  });
+
   const playerConflictStats = (player: PlayerModel, dirLR: boolean) => {
     const playerAvatar = () => {
       return <Stack align={"center"} gap={"5"} style={{alignSelf: "flex-start"}}>
@@ -81,6 +88,44 @@ export function GameBoard(props: {players: PlayerModel[]}) {
       pos={"relative"}
       className="gameBoard"
       style={{flexGrow: 1}}>
+
+      <Box pos={"absolute"}>
+        <Group
+          className="locations-agent-icon-container"
+          align="center"
+          gap={0}
+          style={{
+            position: "absolute",
+            top: "42%",
+            left: "25%",
+          }}>
+          <img
+            width={25}
+            src={agent_icon_blue}
+            alt="Agent icon"
+            className={"locations-agent-icon"}/>
+
+          <img
+            width={25}
+            src={agent_icon_blue}
+            alt="Agent icon"
+            className={"locations-agent-icon"}/>
+
+          <img
+            width={25}
+            src={agent_icon_blue}
+            alt="Agent icon"
+            className={"locations-agent-icon"}/>
+        </Group>
+
+
+        <Image
+          ref={setNodeRef}
+          maw={"250px"}
+          fit={"contain"}
+          src={loc_deep_desert}
+          alt="Location"/>
+      </Box>
 
       <Group
         h={"250px"}

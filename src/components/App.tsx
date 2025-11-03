@@ -13,7 +13,8 @@ import {InHandCards} from "./InHandCards.tsx";
 import {useWebSocket, WebSocketProvider} from "./WebSocketContext.tsx";
 import {EMPEROR_SHADDAM, GURNEY_HALLECK, MUAD_DIB, PRINCESS_IRULAN} from "../const/Util.tsx";
 import {GameBoard} from "./GameBoard.tsx";
-
+import { DndContext } from "@dnd-kit/core";
+import {restrictToWindowEdges} from '@dnd-kit/modifiers';
 
 function Content(props: {
   players: PlayerModel[]
@@ -113,9 +114,11 @@ function Game(props: {
   }
 
   return (
-    <MantineProvider theme={duneTheme}>
-      {gameStarted ? contentComponent() : setupComponent()}
-    </MantineProvider>
+    <DndContext modifiers={[restrictToWindowEdges]}>
+      <MantineProvider theme={duneTheme}>
+        {gameStarted ? contentComponent() : setupComponent()}
+      </MantineProvider>
+    </DndContext>
   )
 }
 

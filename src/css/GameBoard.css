@@ -11,3 +11,14 @@
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
 }
+
+.locations-agent-icon-container .locations-agent-icon:nth-child(1) {
+  filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.5))
+  drop-shadow(0px 0 0 #313131)
+}
+
+.locations-agent-icon-container .locations-agent-icon:nth-child(2),.locations-agent-icon:nth-child(3) {
+  margin-left: -20%;
+  filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.5))
+  drop-shadow(0px 0 0 #94664d)
+}

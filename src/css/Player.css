@@ -61,12 +61,12 @@
   border-width: 2px;
 }
 
-.agent-icon-container .agent-icon:nth-child(1) {
+.players-agent-icon-container .players-agent-icon:nth-child(1) {
   filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.5))
   drop-shadow(0px 0 0 #313131)
 }
 
-.agent-icon-container .agent-icon:nth-child(2),.agent-icon:nth-child(3) {
+.players-agent-icon-container .players-agent-icon:nth-child(2),.players-agent-icon:nth-child(3) {
   margin-top: -180%;
   filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.5))
   drop-shadow(0px 0 0 #94664d)
