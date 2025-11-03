@@ -14,8 +14,7 @@ export class PlayerModel {
     [ResourceType.Spice, 0],
     [ResourceType.Solari, 0]
   ])
-  numAgentsAvailable: number = 3;
-  numAgentsUsed: number = 1;
+  agents: AgentModel[];
   swordmasterUnlocked: boolean = false;
   firstPlayer: boolean = false;
   combat: CombatModel = new CombatModel();
@@ -25,6 +24,11 @@ export class PlayerModel {
     this.character = character;
     this.color = color;
     this.isThisPlayer = isThisPlayer;
+    this.agents = [
+      new AgentModel(`${this.character.name}#1`),
+      new AgentModel(`${this.character.name}#2`),
+      new AgentModel(`${this.character.name}#3`)
+    ]
   }
 }
 
@@ -78,4 +82,13 @@ export class NumCardsModel {
   inDiscardPile: number = 0;
   inDrawPile: number = 0;
   intrigues: number = 0;
+}
+
+export class AgentModel {
+  id: string;
+  atLocation: number | undefined;
+
+  constructor(id: string) {
+    this.id = id;
+  }
 }

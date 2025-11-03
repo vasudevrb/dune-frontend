@@ -7,7 +7,7 @@ import {ImperiumRow} from "./ImperiumRow.tsx";
 import {Players} from "./Players.tsx";
 import {Setup} from "./setup/Setup.tsx";
 import {useEffect, useState} from "react";
-import  {PlayerModel} from "../model/Player.tsx";
+import  {PlayerModel} from "../model/PlayerModel.tsx";
 import {START_GAME} from "../const/Actions.tsx";
 import {InHandCards} from "./InHandCards.tsx";
 import {useWebSocket, WebSocketProvider} from "./WebSocketContext.tsx";

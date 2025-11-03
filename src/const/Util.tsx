@@ -1,4 +1,4 @@
-import {CharacterModel} from "../model/Player.tsx";
+import {CharacterModel} from "../model/PlayerModel.tsx";
 
 export const PRINCESS_IRULAN = new CharacterModel
 (

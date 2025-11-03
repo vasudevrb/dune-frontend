@@ -20,7 +20,7 @@ import desert_mouse from '../assets/objectives/desert_mouse.png';
 import crysknife from '../assets/objectives/crysknife.png';
 import ornithopter from '../assets/objectives/ornothopter.png';
 import objective_any from '../assets/objectives/any.png';
-import {CombatModifierType, ObjectiveType, type PlayerModel, ResourceType} from "../model/Player.tsx";
+import {CombatModifierType, ObjectiveType, type PlayerModel, ResourceType} from "../model/PlayerModel.tsx";
 import {type JSX, type MouseEventHandler, type ReactElement} from "react";
 import {range} from "../const/Util.tsx";
 import minus_icon from "../assets/minus.svg";
@@ -61,8 +61,9 @@ export function Player(props: { playerModel: PlayerModel; }) {
 
       if (!agentAvailability[index]) return getAgentIcon("GRAY")
       const availableBefore = agentAvailability.slice(0, index).filter(a => a).length;
+      const numAgentsUsed = props.player.agents.filter(a => a.atLocation).length;
 
-      return availableBefore < props.player.numAgentsUsed ?
+      return availableBefore <  numAgentsUsed ?
         getAgentIcon("GRAY") :
         getAgentIcon(props.player.color);
     }
@@ -83,7 +84,8 @@ export function Player(props: { playerModel: PlayerModel; }) {
 
   const getAgents = () => {
     const elements: JSX.Element[] = [];
-    for (let i = 0; i < props.playerModel.numAgentsAvailable; i++) {
+    const numAgentsAvailable = props.playerModel.agents.length;
+    for (let i = 0; i < numAgentsAvailable; i++) {
       elements.push(
         <Agent player={props.playerModel} index={i} key={`${props.playerModel.name}#${i}`}/>
       );

@@ -5,7 +5,7 @@ import troop_icon from '../assets/combat/troop.png';
 import strength_icon from '../assets/combat/strength.png';
 import worm_icon from '../assets/combat/worm.png';
 import loc_deep_desert from '../assets/locations/deep_desert.png';
-import type {PlayerModel} from "../model/Player.tsx";
+import type {PlayerModel} from "../model/PlayerModel.tsx";
 import {useDroppable} from "@dnd-kit/core";
 import agent_icon_blue from '../assets/agents/agent_blue.svg';
 

@@ -3,7 +3,7 @@ import '../../css/Setup.css'
 import {useEffect, useState} from "react";
 import arrow_right_icon from "../../assets/arrow_right.svg";
 import {Carousel} from "@mantine/carousel";
-import {CharacterModel, PlayerModel} from "../../model/Player.tsx";
+import {CharacterModel, PlayerModel} from "../../model/PlayerModel.tsx";
 import {ADD_TO_GAME, GET_CHARACTER_READY_STATES, START_GAME} from "../../const/Actions.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
 
