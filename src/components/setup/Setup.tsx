@@ -3,9 +3,10 @@ import '../../css/Setup.css'
 import {useEffect, useState} from "react";
 import arrow_right_icon from "../../assets/arrow_right.svg";
 import {Carousel} from "@mantine/carousel";
-import {CharacterModel, PlayerModel} from "../../model/PlayerModel.tsx";
+import type {PlayerModel} from "../../model/PlayerModel.tsx";
 import {ADD_TO_GAME, GET_CHARACTER_READY_STATES, START_GAME} from "../../const/Actions.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
+import {playerStartState} from "../../const/Util.tsx";
 
 export interface Character {
   characterName: string;
@@ -214,8 +215,19 @@ export function Setup(props: {
 
   const handleStartGameClick = (isHostPlayer: boolean) => {
     const playerModels = players.map(pi => {
-      const characterModel = new CharacterModel(pi.characterName, pi.characterUrls, pi.avatarUrl)
-      return new PlayerModel(pi.name, characterModel, pi.color, playerName === pi.name)
+      const characterModel = {
+        name: pi.characterName,
+        urls: pi.characterUrls,
+        avatarUrl: pi.avatarUrl
+      }
+
+      return {
+        ...playerStartState,
+        name: pi.name,
+        character: characterModel,
+        color: pi.color,
+        isThisPlayer: playerName === pi.name
+      }
     })
     props.gameStartHandler(playerModels)
   }

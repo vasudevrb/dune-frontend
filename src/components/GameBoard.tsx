@@ -5,7 +5,7 @@ import troop_icon from '../assets/combat/troop.png';
 import strength_icon from '../assets/combat/strength.png';
 import worm_icon from '../assets/combat/worm.png';
 import loc_deep_desert from '../assets/locations/deep_desert.png';
-import {AgentModel, type PlayerModel} from "../model/PlayerModel.tsx";
+import {type PlayerModel} from "../model/PlayerModel.tsx";
 import {useDroppable} from "@dnd-kit/core";
 import {AgentLocation} from "./AgentLocation.tsx";
 import type {GameModel} from "../model/GameModel.tsx";
@@ -91,12 +91,11 @@ export function GameBoard(props: {game: GameModel}) {
       className="gameBoard"
       style={{flexGrow: 1}}>
 
-      <Box pos={"absolute"} bg={"#ff363645"}>
+      <Box pos={"absolute"}>
         <AgentLocation
           w={"85%"}
           h={"63%"}
           location={props.game.locations[0]}
-          bg={"#ffffff99"}
           style={{
             position: "absolute",
             top: "28%",

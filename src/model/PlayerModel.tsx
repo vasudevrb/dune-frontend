@@ -1,48 +1,23 @@
-import {immerable} from "immer";
-
-export class PlayerModel {
-  [immerable] = true;
-
+export interface PlayerModel {
   name: string;
   character: CharacterModel;
   color: string;
   isThisPlayer: boolean;
-  victoryPoints: number = 0;
-  objectives: ObjectiveType[] = [
-    ObjectiveType.DesertMouse,
-    ObjectiveType.Any,
-  ];
-  numCards: NumCardsModel = new NumCardsModel();
-  resources: Map<ResourceType, number> = new Map([
-    [ResourceType.Water, 0],
-    [ResourceType.Spice, 0],
-    [ResourceType.Solari, 0]
-  ])
+  victoryPoints: number;
+  objectives: ObjectiveType[];
+  numCards: NumCardsModel;
+  resources: ResourcesModel
   agents: AgentModel[];
-  swordmasterUnlocked: boolean = false;
-  firstPlayer: boolean = false;
-  combat: CombatModel = new CombatModel();
-
-  constructor(name: string, character: CharacterModel, color: string, isThisPlayer: boolean) {
-    this.name = name;
-    this.character = character;
-    this.color = color;
-    this.isThisPlayer = isThisPlayer;
-    this.agents = [
-      new AgentModel(`${this.character.name}#1`),
-      new AgentModel(`${this.character.name}#2`),
-      new AgentModel(`${this.character.name}#3`)
-    ]
-  }
+  swordmasterUnlocked: boolean;
+  firstPlayer: boolean;
+  combat: CombatModel;
 }
 
-export const ResourceType = {
-  Water: "Water",
-  Spice: "Spice",
-  Solari: "Solari",
-} as const;
-
-export type ResourceType = keyof typeof ResourceType;
+interface ResourcesModel {
+  water: number,
+  spice: number,
+  solari: number
+}
 
 export const CombatModifierType = {
   Troop: "Troop",
@@ -61,46 +36,28 @@ export const ObjectiveType = {
 
 export type ObjectiveType = keyof typeof ObjectiveType;
 
-export class CharacterModel {
-  [immerable] = true;
-
+export interface CharacterModel {
   name: string;
   urls: string[];
   avatarUrl: string;
-
-  constructor(name: string, urls: string[], avatarUrl: string) {
-    this.name = name;
-    this.urls = urls;
-    this.avatarUrl = avatarUrl;
-  }
 }
 
-export class CombatModel {
-  [immerable] = true;
-
-  troopsInGarrison: number = 3;
-  troopsInCombat: number = 0;
-  wormsInCombat: number = 0;
-  strength: number = 2
+export interface CombatModel {
+  troopsInGarrison: number;
+  troopsInCombat: number;
+  wormsInCombat: number;
+  strength: number;
 }
 
-export class NumCardsModel {
-  [immerable] = true;
-
-  inHand: number = 0;
-  inPlay: number = 0;
-  inDiscardPile: number = 0;
-  inDrawPile: number = 0;
-  intrigues: number = 0;
+export interface NumCardsModel {
+  inHand: number;
+  inPlay: number;
+  inDiscardPile: number;
+  inDrawPile: number;
+  intrigues: number;
 }
 
-export class AgentModel {
-  [immerable] = true;
-
+export interface AgentModel {
   id: string;
-  atLocation: number | undefined;
-
-  constructor(id: string) {
-    this.id = id;
-  }
+  atLocation?: number;
 }

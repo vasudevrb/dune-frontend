@@ -7,16 +7,22 @@ import {ImperiumRow} from "./ImperiumRow.tsx";
 import {Players} from "./Players.tsx";
 import {Setup} from "./setup/Setup.tsx";
 import {useEffect, useState} from "react";
-import  {PlayerModel} from "../model/PlayerModel.tsx";
+import type {PlayerModel} from "../model/PlayerModel.tsx";
 import {START_GAME} from "../const/Actions.tsx";
 import {InHandCards} from "./InHandCards.tsx";
 import {useWebSocket, WebSocketProvider} from "./WebSocketContext.tsx";
-import {EMPEROR_SHADDAM, GURNEY_HALLECK, MUAD_DIB, PRINCESS_IRULAN} from "../const/Util.tsx";
+import {
+  gameStartState,
+  PLAYER_1,
+  PLAYER_2,
+  PLAYER_3, PLAYER_4,
+} from "../const/Util.tsx";
 import {GameBoard} from "./GameBoard.tsx";
 import { DndContext } from "@dnd-kit/core";
 import {restrictToWindowEdges} from '@dnd-kit/modifiers';
-import {GameModel} from "../model/GameModel.tsx";
+import type {GameModel} from "../model/GameModel.tsx";
 import {produce} from "immer";
+import {getAgent, placeAgent} from "../const/GameUtils.tsx";
 
 function Content(props: {
   game: GameModel
@@ -55,17 +61,18 @@ function Game(props: {
   const {subscribe, unsubscribe, sendMessage} = useWebSocket();
 
   const [gameStarted, setGameStarted] = useState(true);
-  const [game, setGame] = useState<GameModel>(new GameModel("", [
-    new PlayerModel("p1", PRINCESS_IRULAN, "RED", false),
-    new PlayerModel("p2", MUAD_DIB, "BLUE", false),
-    new PlayerModel("p3", EMPEROR_SHADDAM, "GOLD", true),
-    new PlayerModel("p4", GURNEY_HALLECK, "GREEN", false)
-  ]));
+  const [game, setGame] = useState<GameModel>({
+    ...gameStartState,
+    players: [PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4]
+  });
 
   const setGlobalGameId = (gameId: string) => {
     props.useGameId(gameId);
-    const game = new GameModel(gameId, []);
-    setGame(game);
+    const newGame = {
+      ...game,
+      gameId: gameId,
+    };
+    setGame(newGame);
   }
 
   const gameStartHandler = (players: PlayerModel[]) => {
@@ -126,12 +133,7 @@ function Game(props: {
     if (over.id === 'droppable') {
       setGame(current =>
         produce(current, draft => {
-          const movedAgent = draft.getAgent(active.id);
-          console.log(`Moved agend ${movedAgent}`);
-          if (movedAgent) {
-            draft.locations[0].placeAgent(movedAgent);
-            movedAgent.atLocation = draft.locations[0].id;
-          }
+          placeAgent(draft, active.id, draft.locations[0].id)
         })
       );
     }

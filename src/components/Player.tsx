@@ -20,7 +20,7 @@ import desert_mouse from '../assets/objectives/desert_mouse.png';
 import crysknife from '../assets/objectives/crysknife.png';
 import ornithopter from '../assets/objectives/ornothopter.png';
 import objective_any from '../assets/objectives/any.png';
-import {AgentModel, CombatModifierType, ObjectiveType, type PlayerModel, ResourceType} from "../model/PlayerModel.tsx";
+import {type AgentModel, CombatModifierType, ObjectiveType, type PlayerModel} from "../model/PlayerModel.tsx";
 import {type JSX, type MouseEventHandler, type ReactElement} from "react";
 import {range} from "../const/Util.tsx";
 import minus_icon from "../assets/minus.svg";
@@ -41,6 +41,7 @@ export function Player(props: { playerModel: PlayerModel; }) {
     const draggedStyle = transform ? {
       transform: CSS.Translate.toString(transform),
       zIndex: 10,
+      transition: !isDragging ? 'transform 300ms ease' : undefined,
     } : undefined;
 
     const getAgentIcon = (color: string) => {
@@ -120,11 +121,11 @@ export function Player(props: { playerModel: PlayerModel; }) {
     )
   }
 
-  const getResourceIconByType = (resourceType: ResourceType) => {
+  const getResourceIconByType = (resourceType: string) => {
     switch (resourceType) {
-      case ResourceType.Water:
+      case "water":
         return water_icon;
-      case ResourceType.Spice:
+      case "spice":
         return spice_icon;
       default:
         return solari_icon
@@ -132,12 +133,11 @@ export function Player(props: { playerModel: PlayerModel; }) {
   }
 
   const getResourcesDisplayElements = () => {
-    const getResource = (resourceType: ResourceType) => {
-      const text = props.playerModel.resources.get(resourceType);
+    const getResource = (quantity: number, resourceType: string) => {
       const icon = getResourceIconByType(resourceType);
       return (
         <Group align="center" gap={"5"}>
-          <Text size="md" className={"player-container-text"}>{text}</Text>
+          <Text size="md" className={"player-container-text"}>{quantity}</Text>
           <img width={15} src={icon} alt="Resource icon"/>
         </Group>
       )
@@ -148,11 +148,11 @@ export function Player(props: { playerModel: PlayerModel; }) {
 
     return (
       <Group align="center" gap={"xs"}>
-        {getResource(ResourceType.Water)}
+        {getResource(props.playerModel.resources.water, "water")}
         {divider()}
-        {getResource(ResourceType.Spice)}
+        {getResource(props.playerModel.resources.spice, "spice")}
         {divider()}
-        {getResource(ResourceType.Solari)}
+        {getResource(props.playerModel.resources.solari, "solari")}
       </Group>
     )
   }
@@ -288,16 +288,15 @@ export function Player(props: { playerModel: PlayerModel; }) {
     return <Divider orientation="vertical" color={"#31313123"}/>
   }
   const getResourceModifierElements = () => {
-    const getResourceLabel = (resourceType: ResourceType) => {
-      const text = props.playerModel.resources.get(resourceType)
+    const getResourceLabel = (quantity: number, resourceType: string) => {
       const icon = getResourceIconByType(resourceType)
-      return getLabelElement(icon, text)
+      return getLabelElement(icon, quantity)
     }
-    const getResourceModifier = (resourceType: ResourceType) => {
+    const getResourceModifier = (quantity: number, resourceType: string) => {
       return (
         <Stack align="center" gap={"xs"}>
           {getButton(plus_icon)}
-          {getResourceLabel(resourceType)}
+          {getResourceLabel(quantity, resourceType)}
           {getButton(minus_icon)}
         </Stack>
       )
@@ -316,11 +315,11 @@ export function Player(props: { playerModel: PlayerModel; }) {
     }
     return (
       <Group w={"100%"} justify="center" gap={"xs"}>
-        {getResourceModifier(ResourceType.Water)}
+        {getResourceModifier(props.playerModel.resources.water, "water")}
         {resourceModifierDivider()}
-        {getResourceModifier(ResourceType.Spice)}
+        {getResourceModifier(props.playerModel.resources.spice, "spice")}
         {resourceModifierDivider()}
-        {getResourceModifier(ResourceType.Solari)}
+        {getResourceModifier(props.playerModel.resources.solari, "solari")}
         {resourceModifierDivider()}
         {getVictoryPointModifier()}
       </Group>
