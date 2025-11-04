@@ -26,61 +26,82 @@ import {range} from "../const/Util.tsx";
 import minus_icon from "../assets/minus.svg";
 import plus_icon from "../assets/plus.svg";
 import {useDisclosure} from "@mantine/hooks";
-import {useDraggable} from "@dnd-kit/core";
+import {useDraggable, useDroppable} from "@dnd-kit/core";
 import {createPortal} from "react-dom";
+
+function Agent(props: {player: PlayerModel, agentModel: AgentModel, index: number}) {
+  const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
+    id: props.agentModel.id,
+    data: {
+      type: "agent",
+      from: "player"
+    }
+  });
+
+  const draggedStyle = transform ? {
+    transform: CSS.Translate.toString(transform),
+    zIndex: 10,
+    transition: !isDragging ? 'transform 300ms ease' : undefined,
+  } : undefined;
+
+  const getAgentIcon = (color: string) => {
+    if (color === "RED") return agent_icon_red;
+    else if (color === "BLUE") return agent_icon_blue;
+    else if (color === "GOLD") return agent_icon_gold;
+    else if (color === "GREEN") return agent_icon_green;
+    else if (color === "GRAY") return agent_icon_disabled;
+  }
+
+  const getAgentColor = (index: number): string => {
+    const totalNumUsableAgents = props.player.swordmasterUnlocked ? 3 : 2;
+    const agentAvailability = range(0, totalNumUsableAgents)
+      .map(i => {
+        return i === 0 ? props.player.swordmasterUnlocked : true;
+      });
+
+    if (!agentAvailability[index]) return "GRAY"
+    const availableBefore = agentAvailability.slice(0, index).filter(a => a).length;
+    const numAgentsUsed = props.player.agents.filter(a => a.atLocation).length;
+
+    return availableBefore <  numAgentsUsed ? "GRAY" : props.player.color
+  }
+
+  const agentIcon = getAgentIcon(getAgentColor(props.index))
+
+  const draggableProps = (props.player.isThisPlayer && agentIcon != agent_icon_disabled)
+    ? {
+      ref: setNodeRef,
+      style: draggedStyle,
+      ...listeners,
+      ...attributes,
+    }
+    : {
+      draggable: false
+    };
+
+  const node = (
+    <img
+      {...draggableProps}
+      width={40}
+      src={agentIcon}
+      alt="Agent icon"
+      className={"players-agent-icon"}/>
+  )
+  return isDragging ? createPortal(node, document.body): node
+}
 
 
 export function Player(props: { playerModel: PlayerModel; }) {
   const [inHandCardsPopoverOpened, setInHandCardsPopoverState] = useDisclosure(false);
   const [objectivesPopoverOpened, setObjectivesPopoverState] = useDisclosure(false);
 
-  const Agent = (props: {player: PlayerModel, agentModel: AgentModel, index: number}) => {
-    const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
-      id: props.agentModel.id,
-    });
-    const draggedStyle = transform ? {
-      transform: CSS.Translate.toString(transform),
-      zIndex: 10,
-      transition: !isDragging ? 'transform 300ms ease' : undefined,
-    } : undefined;
-
-    const getAgentIcon = (color: string) => {
-      if (color === "RED") return agent_icon_red;
-      else if (color === "BLUE") return agent_icon_blue;
-      else if (color === "GOLD") return agent_icon_gold;
-      else if (color === "GREEN") return agent_icon_green;
-      else if (color === "GRAY") return agent_icon_disabled;
+  const playerDroppable = useDroppable({
+    id: `this-player-container`,
+    data: {
+      type: "player"
     }
+  });
 
-    const getAgentColor = (index: number) => {
-      const totalNumUsableAgents = props.player.swordmasterUnlocked ? 3 : 2;
-      const agentAvailability = range(0, totalNumUsableAgents)
-        .map(i => {
-          return i === 0 ? props.player.swordmasterUnlocked : true;
-        });
-
-      if (!agentAvailability[index]) return getAgentIcon("GRAY")
-      const availableBefore = agentAvailability.slice(0, index).filter(a => a).length;
-      const numAgentsUsed = props.player.agents.filter(a => a.atLocation).length;
-
-      return availableBefore <  numAgentsUsed ?
-        getAgentIcon("GRAY") :
-        getAgentIcon(props.player.color);
-    }
-
-    const node = (
-      <img
-        ref={setNodeRef}
-        style={draggedStyle}
-        {...listeners}
-        {...attributes}
-        width={40}
-        src={getAgentColor(props.index)}
-        alt="Agent icon"
-        className={"players-agent-icon"}/>
-    )
-    return isDragging ? createPortal(node, document.body): node
-  }
 
   const getAgents = () => {
     const elements: JSX.Element[] = [];
@@ -396,7 +417,7 @@ export function Player(props: { playerModel: PlayerModel; }) {
 
   const getThisPlayer = () => {
     return (
-      <Stack className="current-player-container" gap={"5"} >
+      <Stack className="current-player-container" gap={"5"} ref={playerDroppable.setNodeRef}>
         <Group align={"flex-start"}>
           {getAvatar()}
           {getNameAndResources()}

@@ -1,4 +1,5 @@
 import type {GameModel} from "../model/GameModel.tsx";
+import type {UniqueIdentifier} from "@dnd-kit/core";
 
 export function getAgent(game: GameModel, agentId: string) {
  return game.players
@@ -6,12 +7,12 @@ export function getAgent(game: GameModel, agentId: string) {
    .find(agent => agent.id === agentId)
 }
 
-function assertExists<T>(value: T | undefined, message: string): T {
+export function assertExists<T>(value: T | undefined, message: string): T {
   if (value == null) throw new Error(message);
   return value;
 }
 
-export function placeAgent(game: GameModel, agentId: string, locationId: number) {
+export function placeAgent(game: GameModel, agentId: UniqueIdentifier, locationId: number) {
   const player = assertExists(
     game.players.find(p => p.agents.some(agent => agent.id === agentId)),
     `Player with agentId: ${agentId} not found.`
@@ -34,4 +35,24 @@ export function placeAgent(game: GameModel, agentId: string, locationId: number)
     playerName: player.name
   });
   agent.atLocation = locationId;
+}
+
+export function recallAgent(game: GameModel, agentId: UniqueIdentifier, locationId: number) {
+  const location = assertExists(
+    game.locations.find(location => location.id === locationId),
+    `Location with id ${locationId} not found.`
+  )
+
+  const locAgent = assertExists(
+    location.agents.find(agent => agent.agentId === agentId),
+    `Location with id ${locationId} not found.`
+  )
+
+  const player = assertExists(
+    game.players.find(p => p.name === locAgent.playerName),
+    `Player with agentId: ${agentId} not found.`
+  )
+
+  player.agents.push({id: agentId.toString()})
+  location.agents = location.agents.filter(agent => agent.agentId != agentId)
 }

@@ -1,5 +1,7 @@
 import {type CharacterModel, ObjectiveType, type PlayerModel} from "../model/PlayerModel.tsx";
 import type {GameModel} from "../model/GameModel.tsx";
+import {assertExists} from "./GameUtils.tsx";
+import type {Active} from "@dnd-kit/core";
 
 export const range = (start: number, end: number): number[] =>
   Array.from({length: end - start + 1}, (_, i) => start + i);
@@ -129,4 +131,22 @@ export const PLAYER_4: PlayerModel = {
     {id: `${EMPEROR_SHADDAM.name}#2`},
     {id: `${EMPEROR_SHADDAM.name}#3`},
   ]
+}
+
+export function createId(items: (string | number)[]): string {
+  return items
+    .map(item =>
+      String(item)
+        .trim()
+        .replace(/\s+/g, '-')
+        .toLowerCase()
+    )
+    .join('#');
+}
+
+export function findDraggableColor(gameModel: GameModel, activeDraggable: Active) {
+  return assertExists(
+    gameModel.players.find(p => p.agents.some(a => a.id === activeDraggable.id)),
+    "Unknown Draggable ID"
+  ).color
 }

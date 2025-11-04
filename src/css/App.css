@@ -6,8 +6,8 @@
   text-align: center;
   background-size: cover;
   /*background-color: #c3c3c3;*/
-  background-image: url("https://i.postimg.cc/L5kVWGjs/bg.png");
-  background-position: center;
+  background-image: url('../assets/bg.png');;
+  background-position: center 60%;
   background-repeat: no-repeat;
   backdrop-filter: blur(20px);
 }

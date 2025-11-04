@@ -11,23 +11,18 @@ import type {PlayerModel} from "../model/PlayerModel.tsx";
 import {START_GAME} from "../const/Actions.tsx";
 import {InHandCards} from "./InHandCards.tsx";
 import {useWebSocket, WebSocketProvider} from "./WebSocketContext.tsx";
-import {
-  gameStartState,
-  PLAYER_1,
-  PLAYER_2,
-  PLAYER_3, PLAYER_4,
-} from "../const/Util.tsx";
+import {gameStartState, PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4} from "../const/Util.tsx";
 import {GameBoard} from "./GameBoard.tsx";
-import { DndContext } from "@dnd-kit/core";
+import {DndContext, type DragEndEvent} from "@dnd-kit/core";
 import {restrictToWindowEdges} from '@dnd-kit/modifiers';
 import type {GameModel} from "../model/GameModel.tsx";
 import {produce} from "immer";
-import {getAgent, placeAgent} from "../const/GameUtils.tsx";
+import {placeAgent, recallAgent} from "../const/GameUtils.tsx";
 
 function Content(props: {
   game: GameModel
 }) {
-  const [opened, {open, close}] = useDisclosure(false);
+  const [opened, {close}] = useDisclosure(false);
 
   return <div className="game-screen">
     <Drawer className="drawer-1"
@@ -123,17 +118,28 @@ function Game(props: {
     return <Content game={game}/>
   }
 
-  function handleDragEnd(event: { over: any; active: any; }) {
-    const { over, active } = event;
-    if (over) {
-      console.log(`${active.id} dropped on ${over.id}`);
-      // Update state here: move draggable into droppable area
-    }
+  function handleDragEnd(event: DragEndEvent) {
+    const active = event.active;
+    const over = event.over;
+    if (!over || !active) return;
 
-    if (over.id === 'droppable') {
+    const activeData = event.active.data.current;
+    const overData = event.over?.data.current;
+    if (!overData || !activeData) return;
+
+    console.log(`${active.id} dropped on ${over.id}`);
+
+
+    if (activeData.from === "player" && overData.type === "location") {
       setGame(current =>
         produce(current, draft => {
           placeAgent(draft, active.id, draft.locations[0].id)
+        })
+      );
+    } else if (activeData.from === "location" && overData.type === "player") {
+      setGame(current =>
+        produce(current, draft => {
+          recallAgent(draft, active.id, draft.locations[0].id)
         })
       );
     }

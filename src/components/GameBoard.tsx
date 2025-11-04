@@ -6,14 +6,10 @@ import strength_icon from '../assets/combat/strength.png';
 import worm_icon from '../assets/combat/worm.png';
 import loc_deep_desert from '../assets/locations/deep_desert.png';
 import {type PlayerModel} from "../model/PlayerModel.tsx";
-import {useDroppable} from "@dnd-kit/core";
 import {AgentLocation} from "./AgentLocation.tsx";
 import type {GameModel} from "../model/GameModel.tsx";
 
 export function GameBoard(props: {game: GameModel}) {
-  const {isOver, setNodeRef} = useDroppable({
-    id: 'droppable',
-  });
 
   const playerConflictStats = (player: PlayerModel, dirLR: boolean) => {
     const playerAvatar = () => {
@@ -91,11 +87,19 @@ export function GameBoard(props: {game: GameModel}) {
       className="gameBoard"
       style={{flexGrow: 1}}>
 
-      <Box pos={"absolute"}>
+      <Box
+        pos={"absolute"}
+        bg={"#ffffff32"}
+        style={{
+          top: "30%",
+          left: "35%"
+      }}
+      >
         <AgentLocation
           w={"85%"}
           h={"63%"}
           location={props.game.locations[0]}
+          bg={"#ffffff52"}
           style={{
             position: "absolute",
             top: "28%",
@@ -106,7 +110,6 @@ export function GameBoard(props: {game: GameModel}) {
             left: "18%",
         }}/>
         <Image
-          ref={setNodeRef}
           maw={"250px"}
           fit={"contain"}
           src={loc_deep_desert}
