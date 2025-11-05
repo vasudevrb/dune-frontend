@@ -62,7 +62,7 @@ export function Setup(props: {
         if (action === GET_CHARACTER_READY_STATES) {
           handlePlayerInfoResponse(body)
         } else if (action === START_GAME) {
-          handleStartGameClick(false)
+          handleStartGameClick()
         }
       }
     });
@@ -213,7 +213,7 @@ export function Setup(props: {
     sendMessage({action: GET_CHARACTER_READY_STATES})
   }
 
-  const handleStartGameClick = (isHostPlayer: boolean) => {
+  const handleStartGameClick = () => {
     const playerModels = players.map(pi => {
       const characterModel = {
         name: pi.characterName,
@@ -499,7 +499,7 @@ export function Setup(props: {
               (gameType === 0 && players.length >= 2 && players.map(p => p.status).every(s => s === "Ready")) &&
               <Button
                 mt={"40px"}
-                onClick={() => handleStartGameClick(true)}
+                onClick={() => handleStartGameClick()}
                 size="xs"
                 radius="xl"
                 variant="filled">

@@ -16,9 +16,11 @@ type Props = {
   children: React.ReactNode;
 };
 
+// @ts-ignore
 const WebSocketContext = createContext<WebSocketContextType>({})
 
 export const WebSocketProvider: React.FC<Props> = ({ gameId, children }) => {
+  // @ts-ignore
   const [socket, setSocket] = useState<WebSocket>(null)
   const callbackMap = useRef<Map<string, MessageCallback>>(new Map())
 

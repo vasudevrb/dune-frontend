@@ -1,7 +1,7 @@
 import '@mantine/core/styles.css'
 import '@mantine/carousel/styles.css';
 import '../css/App.css'
-import {Box, Drawer, Group, MantineProvider, type MantineThemeOverride, Stack} from '@mantine/core';
+import {Box, Drawer, MantineProvider, type MantineThemeOverride, Stack} from '@mantine/core';
 import {useDisclosure} from "@mantine/hooks";
 import {ImperiumRow} from "./ImperiumRow.tsx";
 import {Players} from "./Players.tsx";
