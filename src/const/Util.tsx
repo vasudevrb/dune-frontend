@@ -13,7 +13,8 @@ export const gameStartState: GameModel = {
     {
       name: "Deep Desert",
       id: 1,
-      agents: []
+      agents: [],
+      spies: []
     }
   ],
 }
@@ -52,6 +53,11 @@ export const playerStartState: PlayerModel = {
     {id: `${characterStartState.name}#2`},
     {id: `${characterStartState.name}#3`}
   ],
+  spies: [
+    {id: `${characterStartState.name}#1`},
+    {id: `${characterStartState.name}#2`},
+    {id: `${characterStartState.name}#3`}
+  ],
   swordmasterUnlocked: false,
   combat: {
     troopsInGarrison: 3,
@@ -73,9 +79,14 @@ export const PLAYER_1: PlayerModel = {
   isThisPlayer: true,
   color: "RED",
   agents: [
-    {id: `${PRINCESS_IRULAN.name}#1`},
-    {id: `${PRINCESS_IRULAN.name}#2`},
-    {id: `${PRINCESS_IRULAN.name}#3`},
+    {id: `agent-${PRINCESS_IRULAN.name}#1`},
+    {id: `agent-${PRINCESS_IRULAN.name}#2`},
+    {id: `agent-${PRINCESS_IRULAN.name}#3`},
+  ],
+  spies: [
+    {id: `spy-${PRINCESS_IRULAN.name}#1`},
+    {id: `spy-${PRINCESS_IRULAN.name}#2`},
+    {id: `spy-${PRINCESS_IRULAN.name}#3`},
   ]
 }
 
@@ -91,9 +102,14 @@ export const PLAYER_2: PlayerModel = {
   character: MUAD_DIB,
   color: "BLUE",
   agents: [
-    {id: `${MUAD_DIB.name}#1`},
-    {id: `${MUAD_DIB.name}#2`},
-    {id: `${MUAD_DIB.name}#3`},
+    {id: `agent-${MUAD_DIB.name}#1`},
+    {id: `agent-${MUAD_DIB.name}#2`},
+    {id: `agent-${MUAD_DIB.name}#3`},
+  ],
+  spies: [
+    {id: `spy-${MUAD_DIB.name}#1`},
+    {id: `spy-${MUAD_DIB.name}#2`},
+    {id: `spy-${MUAD_DIB.name}#3`},
   ]
 }
 
@@ -109,9 +125,14 @@ export const PLAYER_3: PlayerModel = {
   character: GURNEY_HALLECK,
   color: "GOLD",
   agents: [
-    {id: `${GURNEY_HALLECK.name}#1`},
-    {id: `${GURNEY_HALLECK.name}#2`},
-    {id: `${GURNEY_HALLECK.name}#3`},
+    {id: `agent-${GURNEY_HALLECK.name}#1`},
+    {id: `agent-${GURNEY_HALLECK.name}#2`},
+    {id: `agent-${GURNEY_HALLECK.name}#3`},
+  ],
+  spies: [
+    {id: `spy-${GURNEY_HALLECK.name}#1`},
+    {id: `spy-${GURNEY_HALLECK.name}#2`},
+    {id: `spy-${GURNEY_HALLECK.name}#3`},
   ]
 }
 
@@ -127,9 +148,14 @@ export const PLAYER_4: PlayerModel = {
   character: EMPEROR_SHADDAM,
   color: "GREEN",
   agents: [
-    {id: `${EMPEROR_SHADDAM.name}#1`},
-    {id: `${EMPEROR_SHADDAM.name}#2`},
-    {id: `${EMPEROR_SHADDAM.name}#3`},
+    {id: `agent-${EMPEROR_SHADDAM.name}#1`},
+    {id: `agent-${EMPEROR_SHADDAM.name}#2`},
+    {id: `agent-${EMPEROR_SHADDAM.name}#3`},
+  ],
+  spies: [
+    {id: `spy-${EMPEROR_SHADDAM.name}#1`},
+    {id: `spy-${EMPEROR_SHADDAM.name}#2`},
+    {id: `spy-${EMPEROR_SHADDAM.name}#3`},
   ]
 }
 

@@ -78,3 +78,14 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
+
+.players-spy-icon-container .players-spy-icon:nth-child(1) {
+  filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.5))
+  drop-shadow(0px 0 0 #313131)
+}
+
+.players-spy-icon-container .players-spy-icon:nth-child(2),.players-spy-icon:nth-child(3) {
+  margin-left: -20%;
+  filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.5))
+  drop-shadow(0px 0 0 #94664d)
+}

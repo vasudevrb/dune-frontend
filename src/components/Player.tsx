@@ -13,6 +13,10 @@ import agent_icon_red from '../assets/agents/agent_red.svg';
 import agent_icon_blue from '../assets/agents/agent_blue.svg';
 import agent_icon_green from '../assets/agents/agent_green.svg';
 import agent_icon_gold from '../assets/agents/agent_gold.svg';
+import spy_icon_red from '../assets/spies/spy_red.png';
+import spy_icon_green from '../assets/spies/spy_red.png';
+import spy_icon_blue from '../assets/spies/spy_red.png';
+import spy_icon_gold from '../assets/spies/spy_red.png';
 import vp_icon from '../assets/resources/victory_point.png';
 import objective_card_icon from '../assets/cards/objective_card.jpg'
 import hand_icon from '../assets/cards/imperium_card.jpg';
@@ -20,7 +24,7 @@ import desert_mouse from '../assets/objectives/desert_mouse.png';
 import crysknife from '../assets/objectives/crysknife.png';
 import ornithopter from '../assets/objectives/ornothopter.png';
 import objective_any from '../assets/objectives/any.png';
-import {type AgentModel, CombatModifierType, ObjectiveType, type PlayerModel} from "../model/PlayerModel.tsx";
+import {type AgentModel, CombatModifierType, ObjectiveType, type PlayerModel, type SpyModel} from "../model/PlayerModel.tsx";
 import {type JSX, type MouseEventHandler, type ReactElement} from "react";
 import {range} from "../const/Util.tsx";
 import minus_icon from "../assets/minus.svg";
@@ -34,7 +38,7 @@ function Agent(props: {player: PlayerModel, agentModel: AgentModel, index: numbe
     id: props.agentModel.id,
     data: {
       type: "agent",
-      from: "player"
+      location: "player"
     }
   });
 
@@ -90,6 +94,52 @@ function Agent(props: {player: PlayerModel, agentModel: AgentModel, index: numbe
   return isDragging ? createPortal(node, document.body): node
 }
 
+function Spy(props: {player: PlayerModel, spyModel: SpyModel, index: number}) {
+  const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
+    id: props.spyModel.id,
+    data: {
+      type: "spy",
+      location: "player"
+    }
+  });
+
+  const draggedStyle = transform ? {
+    transform: CSS.Translate.toString(transform),
+    zIndex: 10,
+  } : undefined;
+
+  const getSpyIcon = (color: string) => {
+    if (color === "RED") return spy_icon_red;
+    else if (color === "BLUE") return spy_icon_blue;
+    else if (color === "GOLD") return spy_icon_gold;
+    else if (color === "GREEN") return spy_icon_green;
+  }
+
+  const agentIcon = getSpyIcon(props.player.color)
+
+  const draggableProps = (props.player.isThisPlayer && agentIcon != agent_icon_disabled)
+    ? {
+      ref: setNodeRef,
+      style: draggedStyle,
+      ...listeners,
+      ...attributes,
+    }
+    : {
+      draggable: false
+    };
+
+  const node = (
+    <img
+      {...draggableProps}
+      width={30}
+      src={agentIcon}
+      alt="Spy icon"
+      className={"players-spy-icon"}/>
+  )
+  return isDragging ? createPortal(node, document.body): node
+}
+
+
 
 export function Player(props: { playerModel: PlayerModel; }) {
   const [inHandCardsPopoverOpened, setInHandCardsPopoverState] = useDisclosure(false);
@@ -98,7 +148,8 @@ export function Player(props: { playerModel: PlayerModel; }) {
   const playerDroppable = useDroppable({
     id: `this-player-container`,
     data: {
-      type: "player"
+      location: "player",
+      type: "spy,agent"
     }
   });
 
@@ -405,6 +456,24 @@ export function Player(props: { playerModel: PlayerModel; }) {
     )
   }
 
+  const getSpiesAndFlags = () => {
+    return (
+      <Group w={"100%"} justify="center" align={"stretch"} gap={0}>
+        <Group w={"48%"} className={"players-spy-icon-container"} justify="center">
+          {
+            props.playerModel.spies.map((spy, index) =>
+              <Spy player={props.playerModel} spyModel={spy} index={index}/>
+            )
+          }
+        </Group>
+        <Divider orientation="vertical" m={"0"} color={"#cacaca"}/>
+        <Group w={"48%"} h={"100%"}>
+
+        </Group>
+      </Group>
+    )
+  }
+
   const getOppositionPlayer = () => {
     return (
       <Group className="player-container">
@@ -423,6 +492,7 @@ export function Player(props: { playerModel: PlayerModel; }) {
           {getNameAndResources()}
           {getAgents()}
         </Group>
+        {getSpiesAndFlags()}
         <Space h={"md"}/>
         {getResourceModifierElements()}
         <Divider orientation={"horizontal"} m={"md"} color={"#313131ff"}/>

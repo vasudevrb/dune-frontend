@@ -1,5 +1,5 @@
 import type {PlayerModel} from "./PlayerModel.tsx";
-import {AgentLocationModel} from "./AgentLocationModel.tsx";
+import type {AgentLocationModel} from "./AgentLocationModel.tsx";
 
 export interface GameModel {
   gameId: string;

@@ -1,26 +1,25 @@
 import type {AgentLocationModel} from "../model/AgentLocationModel.tsx";
-import {Box, Group, type MantineStyleProp, type StyleProp} from "@mantine/core";
-import agent_icon_blue from '../assets/agents/agent_blue.svg';
 import type {Property} from "csstype";
-import agent_icon_red from "../assets/agents/agent_red.svg";
-import agent_icon_gold from "../assets/agents/agent_gold.svg";
-import agent_icon_green from "../assets/agents/agent_green.svg";
-import agent_icon_disabled from "../assets/agents/agent_disabled.svg";
+import {Box, Group, type MantineStyleProp, type StyleProp} from "@mantine/core";
 import {useDraggable, useDroppable} from "@dnd-kit/core";
-import {createId} from "../const/Util.tsx";
 import {CSS} from "@dnd-kit/utilities";
+import spy_icon_red from "../assets/spies/spy_red.png";
+import spy_icon_blue from "../assets/spies/spy_blue.png";
+import spy_icon_gold from "../assets/spies/spy_gold.png";
+import spy_icon_green from "../assets/spies/spy_green.png";
 import {createPortal} from "react-dom";
+import {createId} from "../const/Util.tsx";
 
-function Agent(props: {
-  agentId: string;
+function Spy(props: {
+  spyId: string;
   color: string;
   playerName: string
 }) {
   const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
-    id: `${props.agentId}`,
+    id: `${props.spyId}`,
     data: {
-      location: "boardspace",
-      type: "agent"
+      type: "spy",
+      location: "boardspace"
     }
   });
   const draggedStyle = transform ? {
@@ -29,12 +28,11 @@ function Agent(props: {
     transition: !isDragging ? 'transform 300ms ease' : undefined,
   } : undefined;
 
-  const getAgentIcon = (color: string) => {
-    if (color === "RED") return agent_icon_red;
-    else if (color === "BLUE") return agent_icon_blue;
-    else if (color === "GOLD") return agent_icon_gold;
-    else if (color === "GREEN") return agent_icon_green;
-    else if (color === "GRAY") return agent_icon_disabled;
+  const getSpyIcon = (color: string) => {
+    if (color === "RED") return spy_icon_red;
+    else if (color === "BLUE") return spy_icon_blue;
+    else if (color === "GOLD") return spy_icon_gold;
+    else if (color === "GREEN") return spy_icon_green;
   }
 
   const node = (
@@ -44,16 +42,15 @@ function Agent(props: {
       {...listeners}
       {...attributes}
       width={25}
-      src={getAgentIcon(props.color)}
-      alt="Agent icon"
-      className={"locations-agent-icon"}/>
+      src={getSpyIcon(props.color)}
+      alt="Spy icon"
+      className={"locations-spy-icon"}/>
   )
 
   return isDragging ? createPortal(node, document.body): node
 }
 
-
-export function AgentLocation(props: {
+export function SpyLocation(props: {
   location: AgentLocationModel;
   agentsContainerStyle?: { top: Property.Top, left: Property.Left };
   style?: MantineStyleProp
@@ -64,10 +61,10 @@ export function AgentLocation(props: {
   bg?: string;
 }) {
   const {setNodeRef} = useDroppable({
-    id: `agent-droppable-${createId([props.location.name, props.location.id])}`,
+    id: `spy-droppable-${createId([props.location.name, props.location.id])}`,
     data: {
       location: "boardspace",
-      type: "agent"
+      type: "spy"
     }
   });
 
@@ -82,7 +79,7 @@ export function AgentLocation(props: {
       bg={props.bg}
       style={props.style}>
       <Group
-        className="locations-agent-icon-container"
+        className="locations-spy-icon-container"
         align="center"
         gap={0}
         style={{
@@ -91,12 +88,12 @@ export function AgentLocation(props: {
           left: props.agentsContainerStyle?.left,
         }}>
         {
-          props.location.agents.map((agent) =>
-           <Agent
-             agentId={agent.agentId}
-             color={agent.color}
-             playerName={agent.playerName}
-             key={agent.agentId}/>
+          props.location.spies.map((spy) =>
+            <Spy
+              spyId={spy.spyId}
+              color={spy.color}
+              playerName={spy.playerName}
+              key={spy.spyId}/>
           )
         }
       </Group>

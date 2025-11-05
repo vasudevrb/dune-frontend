@@ -8,6 +8,7 @@ export interface PlayerModel {
   numCards: NumCardsModel;
   resources: ResourcesModel
   agents: AgentModel[];
+  spies: SpyModel[];
   swordmasterUnlocked: boolean;
   firstPlayer: boolean;
   combat: CombatModel;
@@ -58,6 +59,11 @@ export interface NumCardsModel {
 }
 
 export interface AgentModel {
+  id: string;
+  atLocation?: number;
+}
+
+export interface SpyModel {
   id: string;
   atLocation?: number;
 }

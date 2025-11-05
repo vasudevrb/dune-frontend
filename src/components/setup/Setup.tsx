@@ -226,7 +226,17 @@ export function Setup(props: {
         name: pi.name,
         character: characterModel,
         color: pi.color,
-        isThisPlayer: playerName === pi.name
+        isThisPlayer: playerName === pi.name,
+        agents: [
+          {id: `agent-${characterModel.name}#1`},
+          {id: `agent-${characterModel.name}#2`},
+          {id: `agent-${characterModel.name}#3`}
+        ],
+        spies: [
+          {id: `spy-${characterModel.name}#1`},
+          {id: `spy-${characterModel.name}#2`},
+          {id: `spy-${characterModel.name}#3`}
+        ],
       }
     })
     props.gameStartHandler(playerModels)

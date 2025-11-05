@@ -17,7 +17,7 @@ import {DndContext, type DragEndEvent} from "@dnd-kit/core";
 import {restrictToWindowEdges} from '@dnd-kit/modifiers';
 import type {GameModel} from "../model/GameModel.tsx";
 import {produce} from "immer";
-import {placeAgent, recallAgent} from "../const/GameUtils.tsx";
+import {placeAgent, placeSpy, recallAgent, recallSpy} from "../const/GameUtils.tsx";
 
 function Content(props: {
   game: GameModel
@@ -128,21 +128,21 @@ function Game(props: {
     if (!overData || !activeData) return;
 
     console.log(`${active.id} dropped on ${over.id}`);
+    if (!(overData.type as string).includes(activeData.type)) return;
 
-
-    if (activeData.from === "player" && overData.type === "location") {
-      setGame(current =>
-        produce(current, draft => {
-          placeAgent(draft, active.id, draft.locations[0].id)
-        })
-      );
-    } else if (activeData.from === "location" && overData.type === "player") {
-      setGame(current =>
-        produce(current, draft => {
-          recallAgent(draft, active.id, draft.locations[0].id)
-        })
-      );
-    }
+    setGame(current =>
+      produce(current, draft => {
+        if (activeData.location === "player" && overData.location === "boardspace") {
+          (activeData.type === "agent")
+            ? placeAgent(draft, active.id, draft.locations[0].id)
+            : placeSpy(draft, active.id, draft.locations[0].id)
+        } else if (activeData.location === "boardspace" && overData.location === "player") {
+          (activeData.type === "agent")
+            ? recallAgent(draft, active.id, draft.locations[0].id)
+            : recallSpy(draft, active.id, draft.locations[0].id)
+        }
+      })
+    );
   }
 
   return (

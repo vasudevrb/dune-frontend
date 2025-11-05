@@ -8,8 +8,9 @@ import loc_deep_desert from '../assets/locations/deep_desert.png';
 import {type PlayerModel} from "../model/PlayerModel.tsx";
 import {AgentLocation} from "./AgentLocation.tsx";
 import type {GameModel} from "../model/GameModel.tsx";
+import {SpyLocation} from "./SpyLocation.tsx";
 
-export function GameBoard(props: {game: GameModel}) {
+export function GameBoard(props: { game: GameModel }) {
 
   const playerConflictStats = (player: PlayerModel, dirLR: boolean) => {
     const playerAvatar = () => {
@@ -93,8 +94,7 @@ export function GameBoard(props: {game: GameModel}) {
         style={{
           top: "30%",
           left: "35%"
-      }}
-      >
+        }}>
         <AgentLocation
           w={"85%"}
           h={"63%"}
@@ -108,7 +108,22 @@ export function GameBoard(props: {game: GameModel}) {
           agentsContainerStyle={{
             top: "22%",
             left: "18%",
-        }}/>
+          }}/>
+        <SpyLocation
+          w={"30%"}
+          h={"20%"}
+          location={props.game.locations[0]}
+          bg={"#ffffff90"}
+          style={{
+            position: "absolute",
+            top: "3%",
+            left: "58%",
+          }}
+          agentsContainerStyle={{
+            top: "-10%",
+            left: "20%",
+          }}/>
+
         <Image
           maw={"250px"}
           fit={"contain"}
@@ -153,7 +168,7 @@ export function GameBoard(props: {game: GameModel}) {
             fit={"contain"}
             src={combat_icon_tinted}
             style={{
-              opacity: "0.25"
+              opacity: "0.05"
             }}
             alt="Combat icon"/>
         </Box>
