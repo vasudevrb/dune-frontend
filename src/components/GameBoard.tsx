@@ -1,14 +1,15 @@
 import '../css/GameBoard.css'
-import {Avatar, Box, Divider, Flex, Group, Image, Stack, Text} from "@mantine/core";
+import {Avatar, Box, Divider, Flex, Group, Image, ScrollArea, Space, Stack, Text} from "@mantine/core";
 import combat_icon_tinted from '../assets/combat/combat_tinted.png';
 import troop_icon from '../assets/combat/troop.png';
 import strength_icon from '../assets/combat/strength.png';
 import worm_icon from '../assets/combat/worm.png';
 import loc_deep_desert from '../assets/locations/deep_desert.png';
-import {type PlayerModel} from "../model/PlayerModel.tsx";
+import {FactionType, type PlayerModel} from "../model/PlayerModel.tsx";
 import {AgentLocation} from "./AgentLocation.tsx";
 import type {GameModel} from "../model/GameModel.tsx";
 import {SpyLocation} from "./SpyLocation.tsx";
+import {Faction} from "./Faction.tsx";
 
 export function GameBoard(props: { game: GameModel }) {
 
@@ -83,14 +84,30 @@ export function GameBoard(props: { game: GameModel }) {
 
   return (
     <Box
-      mb={"5%"}
-      pos={"relative"}
-      className="gameBoard"
-      style={{flexGrow: 1}}>
+      pos={"absolute"}
+      w={"100%"}
+      h={"100%"}
+      className="gameBoard">
+
+      <ScrollArea
+        className={"scroll-area-faction-space"}
+        pos={"absolute"}
+        h={"100%"}
+        style={{flex: 1}}
+        offsetScrollbars={false}
+        type={"never"}
+        scrollbars="y">
+        <Stack gap="0" style={{minHeight: '100%'}}>
+          <Faction factionType={FactionType.Emperor}/>
+          <Faction factionType={FactionType.SpacingGuild}/>
+          <Faction factionType={FactionType.BeneGesserit}/>
+          <Faction factionType={FactionType.Fremen}/>
+        </Stack>
+        <Space h={"6%"}/>
+      </ScrollArea>
 
       <Box
         pos={"absolute"}
-        bg={"#ffffff32"}
         style={{
           top: "30%",
           left: "35%"
@@ -99,7 +116,6 @@ export function GameBoard(props: { game: GameModel }) {
           w={"85%"}
           h={"63%"}
           location={props.game.locations[0]}
-          bg={"#ffffff52"}
           style={{
             position: "absolute",
             top: "28%",
@@ -113,7 +129,6 @@ export function GameBoard(props: { game: GameModel }) {
           w={"30%"}
           h={"20%"}
           location={props.game.locations[0]}
-          bg={"#ffffff90"}
           style={{
             position: "absolute",
             top: "3%",
@@ -137,23 +152,22 @@ export function GameBoard(props: { game: GameModel }) {
         w={"55%"}
         style={{
           position: "absolute",
-          bottom: 15,
-          right: 15,
+          bottom: "8%",
+          right: "16%",
         }}>
         <Flex direction={"column"} justify={"flex-end"} w={"25%"} h={"100%"}>
           <Image
-            maw={"100%"}
-            mah={"100%"}
+            mah={"175px"}
             fit={"contain"}
-            radius={"md"}
+            radius={"10"}
             src={"https://api.dunecardshub.com/uploads/images/conflict_1lvl_uprising_02.png"}
             style={{
               objectPosition: "right center",
-              boxShadow: "0 0 30px 7px #94664dca",
+              filter: `drop-shadow(0 0 30px #94664dca)`
             }}
             alt="Combat icon"/>
         </Flex>
-        <Box className={"combat-container"} w={"75%"} h={"100%"} style={{flex: 1}} pos={"relative"}>
+        <Box className={"combat-container"} maw={"500px"} w={"75%"} h={"100%"} style={{flex: 1}} pos={"relative"}>
           <Divider h={"20%"} orientation={"vertical"} style={{opacity: "0.3", position: "absolute", left: "50%"}}/>
           <Divider h={"20%"} orientation={"vertical"} style={{opacity: "0.3", position: "absolute", bottom: 0, left: "50%"}}/>
           <Divider w={"20%"} orientation={"horizontal"} style={{opacity: "0.3", position: "absolute", bottom: "50%"}}/>

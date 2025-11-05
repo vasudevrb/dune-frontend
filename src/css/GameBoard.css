@@ -1,10 +1,3 @@
-.game-board {
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-}
-
 .combat-container {
   border: none;
   background: rgba(114, 59, 44, 0.3);
@@ -32,4 +25,8 @@
   margin-left: -20%;
   filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.5))
   drop-shadow(0px 0 0 #94664d)
+}
+
+.scroll-area-faction-space .mantine-Stack-root {
+  padding-bottom: 10px;
 }

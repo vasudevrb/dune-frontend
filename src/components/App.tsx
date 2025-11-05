@@ -1,7 +1,7 @@
 import '@mantine/core/styles.css'
 import '@mantine/carousel/styles.css';
 import '../css/App.css'
-import {Drawer, MantineProvider, type MantineThemeOverride, Stack} from '@mantine/core';
+import {Box, Drawer, Group, MantineProvider, type MantineThemeOverride, Stack} from '@mantine/core';
 import {useDisclosure} from "@mantine/hooks";
 import {ImperiumRow} from "./ImperiumRow.tsx";
 import {Players} from "./Players.tsx";
@@ -24,7 +24,7 @@ function Content(props: {
 }) {
   const [opened, {close}] = useDisclosure(false);
 
-  return <div className="game-screen">
+  return <Box w={"100%"} h={"100%"}>
     <Drawer className="drawer-1"
             withCloseButton={false}
             position="bottom"
@@ -40,13 +40,28 @@ function Content(props: {
       <ImperiumRow/>
     </Drawer>
 
-    <Stack className="board-area">
+    <Stack
+      pos={"absolute"}
+      style={{
+        left: "0",
+        top: "0"
+      }}
+      className="board-area"
+      h={"100%"}
+      w={"100%"}>
       <GameBoard game={props.game}/>
       <InHandCards/>
     </Stack>
 
-    <div className="players"><Players playerList={props.game.players}/></div>
-  </div>
+    <Box h={"100%"}
+         pos={"absolute"}
+         style={{
+           right: "0",
+           top: "0"
+         }}>
+      <Players playerList={props.game.players}/>
+    </Box>
+  </Box>
 }
 
 

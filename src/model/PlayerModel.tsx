@@ -37,6 +37,15 @@ export const ObjectiveType = {
 
 export type ObjectiveType = keyof typeof ObjectiveType;
 
+export const FactionType = {
+  Fremen: "Fremen",
+  BeneGesserit: "BeneGesserit",
+  SpacingGuild: "SpacingGuild",
+  Emperor: "Emperor",
+} as const;
+
+export type FactionType = keyof typeof FactionType;
+
 export interface CharacterModel {
   name: string;
   urls: string[];

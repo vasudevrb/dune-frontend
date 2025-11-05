@@ -1,10 +1,16 @@
 .in-hand-cards-row {
-  position: fixed;
-  max-width: 75%;
-  width: 75%;
+  position: absolute;
+  width: 100%;
   bottom: 0;
   left: 0;
   transform: translateY(75%);
+  background: linear-gradient(
+    to top,
+    rgba(255, 172, 51, 0.2) 0%,   /* bright near bottom */
+    rgba(255, 172, 51, 0.15) 20%,
+    rgba(255, 172, 51, 0.1) 40%,
+    rgba(255, 172, 51, 0) 70%     /* fully transparent higher up */
+  ) no-repeat;
 }
 
 .in-hand-card {
