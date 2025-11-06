@@ -24,7 +24,9 @@ function Content(props: {
 }) {
   const [opened, {close}] = useDisclosure(false);
 
-  return <Box w={"100%"} h={"100%"}>
+  return <Box
+    w={"100%"}
+    h={"100%"}>
     <Drawer className="drawer-1"
             withCloseButton={false}
             position="bottom"
@@ -41,16 +43,13 @@ function Content(props: {
     </Drawer>
 
     <Stack
-      pos={"absolute"}
-      style={{
-        left: "0",
-        top: "0"
-      }}
       className="board-area"
       h={"100%"}
-      w={"100%"}>
+      w={"100%"}
+      style={{ position: "relative", minHeight: 0 }}
+      gap={0}>
       <GameBoard game={props.game}/>
-      <InHandCards/>
+      <InHandCards />
     </Stack>
 
     <Box h={"100%"}

@@ -18,7 +18,6 @@ export function Players(props: { playerList: PlayerModel[] }) {
   return (
     <ScrollArea
       h={"100%"}
-      style={{flex: 1}}
       offsetScrollbars={false}
       type={"never"}
       scrollbars="y">

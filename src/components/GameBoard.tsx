@@ -84,16 +84,16 @@ export function GameBoard(props: { game: GameModel }) {
 
   return (
     <Box
-      pos={"absolute"}
       w={"100%"}
       h={"100%"}
+      mb={"50px"}
+      style={{ flexGrow: 1 }}
       className="gameBoard">
 
       <ScrollArea
         className={"scroll-area-faction-space"}
-        pos={"absolute"}
+        w={"335px"}
         h={"100%"}
-        style={{flex: 1}}
         offsetScrollbars={false}
         type={"never"}
         scrollbars="y">
@@ -103,48 +103,47 @@ export function GameBoard(props: { game: GameModel }) {
           <Faction factionType={FactionType.BeneGesserit}/>
           <Faction factionType={FactionType.Fremen}/>
         </Stack>
-        <Space h={"6%"}/>
       </ScrollArea>
 
-      <Box
-        pos={"absolute"}
-        style={{
-          top: "30%",
-          left: "35%"
-        }}>
-        <AgentLocation
-          w={"85%"}
-          h={"63%"}
-          location={props.game.locations[0]}
-          style={{
-            position: "absolute",
-            top: "28%",
-            left: "10%",
-          }}
-          agentsContainerStyle={{
-            top: "22%",
-            left: "18%",
-          }}/>
-        <SpyLocation
-          w={"30%"}
-          h={"20%"}
-          location={props.game.locations[0]}
-          style={{
-            position: "absolute",
-            top: "3%",
-            left: "58%",
-          }}
-          agentsContainerStyle={{
-            top: "-10%",
-            left: "20%",
-          }}/>
+      {/*<Box*/}
+      {/*  pos={"absolute"}*/}
+      {/*  style={{*/}
+      {/*    top: "30%",*/}
+      {/*    left: "35%"*/}
+      {/*  }}>*/}
+      {/*  <AgentLocation*/}
+      {/*    w={"85%"}*/}
+      {/*    h={"63%"}*/}
+      {/*    location={props.game.locations[0]}*/}
+      {/*    style={{*/}
+      {/*      position: "absolute",*/}
+      {/*      top: "28%",*/}
+      {/*      left: "10%",*/}
+      {/*    }}*/}
+      {/*    agentsContainerStyle={{*/}
+      {/*      top: "22%",*/}
+      {/*      left: "18%",*/}
+      {/*    }}/>*/}
+      {/*  <SpyLocation*/}
+      {/*    w={"30%"}*/}
+      {/*    h={"20%"}*/}
+      {/*    location={props.game.locations[0]}*/}
+      {/*    style={{*/}
+      {/*      position: "absolute",*/}
+      {/*      top: "3%",*/}
+      {/*      left: "58%",*/}
+      {/*    }}*/}
+      {/*    agentsContainerStyle={{*/}
+      {/*      top: "-10%",*/}
+      {/*      left: "20%",*/}
+      {/*    }}/>*/}
 
-        <Image
-          maw={"250px"}
-          fit={"contain"}
-          src={loc_deep_desert}
-          alt="Location"/>
-      </Box>
+      {/*  <Image*/}
+      {/*    maw={"250px"}*/}
+      {/*    fit={"contain"}*/}
+      {/*    src={loc_deep_desert}*/}
+      {/*    alt="Location"/>*/}
+      {/*</Box>*/}
 
       <Group
         h={"250px"}
