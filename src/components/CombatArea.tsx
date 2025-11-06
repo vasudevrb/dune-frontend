@@ -22,7 +22,10 @@ export function CombatArea(props: { game: GameModel }) {
           <img width={20} src={troop_icon} alt="Garrissoned troops"/>
         </Group>
 
-        <img width={40} src={maker_hook_icon} alt="Maker hook"/>
+        {
+          player.makerHookUnlocked &&
+          <img width={40} src={maker_hook_icon} alt="Maker hook"/>
+        }
       </Stack>
     }
     const combatStrength = () => {
@@ -122,6 +125,7 @@ export function CombatArea(props: { game: GameModel }) {
           p="40"
           fit={"contain"}
           src={combat_icon_tinted}
+          draggable={false}
           style={{opacity: "0.1"}}
           alt="Combat icon"/>
       </Box>

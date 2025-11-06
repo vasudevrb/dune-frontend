@@ -72,6 +72,7 @@ export const playerStartState: PlayerModel = {
     Emperor: 0
   },
   swordmasterUnlocked: false,
+  makerHookUnlocked: false,
   combat: {
     troopsInGarrison: 3,
     troopsInCombat: 0,
@@ -111,7 +112,8 @@ export const PLAYER_1: PlayerModel = {
     BeneGesserit: 0,
     SpacingGuild: 0,
     Emperor: 0
-  }
+  },
+  makerHookUnlocked: true,
 }
 
 export const MUAD_DIB: CharacterModel = {
@@ -167,7 +169,8 @@ export const PLAYER_3: PlayerModel = {
     {id: `control_flag-${GURNEY_HALLECK.name}#1`},
     {id: `control_flag-${GURNEY_HALLECK.name}#2`},
     {id: `control_flag-${GURNEY_HALLECK.name}#3`},
-  ]
+  ],
+  makerHookUnlocked: true,
 }
 
 export const EMPEROR_SHADDAM: CharacterModel = {

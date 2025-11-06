@@ -1,5 +1,6 @@
 import type {GameModel} from "../model/GameModel.tsx";
 import type {UniqueIdentifier} from "@dnd-kit/core";
+import {FactionType} from "../model/PlayerModel.tsx";
 
 export function getAgent(game: GameModel, agentId: string) {
  return game.players
@@ -100,4 +101,26 @@ export function recallSpy(game: GameModel, spyId: UniqueIdentifier, locationId: 
 
   player.spies.push({id: spyId.toString()})
   location.spies = location.spies.filter(spy => spy.spyId != spyId)
+}
+
+export function setFactionInfluence(game:GameModel, playerName: string, factionType: FactionType, influence: number) {
+  const player = assertExists(
+    game.players.find(p => p.name === playerName),
+    `Player with name: ${playerName} not found.`
+  )
+
+  switch (factionType) {
+    case FactionType.Fremen:
+      player.factionInfluences.Fremen = influence;
+      break;
+    case FactionType.BeneGesserit:
+      player.factionInfluences.BeneGesserit = influence;
+      break;
+    case FactionType.SpacingGuild:
+      player.factionInfluences.SpacingGuild = influence;
+      break;
+    case FactionType.Emperor:
+      player.factionInfluences.Emperor = influence;
+      break;
+  }
 }

@@ -17,7 +17,7 @@ import {DndContext, type DragEndEvent} from "@dnd-kit/core";
 import {restrictToWindowEdges} from '@dnd-kit/modifiers';
 import type {GameModel} from "../model/GameModel.tsx";
 import {produce} from "immer";
-import {placeAgent, placeSpy, recallAgent, recallSpy} from "../const/GameUtils.tsx";
+import {placeAgent, placeSpy, recallAgent, recallSpy, setFactionInfluence} from "../const/GameUtils.tsx";
 
 function Content(props: {
   game: GameModel
@@ -154,6 +154,10 @@ function Game(props: {
           (activeData.type === "agent")
             ? recallAgent(draft, active.id, draft.locations[0].id)
             : recallSpy(draft, active.id, draft.locations[0].id)
+        } else if (activeData.location === 'faction' && overData.location === 'faction') {
+          if (activeData.factionType === overData.factionType) {
+            setFactionInfluence(draft, activeData.playerName, overData.factionType, overData.influenceLevel)
+          }
         }
       })
     );

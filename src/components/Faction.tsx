@@ -10,7 +10,7 @@ import faction_marker_blue from '../assets/faction_marker/faction_marker_blue.sv
 import faction_marker_green from '../assets/faction_marker/faction_marker_green.svg';
 import faction_marker_gold from '../assets/faction_marker/faction_marker_gold.svg';
 import {range} from "../const/Util.tsx";
-import {useDraggable} from "@dnd-kit/core";
+import {useDraggable, useDroppable} from "@dnd-kit/core";
 import {CSS} from "@dnd-kit/utilities";
 import {createPortal} from "react-dom";
 
@@ -22,12 +22,12 @@ function FactionInfluenceMarker(props: {
   const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
     id: `marker-${props.factionType}-${props.player.name}-${props.influence}`,
     data: {
-      type: "faction_marker",
-      location: "boardspace"
+      type: "faction_space",
+      location: "faction",
+      factionType: props.factionType,
+      playerName: props.player.name
     }
   });
-
-  console.log(JSON.stringify(props.player));
 
   const draggedStyle = transform ? {
     transform: CSS.Translate.toString(transform),
@@ -93,6 +93,66 @@ function FactionInfluenceMarker(props: {
   return isDragging ? createPortal(node, document.body): node
 }
 
+export function FactionTrack(props: {
+  factionType: FactionType,
+  influenceLevel: number,
+  players: PlayerModel[],
+}) {
+  const bottomPositions: string[] = [
+    "1%",
+    "16%",
+    "31%",
+    "46%",
+    "61%",
+    "73%",
+    "85%",
+  ]
+
+  const factionTrackDroppable = useDroppable({
+    id: `faction-track-${props.factionType}-${props.influenceLevel}`,
+    data: {
+      location: `faction`,
+      type: "faction_space",
+      factionType: props.factionType,
+      influenceLevel: props.influenceLevel,
+    }
+  });
+
+  const getInfluenceMarker = (player: PlayerModel) => {
+    return (
+      <FactionInfluenceMarker
+        key={`${player.name}-${props.factionType}-${props.influenceLevel}`}
+        player={player}
+        factionType={props.factionType}
+        influence={props.influenceLevel}/>
+    )
+  }
+
+  return (
+    <Box
+      ref={factionTrackDroppable.setNodeRef}
+      w={"35%"}
+      h={"13%"}
+      style={{
+        position: "absolute",
+        bottom: `${bottomPositions[props.influenceLevel]}`,
+        left: "5%",
+      }}>
+      <Group
+        w={"100%"}
+        h={"100%"}
+        mt={"2%"}
+        ms={"8%"}
+        gap={"1%"}
+        align={"stretch"}>
+        {
+          props.players.map((player) => getInfluenceMarker(player))
+        }
+      </Group>
+    </Box>
+  )
+}
+
 
 export function Faction(props: {
   factionType: FactionType
@@ -111,53 +171,13 @@ export function Faction(props: {
     }
   }
 
-  const getFactionTrack = (influence: number, bottomPosition: string) => {
-    const getInfluenceMarker = (player: PlayerModel) => {
-      return (
-        <FactionInfluenceMarker
-          key={`${player.name}-${props.factionType}-${influence}`}
-          player={player}
-          factionType={props.factionType}
-          influence={influence}/>
-      )
-    }
-
-    return (
-      <Box
-        bg={"#ffffff32"}
-        w={"35%"}
-        h={"13%"}
-        style={{
-          position: "absolute",
-          bottom: `${bottomPosition}`,
-          left: "5%",
-        }}>
-        <Group
-          w={"100%"}
-          h={"100%"}
-          mt={"2%"}
-          ms={"8%"}
-          gap={"1%"}
-          align={"stretch"}>
-          {
-            props.players.map((player) => getInfluenceMarker(player))
-          }
-        </Group>
-      </Box>
-    )
-  }
-
   const getFactionTracks = () => {
-    const bottomPositions: string[] = [
-      "1%",
-      "16%",
-      "31%",
-      "46%",
-      "61%",
-      "73%",
-      "85%",
-    ]
-    return range(0, 6).map(influence => getFactionTrack(influence, bottomPositions[influence]));
+    return range(0, 6).map(influence =>
+    <FactionTrack
+      factionType={props.factionType}
+      influenceLevel={influence}
+      players={props.players}/>
+    );
   }
 
   return (

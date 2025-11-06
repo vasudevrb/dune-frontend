@@ -12,7 +12,7 @@ export interface PlayerModel {
   spies: SpyModel[];
   controlFlags: ControlFlagModel[];
   swordmasterUnlocked: boolean;
-  firstPlayer: boolean;
+  makerHookUnlocked: boolean;
   combat: CombatModel;
 }
 
