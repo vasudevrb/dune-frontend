@@ -14,9 +14,13 @@ import agent_icon_blue from '../assets/agents/agent_blue.svg';
 import agent_icon_green from '../assets/agents/agent_green.svg';
 import agent_icon_gold from '../assets/agents/agent_gold.svg';
 import spy_icon_red from '../assets/spies/spy_red.png';
-import spy_icon_green from '../assets/spies/spy_red.png';
-import spy_icon_blue from '../assets/spies/spy_red.png';
-import spy_icon_gold from '../assets/spies/spy_red.png';
+import spy_icon_green from '../assets/spies/spy_green.png';
+import spy_icon_blue from '../assets/spies/spy_blue.png';
+import spy_icon_gold from '../assets/spies/spy_gold.png';
+import control_flag_red from '../assets/control_flags/control_flag_red.png';
+import control_flag_blue from '../assets/control_flags/control_flag_blue.png';
+import control_flag_gold from '../assets/control_flags/control_flag_gold.png';
+import control_flag_green from '../assets/control_flags/control_flag_green.png';
 import vp_icon from '../assets/resources/victory_point.png';
 import objective_card_icon from '../assets/cards/objective_card.jpg'
 import hand_icon from '../assets/cards/imperium_card.jpg';
@@ -24,7 +28,7 @@ import desert_mouse from '../assets/objectives/desert_mouse.png';
 import crysknife from '../assets/objectives/crysknife.png';
 import ornithopter from '../assets/objectives/ornothopter.png';
 import objective_any from '../assets/objectives/any.png';
-import {type AgentModel, CombatModifierType, ObjectiveType, type PlayerModel, type SpyModel} from "../model/PlayerModel.tsx";
+import {type AgentModel, CombatModifierType, type ControlFlagModel, ObjectiveType, type PlayerModel, type SpyModel} from "../model/PlayerModel.tsx";
 import {type JSX, type MouseEventHandler, type ReactElement} from "react";
 import {range} from "../const/Util.tsx";
 import minus_icon from "../assets/minus.svg";
@@ -115,9 +119,9 @@ function Spy(props: {player: PlayerModel, spyModel: SpyModel, index: number}) {
     else if (color === "GREEN") return spy_icon_green;
   }
 
-  const agentIcon = getSpyIcon(props.player.color)
+  const spyIcon = getSpyIcon(props.player.color)
 
-  const draggableProps = (props.player.isThisPlayer && agentIcon != agent_icon_disabled)
+  const draggableProps = (props.player.isThisPlayer)
     ? {
       ref: setNodeRef,
       style: draggedStyle,
@@ -132,16 +136,63 @@ function Spy(props: {player: PlayerModel, spyModel: SpyModel, index: number}) {
     <img
       {...draggableProps}
       width={30}
-      src={agentIcon}
+      src={spyIcon}
       alt="Spy icon"
       className={"players-spy-icon"}/>
   )
   return isDragging ? createPortal(node, document.body): node
 }
 
+function ControlFlag(props: {player: PlayerModel, controlFlagModel: ControlFlagModel, index: number}) {
+  const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
+    id: props.controlFlagModel.id,
+    data: {
+      type: "control_flag",
+      location: "player"
+    }
+  });
+
+  const draggedStyle = transform ? {
+    transform: CSS.Translate.toString(transform),
+    zIndex: 10,
+  } : undefined;
+
+  const getControlFlagIcon = (color: string) => {
+    if (color === "RED") return control_flag_red;
+    else if (color === "BLUE") return control_flag_blue;
+    else if (color === "GOLD") return control_flag_gold;
+    else if (color === "GREEN") return control_flag_green;
+  }
+
+  const controlFlagIcon = getControlFlagIcon(props.player.color)
+
+  const draggableProps = (props.player.isThisPlayer)
+    ? {
+      ref: setNodeRef,
+      style: draggedStyle,
+      ...listeners,
+      ...attributes,
+    }
+    : {
+      draggable: false
+    };
+
+  const node = (
+    <img
+      {...draggableProps}
+      width={30}
+      src={controlFlagIcon}
+      alt="Control flag icon"
+      className={"players-control-flag-icon"}/>
+  )
+  return isDragging ? createPortal(node, document.body): node
+}
 
 
-export function Player(props: { playerModel: PlayerModel; }) {
+export function Player(props: {
+  playerModel: PlayerModel;
+  currentPlayer: string;
+}) {
   const [inHandCardsPopoverOpened, setInHandCardsPopoverState] = useDisclosure(false);
   const [objectivesPopoverOpened, setObjectivesPopoverState] = useDisclosure(false);
 
@@ -467,16 +518,33 @@ export function Player(props: { playerModel: PlayerModel; }) {
           }
         </Group>
         <Divider orientation="vertical" m={"0"} color={"#cacaca"}/>
-        <Group w={"48%"} h={"100%"}>
-
+        <Group w={"48%"} h={"100%"} className={"players-control-flag-icon-container"} justify="center">
+          {
+            props.playerModel.controlFlags.map((cf, index) =>
+              <ControlFlag player={props.playerModel} controlFlagModel={cf} index={index}/>
+            )
+          }
         </Group>
       </Group>
     )
   }
 
+  const getCurrentPlayerStyleClass = () => {
+    switch (props.playerModel.color) {
+      case "RED": return "player-container-current-player-red";
+      case "BLUE": return "player-container-current-player-blue";
+      case "GOLD": return "player-container-current-player-gold";
+      default: return "player-container-current-player-green";
+    }
+  }
+
+  const currentPlayerStyleClass = (props.playerModel.name === props.currentPlayer)
+  ? getCurrentPlayerStyleClass()
+    : null;
+
   const getOppositionPlayer = () => {
     return (
-      <Group className="player-container">
+      <Group className={`player-container ${currentPlayerStyleClass}`}>
         {getAvatar()}
         {getNameAndResources()}
         {getAgents()}
@@ -486,7 +554,7 @@ export function Player(props: { playerModel: PlayerModel; }) {
 
   const getThisPlayer = () => {
     return (
-      <Stack className="current-player-container" gap={"5"} ref={playerDroppable.setNodeRef}>
+      <Stack className={`current-player-container ${currentPlayerStyleClass}`} gap={"5"} ref={playerDroppable.setNodeRef}>
         <Group align={"flex-start"}>
           {getAvatar()}
           {getNameAndResources()}

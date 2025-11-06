@@ -237,6 +237,11 @@ export function Setup(props: {
           {id: `spy-${characterModel.name}#2`},
           {id: `spy-${characterModel.name}#3`}
         ],
+        controlFlags: [
+          {id: `control_flag-${characterModel.name}#1`},
+          {id: `control_flag-${characterModel.name}#2`},
+          {id: `control_flag-${characterModel.name}#3`}
+        ],
       }
     })
     props.gameStartHandler(playerModels)

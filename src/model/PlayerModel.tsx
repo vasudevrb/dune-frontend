@@ -9,6 +9,7 @@ export interface PlayerModel {
   resources: ResourcesModel
   agents: AgentModel[];
   spies: SpyModel[];
+  controlFlags: ControlFlagModel[];
   swordmasterUnlocked: boolean;
   firstPlayer: boolean;
   combat: CombatModel;
@@ -73,6 +74,10 @@ export interface AgentModel {
 }
 
 export interface SpyModel {
+  id: string;
+  atLocation?: number;
+}
+export interface ControlFlagModel {
   id: string;
   atLocation?: number;
 }

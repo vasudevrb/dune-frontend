@@ -4,5 +4,6 @@ import type {AgentLocationModel} from "./AgentLocationModel.tsx";
 export interface GameModel {
   gameId: string;
   players: PlayerModel[];
-  locations: AgentLocationModel[]
+  locations: AgentLocationModel[];
+  currentPlayer: string;
 }

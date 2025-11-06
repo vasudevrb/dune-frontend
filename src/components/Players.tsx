@@ -2,16 +2,17 @@ import '../css/Players.css'
 import {ScrollArea, Stack} from "@mantine/core";
 import {Player} from "./Player.tsx";
 import type {PlayerModel} from "../model/PlayerModel.tsx";
+import type {GameModel} from "../model/GameModel.tsx";
 
-export function Players(props: { playerList: PlayerModel[] }) {
+export function Players(props: { game: GameModel }) {
   const filterPlayers = (predicate: (player: PlayerModel) => boolean) => {
-    return props.playerList.filter(predicate)
+    return props.game.players.filter(predicate)
   }
 
   const getPlayerElements = (predicate: (player: PlayerModel) => boolean) => {
     return filterPlayers(predicate)
       .map(player => (
-        <Player key={player.name} playerModel={player}/>
+        <Player key={player.name} playerModel={player} currentPlayer={props.game.currentPlayer}/>
       ))
   }
 

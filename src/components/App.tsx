@@ -58,7 +58,7 @@ function Content(props: {
            right: "0",
            top: "0"
          }}>
-      <Players playerList={props.game.players}/>
+      <Players game={props.game}/>
     </Box>
   </Box>
 }

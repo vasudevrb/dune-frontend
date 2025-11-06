@@ -9,6 +9,7 @@ export const range = (start: number, end: number): number[] =>
 export const gameStartState: GameModel = {
   gameId: "",
   players: [],
+  currentPlayer: "P2",
   locations: [
     {
       name: "Deep Desert",
@@ -49,14 +50,19 @@ export const playerStartState: PlayerModel = {
     solari: 0
   },
   agents: [
-    {id: `${characterStartState.name}#1`},
-    {id: `${characterStartState.name}#2`},
-    {id: `${characterStartState.name}#3`}
+    {id: `agent-${characterStartState.name}#1`},
+    {id: `agent-${characterStartState.name}#2`},
+    {id: `agent-${characterStartState.name}#3`}
   ],
   spies: [
-    {id: `${characterStartState.name}#1`},
-    {id: `${characterStartState.name}#2`},
-    {id: `${characterStartState.name}#3`}
+    {id: `spy-${characterStartState.name}#1`},
+    {id: `spy-${characterStartState.name}#2`},
+    {id: `spy-${characterStartState.name}#3`}
+  ],
+  controlFlags: [
+    {id: `control_flag-${characterStartState.name}#1`},
+    {id: `control_flag-${characterStartState.name}#2`},
+    {id: `control_flag-${characterStartState.name}#3`}
   ],
   swordmasterUnlocked: false,
   combat: {
@@ -76,7 +82,7 @@ export const PLAYER_1: PlayerModel = {
   ...playerStartState,
   name: "P1",
   character: PRINCESS_IRULAN,
-  isThisPlayer: true,
+  isThisPlayer: false,
   color: "RED",
   agents: [
     {id: `agent-${PRINCESS_IRULAN.name}#1`},
@@ -87,6 +93,11 @@ export const PLAYER_1: PlayerModel = {
     {id: `spy-${PRINCESS_IRULAN.name}#1`},
     {id: `spy-${PRINCESS_IRULAN.name}#2`},
     {id: `spy-${PRINCESS_IRULAN.name}#3`},
+  ],
+  controlFlags: [
+    {id: `control_flag-${PRINCESS_IRULAN.name}#1`},
+    {id: `control_flag-${PRINCESS_IRULAN.name}#2`},
+    {id: `control_flag-${PRINCESS_IRULAN.name}#3`},
   ]
 }
 
@@ -110,6 +121,11 @@ export const PLAYER_2: PlayerModel = {
     {id: `spy-${MUAD_DIB.name}#1`},
     {id: `spy-${MUAD_DIB.name}#2`},
     {id: `spy-${MUAD_DIB.name}#3`},
+  ],
+  controlFlags: [
+    {id: `control_flag-${MUAD_DIB.name}#1`},
+    {id: `control_flag-${MUAD_DIB.name}#2`},
+    {id: `control_flag-${MUAD_DIB.name}#3`},
   ]
 }
 
@@ -121,7 +137,7 @@ export const GURNEY_HALLECK: CharacterModel = {
 export const PLAYER_3: PlayerModel = {
   ...playerStartState,
   name: "P3",
-  isThisPlayer: false,
+  isThisPlayer: true,
   character: GURNEY_HALLECK,
   color: "GOLD",
   agents: [
@@ -133,6 +149,11 @@ export const PLAYER_3: PlayerModel = {
     {id: `spy-${GURNEY_HALLECK.name}#1`},
     {id: `spy-${GURNEY_HALLECK.name}#2`},
     {id: `spy-${GURNEY_HALLECK.name}#3`},
+  ],
+  controlFlags: [
+    {id: `control_flag-${GURNEY_HALLECK.name}#1`},
+    {id: `control_flag-${GURNEY_HALLECK.name}#2`},
+    {id: `control_flag-${GURNEY_HALLECK.name}#3`},
   ]
 }
 
@@ -156,6 +177,11 @@ export const PLAYER_4: PlayerModel = {
     {id: `spy-${EMPEROR_SHADDAM.name}#1`},
     {id: `spy-${EMPEROR_SHADDAM.name}#2`},
     {id: `spy-${EMPEROR_SHADDAM.name}#3`},
+  ],
+  controlFlags: [
+    {id: `control_flag-${EMPEROR_SHADDAM.name}#1`},
+    {id: `control_flag-${EMPEROR_SHADDAM.name}#2`},
+    {id: `control_flag-${EMPEROR_SHADDAM.name}#3`},
   ]
 }
 
