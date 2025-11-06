@@ -10,6 +10,7 @@ import type {GameModel} from "../model/GameModel.tsx";
 import {SpyLocation} from "./SpyLocation.tsx";
 import {Faction} from "./Faction.tsx";
 import {CombatArea} from "./CombatArea.tsx";
+import {Player} from "./Player.tsx";
 
 export function GameBoard(props: { game: GameModel }) {
 

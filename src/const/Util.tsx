@@ -69,7 +69,7 @@ export const playerStartState: PlayerModel = {
     Fremen: 0,
     BeneGesserit: 0,
     SpacingGuild: 0,
-    Emperor: 2
+    Emperor: 0
   },
   swordmasterUnlocked: false,
   combat: {
@@ -107,10 +107,10 @@ export const PLAYER_1: PlayerModel = {
     {id: `control_flag-${PRINCESS_IRULAN.name}#3`},
   ],
   factionInfluences: {
-    Fremen: 1,
-    BeneGesserit: 2,
-    SpacingGuild: 2,
-    Emperor: 1
+    Fremen: 0,
+    BeneGesserit: 0,
+    SpacingGuild: 0,
+    Emperor: 0
   }
 }
 
@@ -150,7 +150,7 @@ export const GURNEY_HALLECK: CharacterModel = {
 export const PLAYER_3: PlayerModel = {
   ...playerStartState,
   name: "P3",
-  isThisPlayer: true,
+  isThisPlayer: false,
   character: GURNEY_HALLECK,
   color: "GOLD",
   agents: [
@@ -178,7 +178,7 @@ export const EMPEROR_SHADDAM: CharacterModel = {
 export const PLAYER_4: PlayerModel = {
   ...playerStartState,
   name: "P4",
-  isThisPlayer: false,
+  isThisPlayer: true,
   character: EMPEROR_SHADDAM,
   color: "GREEN",
   agents: [
