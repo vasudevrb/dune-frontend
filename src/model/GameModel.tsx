@@ -6,4 +6,5 @@ export interface GameModel {
   players: PlayerModel[];
   locations: AgentLocationModel[];
   currentPlayer: string;
+  firstPlayer: string;
 }

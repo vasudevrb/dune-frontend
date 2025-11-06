@@ -192,6 +192,7 @@ function ControlFlag(props: {player: PlayerModel, controlFlagModel: ControlFlagM
 export function Player(props: {
   playerModel: PlayerModel;
   currentPlayer: string;
+  firstPlayer: string;
 }) {
   const [inHandCardsPopoverOpened, setInHandCardsPopoverState] = useDisclosure(false);
   const [objectivesPopoverOpened, setObjectivesPopoverState] = useDisclosure(false);
@@ -376,10 +377,10 @@ export function Player(props: {
             {props.playerModel.character.name}
           </Text>
           <Tooltip label="First player">
-            <img width={20}
+            <img width={25}
                  src={first_player_icon}
                  alt="First player token"
-                 hidden={!props.playerModel.firstPlayer}/>
+                 hidden={props.firstPlayer != props.playerModel.name}/>
           </Tooltip>
         </Group>
 

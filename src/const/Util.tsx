@@ -9,6 +9,7 @@ export const range = (start: number, end: number): number[] =>
 export const gameStartState: GameModel = {
   gameId: "",
   players: [],
+  firstPlayer: "P1",
   currentPlayer: "P2",
   locations: [
     {

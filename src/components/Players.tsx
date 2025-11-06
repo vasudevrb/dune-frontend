@@ -12,7 +12,12 @@ export function Players(props: { game: GameModel }) {
   const getPlayerElements = (predicate: (player: PlayerModel) => boolean) => {
     return filterPlayers(predicate)
       .map(player => (
-        <Player key={player.name} playerModel={player} currentPlayer={props.game.currentPlayer}/>
+        <Player
+          key={player.name}
+          playerModel={player}
+          currentPlayer={props.game.currentPlayer}
+          firstPlayer={props.game.firstPlayer}
+        />
       ))
   }
 
