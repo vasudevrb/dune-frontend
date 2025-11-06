@@ -1,6 +1,6 @@
 import '../css/Player.css'
 import {CSS} from '@dnd-kit/utilities';
-import {ActionIcon, Avatar, Box, Divider, Group, Popover, Space, Stack, Text, Tooltip} from "@mantine/core";
+import {ActionIcon, Avatar, Box, Divider, Group, Image, Popover, Space, Stack, Text, Tooltip} from "@mantine/core";
 import water_icon from '../assets/resources/water.png';
 import spice_icon from '../assets/resources/spice.png';
 import solari_icon from '../assets/resources/solari.png';
@@ -23,7 +23,9 @@ import control_flag_gold from '../assets/control_flags/control_flag_gold.png';
 import control_flag_green from '../assets/control_flags/control_flag_green.png';
 import vp_icon from '../assets/resources/victory_point.png';
 import objective_card_icon from '../assets/cards/objective_card.jpg'
-import hand_icon from '../assets/cards/imperium_card.jpg';
+import imperium_card from '../assets/cards/imperium_card.jpg';
+import intrigue_card from '../assets/cards/intrigue_card.jpg';
+import draw_card from '../assets/cards/draw_card.png';
 import desert_mouse from '../assets/objectives/desert_mouse.png';
 import crysknife from '../assets/objectives/crysknife.png';
 import ornithopter from '../assets/objectives/ornothopter.png';
@@ -350,7 +352,7 @@ export function Player(props: {
       <Group align="center" gap={"xs"}>
         {
           getIconPopover(
-            hand_icon,
+            imperium_card,
             getCardStats(),
             inHandCardsPopoverOpened,
             setInHandCardsPopoverState
@@ -490,20 +492,17 @@ export function Player(props: {
           w={35}
           h={54}
           className={"player-resource-modifier-button"}
-          variant={"outline"}
+          variant={"none"}
           radius={"0"}>
-          <img src={icon} alt="Action button"/>
+          <Image src={icon} alt="Action button"/>
         </ActionIcon>
       )
     }
     return (
-      <Group w={"100%"} justify="stretch" gap={"xs"}>
-        {getActionButton(hand_icon)}
-        {getActionButton(hand_icon)}
-        {getActionButton(hand_icon)}
-        {getActionButton(hand_icon)}
-        {getActionButton(hand_icon)}
-        {getActionButton(hand_icon)}
+      <Group w={"100%"} gap={"xs"}>
+        {getActionButton(draw_card)}
+        {getActionButton(imperium_card)}
+        {getActionButton(intrigue_card)}
       </Group>
     )
   }
