@@ -65,6 +65,12 @@ export const playerStartState: PlayerModel = {
     {id: `control_flag-${characterStartState.name}#2`},
     {id: `control_flag-${characterStartState.name}#3`}
   ],
+  factionInfluences: {
+    Fremen: 0,
+    BeneGesserit: 0,
+    SpacingGuild: 0,
+    Emperor: 2
+  },
   swordmasterUnlocked: false,
   combat: {
     troopsInGarrison: 3,
@@ -99,7 +105,13 @@ export const PLAYER_1: PlayerModel = {
     {id: `control_flag-${PRINCESS_IRULAN.name}#1`},
     {id: `control_flag-${PRINCESS_IRULAN.name}#2`},
     {id: `control_flag-${PRINCESS_IRULAN.name}#3`},
-  ]
+  ],
+  factionInfluences: {
+    Fremen: 1,
+    BeneGesserit: 2,
+    SpacingGuild: 2,
+    Emperor: 1
+  }
 }
 
 export const MUAD_DIB: CharacterModel = {

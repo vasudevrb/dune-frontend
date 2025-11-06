@@ -29,10 +29,10 @@ export function GameBoard(props: { game: GameModel }) {
         type={"never"}
         scrollbars="y">
         <Stack gap="0" style={{minHeight: '100%'}}>
-          <Faction factionType={FactionType.Emperor}/>
-          <Faction factionType={FactionType.SpacingGuild}/>
-          <Faction factionType={FactionType.BeneGesserit}/>
-          <Faction factionType={FactionType.Fremen}/>
+          <Faction factionType={FactionType.Emperor} players={props.game.players} />
+          <Faction factionType={FactionType.SpacingGuild} players={props.game.players}/>
+          <Faction factionType={FactionType.BeneGesserit} players={props.game.players}/>
+          <Faction factionType={FactionType.Fremen} players={props.game.players}/>
         </Stack>
       </ScrollArea>
 

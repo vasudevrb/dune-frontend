@@ -6,7 +6,8 @@ export interface PlayerModel {
   victoryPoints: number;
   objectives: ObjectiveType[];
   numCards: NumCardsModel;
-  resources: ResourcesModel
+  resources: ResourcesModel;
+  factionInfluences: FactionInfluencesModel;
   agents: AgentModel[];
   spies: SpyModel[];
   controlFlags: ControlFlagModel[];
@@ -19,6 +20,13 @@ interface ResourcesModel {
   water: number,
   spice: number,
   solari: number
+}
+
+interface FactionInfluencesModel {
+  Fremen: number,
+  BeneGesserit: number,
+  SpacingGuild: number,
+  Emperor: number
 }
 
 export const CombatModifierType = {
