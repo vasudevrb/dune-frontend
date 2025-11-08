@@ -1,6 +1,6 @@
 import type {GameModel} from "../model/GameModel.tsx";
 import type {UniqueIdentifier} from "@dnd-kit/core";
-import {FactionType} from "../model/PlayerModel.tsx";
+import {FactionType, type PlayerModel} from "../model/PlayerModel.tsx";
 
 export function getAgent(game: GameModel, agentId: string) {
  return game.players
@@ -36,6 +36,11 @@ export function placeAgent(game: GameModel, agentId: UniqueIdentifier, locationI
     playerName: player.name
   });
   agent.atLocation = locationId;
+}
+
+export function moveThisPlayerToLast(players: PlayerModel[]) {
+  const thisPlayerIndex = players.findIndex(player => player.isThisPlayer);
+  return [...players.slice(thisPlayerIndex + 1), ...players.slice(0, thisPlayerIndex + 1)];
 }
 
 export function recallAgent(game: GameModel, agentId: UniqueIdentifier, locationId: number) {

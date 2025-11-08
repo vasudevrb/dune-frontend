@@ -1,16 +1,12 @@
 import '../css/GameBoard.css'
-import {Avatar, Box, Divider, Flex, Group, Image, ScrollArea, Space, Stack, Text} from "@mantine/core";
-import troop_icon from '../assets/combat/troop.png';
-import strength_icon from '../assets/combat/strength.png';
-import worm_icon from '../assets/combat/worm.png';
+import {Box, Image, ScrollArea, Stack} from "@mantine/core";
 import loc_deep_desert from '../assets/locations/deep_desert.png';
-import {FactionType, type PlayerModel} from "../model/PlayerModel.tsx";
+import {FactionType} from "../model/PlayerModel.tsx";
 import {AgentLocation} from "./AgentLocation.tsx";
 import type {GameModel} from "../model/GameModel.tsx";
 import {SpyLocation} from "./SpyLocation.tsx";
 import {Faction} from "./Faction.tsx";
 import {CombatArea} from "./CombatArea.tsx";
-import {Player} from "./Player.tsx";
 
 export function GameBoard(props: { game: GameModel }) {
 

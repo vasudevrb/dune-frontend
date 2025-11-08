@@ -174,6 +174,7 @@ export function Faction(props: {
   const getFactionTracks = () => {
     return range(0, 6).map(influence =>
     <FactionTrack
+      key={`${props.factionType}-${influence}`}
       factionType={props.factionType}
       influenceLevel={influence}
       players={props.players}/>

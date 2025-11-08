@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import arrow_right_icon from "../../assets/arrow_right.svg";
 import {Carousel} from "@mantine/carousel";
 import type {PlayerModel} from "../../model/PlayerModel.tsx";
-import {ADD_TO_GAME, GET_CHARACTER_READY_STATES, START_GAME} from "../../const/Actions.tsx";
+import {ADD_TO_GAME, GET_CHARACTER_READY_STATES, RESUME_GAME, START_GAME} from "../../const/Actions.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
 import {playerStartState} from "../../const/Util.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
@@ -95,20 +95,26 @@ export function Setup(props: {
         getCharacters(newId)
       }
     } else {
-      const joinResponse = await joinGame(gameId)
-      if (joinResponse == 200) {
+      globalProps.setPlayerName(playerName)
+      const alreadyPresentInGame = await joinGame(gameId)
+      if (!alreadyPresentInGame) {
         console.log(`Joined game with id ${gameId}`)
-        globalProps.setPlayerName(playerName)
         nextStep()
         await getCharacters(gameId)
+      } else {
+        sendMessage({action: RESUME_GAME})
       }
     }
   }
 
   const setAndUpdateGameId = (gameId: string) => {
-    console.log("Setting game id")
     setGameId(gameId);
     globalProps.setGameId(gameId);
+  }
+
+  const setAndUpdatePlayerName = (playerName: string) => {
+    setPlayerName(playerName);
+    globalProps.setPlayerName(playerName);
   }
 
   const getGameId = async () => {
@@ -131,7 +137,7 @@ export function Setup(props: {
       const response = await fetch(`http://localhost:8080/join-game?playerName=${playerName}&gameId=${id}`)
         .then(res => res.json())
       if (id === response.gameId) {
-        return 200
+        return response.alreadyPresentInGame;
       }
     } catch (err) {
       if (err instanceof Error) {
@@ -329,7 +335,7 @@ export function Setup(props: {
               label="Player name"
               radius={"xs"}
               value={playerName}
-              onChange={(event) => setPlayerName(event.currentTarget.value)}
+              onChange={(event) => setAndUpdatePlayerName(event.currentTarget.value)}
               error={nameError}
               styles={(theme) => ({
                 input: {

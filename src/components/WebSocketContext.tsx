@@ -80,7 +80,7 @@ export const WebSocketProvider: React.FC<Props> = ({ gameId, playerName, childre
       return;
     }
 
-    console.log("Game ID is now available. Creating WS connection");
+    console.log("WSContext: Dependencies now available. Creating WS connection");
 
     /* WS initialization and cleanup */
     const ws = new SockJS(`http://localhost:8080/game`)
@@ -94,10 +94,11 @@ export const WebSocketProvider: React.FC<Props> = ({ gameId, playerName, childre
       onConnect: () => {
         console.log(`Connected as ${playerName}`);
         client.subscribe(`/topic/game/${gameId}`, (msg) => {
-          console.log("Message received", msg);
           dispatchMessageToComponents(msg.body)
         });
-        client.subscribe(`/user/game/${gameId}`, (msg) => dispatchMessageToComponents(msg.body));
+        client.subscribe(`/user/queue/game/${gameId}`, (msg) => {
+          dispatchMessageToComponents(msg.body)
+        });
       },
     })
 

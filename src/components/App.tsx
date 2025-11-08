@@ -11,13 +11,13 @@ import type {PlayerModel} from "../model/PlayerModel.tsx";
 import {PLACE_AGENT, START_GAME, UPDATE_LOCATION, UPDATE_PLAYER} from "../const/Actions.tsx";
 import {InHandCards} from "./InHandCards.tsx";
 import {useWebSocket, WebSocketProvider} from "./WebSocketContext.tsx";
-import {gameStartState, PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4} from "../const/Util.tsx";
+import {gameStartState} from "../const/Util.tsx";
 import {GameBoard} from "./GameBoard.tsx";
 import {DndContext, type DragEndEvent} from "@dnd-kit/core";
 import {restrictToWindowEdges} from '@dnd-kit/modifiers';
 import type {GameModel} from "../model/GameModel.tsx";
 import {produce} from "immer";
-import {placeAgent, placeSpy, recallAgent, recallSpy, setFactionInfluence} from "../const/GameUtils.tsx";
+import {moveThisPlayerToLast, placeAgent, placeSpy, recallAgent, recallSpy, setFactionInfluence} from "../const/GameUtils.tsx";
 import type {AgentLocationModel} from "../model/AgentLocationModel.tsx";
 import {useGameStore} from "../store/GameStore.tsx";
 
@@ -67,11 +67,12 @@ function Content(props: {
 
 
 function Game() {
+  const { playerName } = useGameStore();
   const {subscribe, unsubscribe, sendMessage} = useWebSocket();
 
   const [gameStarted, setGameStarted] = useState(false);
   const [game, setGame] = useState<GameModel>({
-    ...gameStartState,
+    ...gameStartState
   });
 
   const gameStartHandler = (players: PlayerModel[]) => {
@@ -80,11 +81,20 @@ function Game() {
     sendMessage({action: START_GAME})
   }
 
+  const updateGame = (game: GameModel) => {
+    setGame(() =>
+    produce(game, draft => {
+      draft.players.findIndex(player => {
+        player.isThisPlayer = player.name === playerName;
+      });
+      draft.players = moveThisPlayerToLast(draft.players);
+    }));
+  }
+
   const updatePlayer = (player: PlayerModel) => {
     setGame(current =>
       produce(current, draft => {
         const pl = draft.players.findIndex(p => p.name == player.name)
-        console.log(`Finding player with name ${player.name}. Found at index ${pl}. All names are ${draft.players.map(p => p.name).join(', ')}`)
         const isThisPlayer = draft.players[pl].isThisPlayer;
         draft.players[pl] = {...player, isThisPlayer: isThisPlayer};
       })
@@ -110,6 +120,7 @@ function Game() {
         console.log(`Message received: ${action}: ${body}`);
         if (action === START_GAME) {
           setGameStarted(true);
+          updateGame(body);
         } else if (action === UPDATE_PLAYER) {
           updatePlayer(body)
         } else if (action === UPDATE_LOCATION) {

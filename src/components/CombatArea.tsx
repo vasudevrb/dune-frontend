@@ -50,7 +50,7 @@ export function CombatArea(props: { game: GameModel }) {
       </Stack>
     }
     return (
-      <Group w={"50%"} h={"100%"}>
+      <Group w={"50%"} h={"100%"} key={`combat-area-${player.name}-${dirLR ? "left": "right"}`}>
         {dirLR ? playerAvatar() : combatStrength()}
         {dirLR ? combatStrength() : playerAvatar()}
       </Group>
