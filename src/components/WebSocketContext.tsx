@@ -1,5 +1,7 @@
 import {useEffect, createContext, useRef, useContext, useCallback, useState} from "react";
 import * as React from "react";
+import { Client } from "@stomp/stompjs";
+import SockJS from "sockjs-client";
 
 interface WebSocketContextType {
   subscribe: (actions: string[], component: string, callback: MessageCallback) => void;
@@ -13,15 +15,16 @@ interface MessageCallback {
 
 type Props = {
   gameId: string;
+  playerName: string;
   children: React.ReactNode;
 };
 
 // @ts-ignore
 const WebSocketContext = createContext<WebSocketContextType>({})
 
-export const WebSocketProvider: React.FC<Props> = ({ gameId, children }) => {
+export const WebSocketProvider: React.FC<Props> = ({ gameId, playerName, children }) => {
   // @ts-ignore
-  const [socket, setSocket] = useState<WebSocket>(null)
+  const [wsClient, setWsClient] = useState<Client>(null)
   const callbackMap = useRef<Map<string, MessageCallback>>(new Map())
 
   const getCallbackKey = (action: string, component: string) => {
@@ -44,13 +47,27 @@ export const WebSocketProvider: React.FC<Props> = ({ gameId, children }) => {
   }
 
   const sendMessage = useCallback((message: any) => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
+    if (wsClient) {
       console.log("Sending WS message", message)
-      socket.send(JSON.stringify(message));
+      wsClient.publish({
+        destination: `/app/game/${gameId}`,
+        body: JSON.stringify(message),
+      });
     } else {
       console.warn("WebSocket is not open");
     }
-  }, [socket])
+  }, [wsClient])
+
+  const dispatchMessageToComponents = (message: string) => {
+    const { action, body } = JSON.parse(message)
+
+    Array.from(callbackMap.current.keys())
+      .filter(key => key.startsWith(action))
+      .forEach(key => {
+        const callback = callbackMap.current.get(key)
+        callback?.onMessage(action, body)
+      })
+  }
 
   useEffect(() => {
     if (!gameId || gameId.trim() === "") {
@@ -58,27 +75,37 @@ export const WebSocketProvider: React.FC<Props> = ({ gameId, children }) => {
       return;
     }
 
+    if (!playerName || playerName.trim() === "") {
+      console.log("Player Name is unavailable. Not creating WS connection");
+      return;
+    }
+
     console.log("Game ID is now available. Creating WS connection");
 
     /* WS initialization and cleanup */
-    const ws = new WebSocket(`ws://localhost:8080/game/${gameId}`)
-    ws.onopen = () => { console.log('WS open') }
-    ws.onclose = () => { console.log('WS close') }
-    ws.onmessage = (message) => {
-      const { action, body } = JSON.parse(message.data)
+    const ws = new SockJS(`http://localhost:8080/game`)
+    const client = new Client({
+      webSocketFactory: () => ws,
+      reconnectDelay: 5000,
+      debug: (str) => console.log(str),
+      connectHeaders: {
+        "player-name": playerName
+      },
+      onConnect: () => {
+        console.log(`Connected as ${playerName}`);
+        client.subscribe(`/topic/game/${gameId}`, (msg) => {
+          console.log("Message received", msg);
+          dispatchMessageToComponents(msg.body)
+        });
+        client.subscribe(`/user/game/${gameId}`, (msg) => dispatchMessageToComponents(msg.body));
+      },
+    })
 
-      Array.from(callbackMap.current.keys())
-        .filter(key => key.startsWith(action))
-        .forEach(key => {
-          const callback = callbackMap.current.get(key)
-          callback?.onMessage(action, body)
-        })
-    }
+    client.activate();
+    setWsClient(client)
 
-    setSocket(ws)
-
-    return () => { ws.close() }
-  }, [gameId]);
+    return () => { ws.close }
+  }, [gameId, playerName]);
 
   const value = { subscribe, unsubscribe, sendMessage };
   return (

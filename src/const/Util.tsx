@@ -32,7 +32,6 @@ export const playerStartState: PlayerModel = {
   character: characterStartState,
   color: "",
   isThisPlayer: false,
-  firstPlayer: false,
   victoryPoints: 0,
   objectives: [
     ObjectiveType.DesertMouse,
@@ -51,19 +50,19 @@ export const playerStartState: PlayerModel = {
     solari: 0
   },
   agents: [
-    {id: `agent-${characterStartState.name}#1`},
-    {id: `agent-${characterStartState.name}#2`},
-    {id: `agent-${characterStartState.name}#3`}
+    {id: `agent-#1`},
+    {id: `agent-#2`},
+    {id: `agent-#3`}
   ],
   spies: [
-    {id: `spy-${characterStartState.name}#1`},
-    {id: `spy-${characterStartState.name}#2`},
-    {id: `spy-${characterStartState.name}#3`}
+    {id: `spy-#1`},
+    {id: `spy-#2`},
+    {id: `spy-#3`}
   ],
   controlFlags: [
-    {id: `control_flag-${characterStartState.name}#1`},
-    {id: `control_flag-${characterStartState.name}#2`},
-    {id: `control_flag-${characterStartState.name}#3`}
+    {id: `control_flag-#1`},
+    {id: `control_flag-#2`},
+    {id: `control_flag-#3`}
   ],
   factionInfluences: {
     Fremen: 0,

@@ -7,6 +7,7 @@ import type {PlayerModel} from "../../model/PlayerModel.tsx";
 import {ADD_TO_GAME, GET_CHARACTER_READY_STATES, START_GAME} from "../../const/Actions.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
 import {playerStartState} from "../../const/Util.tsx";
+import {useGameStore} from "../../store/GameStore.tsx";
 
 export interface Character {
   characterName: string;
@@ -25,9 +26,10 @@ export interface PlayerInfo {
 }
 
 export function Setup(props: {
-  useSetGameId: (gameId: string) => void;
   gameStartHandler: (players: PlayerModel[]) => void
 }) {
+
+  const globalProps = useGameStore();
   const { subscribe, unsubscribe, sendMessage } = useWebSocket();
 
   const [active, setActive] = useState(0);
@@ -88,6 +90,7 @@ export function Setup(props: {
       if (newId) {
         setAndUpdateGameId(newId)
         console.log(`Game id is ${newId}`)
+        globalProps.setPlayerName(playerName)
         nextStep()
         getCharacters(newId)
       }
@@ -95,6 +98,7 @@ export function Setup(props: {
       const joinResponse = await joinGame(gameId)
       if (joinResponse == 200) {
         console.log(`Joined game with id ${gameId}`)
+        globalProps.setPlayerName(playerName)
         nextStep()
         await getCharacters(gameId)
       }
@@ -102,8 +106,9 @@ export function Setup(props: {
   }
 
   const setAndUpdateGameId = (gameId: string) => {
+    console.log("Setting game id")
     setGameId(gameId);
-    props.useSetGameId(gameId);
+    globalProps.setGameId(gameId);
   }
 
   const getGameId = async () => {
@@ -209,8 +214,6 @@ export function Setup(props: {
       action: ADD_TO_GAME,
       body: {gameId: gameId, playerName: playerName}
     })
-
-    sendMessage({action: GET_CHARACTER_READY_STATES})
   }
 
   const handleStartGameClick = () => {
@@ -228,19 +231,19 @@ export function Setup(props: {
         color: pi.color,
         isThisPlayer: playerName === pi.name,
         agents: [
-          {id: `agent-${characterModel.name}#1`},
-          {id: `agent-${characterModel.name}#2`},
-          {id: `agent-${characterModel.name}#3`}
+          {id: `agent-${pi.name}#1`},
+          {id: `agent-${pi.name}#2`},
+          {id: `agent-${pi.name}#3`}
         ],
         spies: [
-          {id: `spy-${characterModel.name}#1`},
-          {id: `spy-${characterModel.name}#2`},
-          {id: `spy-${characterModel.name}#3`}
+          {id: `spy-${pi.name}#1`},
+          {id: `spy-${pi.name}#2`},
+          {id: `spy-${pi.name}#3`}
         ],
         controlFlags: [
-          {id: `control_flag-${characterModel.name}#1`},
-          {id: `control_flag-${characterModel.name}#2`},
-          {id: `control_flag-${characterModel.name}#3`}
+          {id: `control_flag-${pi.name}#1`},
+          {id: `control_flag-${pi.name}#2`},
+          {id: `control_flag-${pi.name}#3`}
         ],
       }
     })

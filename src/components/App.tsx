@@ -8,7 +8,7 @@ import {Players} from "./Players.tsx";
 import {Setup} from "./setup/Setup.tsx";
 import {useEffect, useState} from "react";
 import type {PlayerModel} from "../model/PlayerModel.tsx";
-import {START_GAME} from "../const/Actions.tsx";
+import {PLACE_AGENT, START_GAME, UPDATE_LOCATION, UPDATE_PLAYER} from "../const/Actions.tsx";
 import {InHandCards} from "./InHandCards.tsx";
 import {useWebSocket, WebSocketProvider} from "./WebSocketContext.tsx";
 import {gameStartState, PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4} from "../const/Util.tsx";
@@ -18,6 +18,8 @@ import {restrictToWindowEdges} from '@dnd-kit/modifiers';
 import type {GameModel} from "../model/GameModel.tsx";
 import {produce} from "immer";
 import {placeAgent, placeSpy, recallAgent, recallSpy, setFactionInfluence} from "../const/GameUtils.tsx";
+import type {AgentLocationModel} from "../model/AgentLocationModel.tsx";
+import {useGameStore} from "../store/GameStore.tsx";
 
 function Content(props: {
   game: GameModel
@@ -64,25 +66,13 @@ function Content(props: {
 }
 
 
-function Game(props: {
-  useGameId: (gameId: string) => void;
-}) {
+function Game() {
   const {subscribe, unsubscribe, sendMessage} = useWebSocket();
 
-  const [gameStarted, setGameStarted] = useState(true);
+  const [gameStarted, setGameStarted] = useState(false);
   const [game, setGame] = useState<GameModel>({
     ...gameStartState,
-    players: [PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4]
   });
-
-  const setGlobalGameId = (gameId: string) => {
-    props.useGameId(gameId);
-    const newGame = {
-      ...game,
-      gameId: gameId,
-    };
-    setGame(newGame);
-  }
 
   const gameStartHandler = (players: PlayerModel[]) => {
     game.players = players;
@@ -90,16 +80,40 @@ function Game(props: {
     sendMessage({action: START_GAME})
   }
 
+  const updatePlayer = (player: PlayerModel) => {
+    setGame(current =>
+      produce(current, draft => {
+        const pl = draft.players.findIndex(p => p.name == player.name)
+        console.log(`Finding player with name ${player.name}. Found at index ${pl}. All names are ${draft.players.map(p => p.name).join(', ')}`)
+        const isThisPlayer = draft.players[pl].isThisPlayer;
+        draft.players[pl] = {...player, isThisPlayer: isThisPlayer};
+      })
+    )
+  }
+
+  const updateLocation = (location: AgentLocationModel) => {
+    setGame(current =>
+    produce(current, draft => {
+      const loc = draft.locations.findIndex(l => l.id === location.id);
+      draft.locations[loc] = location;
+      })
+    );
+  }
+
   useEffect(() => {
     const componentName = "game_component";
     console.log(`In ${componentName}. Subscribing to WS messages`)
 
-    const actions = [START_GAME]
+    const actions = [START_GAME, UPDATE_PLAYER, UPDATE_LOCATION]
     subscribe(actions, componentName, {
       onMessage: (action: string, body: any) => {
-        console.log(`Message received: ${body}`);
+        console.log(`Message received: ${action}: ${body}`);
         if (action === START_GAME) {
           setGameStarted(true);
+        } else if (action === UPDATE_PLAYER) {
+          updatePlayer(body)
+        } else if (action === UPDATE_LOCATION) {
+          updateLocation(body);
         }
       }
     });
@@ -122,7 +136,6 @@ function Game(props: {
   const setupComponent = () => {
     return (
       <Setup
-        useSetGameId={(gameId: string) => setGlobalGameId(gameId)}
         gameStartHandler={(players: PlayerModel[]) => gameStartHandler(players)}
       />
     )
@@ -144,16 +157,24 @@ function Game(props: {
     console.log(`${active.id} dropped on ${over.id}`);
     if (!(overData.type as string).includes(activeData.type)) return;
 
+    let action;
+
     setGame(current =>
       produce(current, draft => {
         if (activeData.location === "player" && overData.location === "boardspace") {
-          (activeData.type === "agent")
-            ? placeAgent(draft, active.id, draft.locations[0].id)
-            : placeSpy(draft, active.id, draft.locations[0].id)
+          if (activeData.type === "agent") {
+            console.log("Placing agent")
+            placeAgent(draft, active.id, draft.locations[0].id)
+            action = PLACE_AGENT
+          } else {
+            placeSpy(draft, active.id, draft.locations[0].id)
+          }
         } else if (activeData.location === "boardspace" && overData.location === "player") {
-          (activeData.type === "agent")
-            ? recallAgent(draft, active.id, draft.locations[0].id)
-            : recallSpy(draft, active.id, draft.locations[0].id)
+          if (activeData.type === "agent"){
+            recallAgent(draft, active.id, draft.locations[0].id)
+          } else {
+            recallSpy(draft, active.id, draft.locations[0].id)
+          }
         } else if (activeData.location === 'faction' && overData.location === 'faction') {
           if (activeData.factionType === overData.factionType) {
             setFactionInfluence(draft, activeData.playerName, overData.factionType, overData.influenceLevel)
@@ -161,6 +182,17 @@ function Game(props: {
         }
       })
     );
+
+    if (action) {
+      switch (action) {
+        case PLACE_AGENT:
+          sendMessage({action: "PLACE_AGENT", body: {
+              agentId: active.id,
+              locationId: game.locations[0].id,
+            }});
+          break;
+      }
+    }
   }
 
   return (
@@ -172,12 +204,14 @@ function Game(props: {
   )
 }
 
+
+
 function App() {
-  const [gameId, setGameId] = useState("");
+  const { playerName, gameId } = useGameStore();
 
   return (
-    <WebSocketProvider gameId={gameId}>
-      <Game useGameId={(gameId: string) => setGameId(gameId)}/>
+    <WebSocketProvider gameId={gameId} playerName={playerName}>
+      <Game/>
     </WebSocketProvider>
   )
 }
