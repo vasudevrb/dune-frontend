@@ -2,6 +2,9 @@ import {type CharacterModel, ObjectiveType, type PlayerModel} from "../model/Pla
 import type {GameModel} from "../model/GameModel.tsx";
 import {assertExists} from "./GameUtils.tsx";
 import type {Active} from "@dnd-kit/core";
+import {notifications} from "@mantine/notifications";
+
+export const SERVER_BASE_URL = "http://localhost:8080";
 
 export const range = (start: number, end: number): number[] =>
   Array.from({length: end - start + 1}, (_, i) => start + i);
@@ -216,4 +219,27 @@ export function findDraggableColor(gameModel: GameModel, activeDraggable: Active
     gameModel.players.find(p => p.agents.some(a => a.id === activeDraggable.id)),
     "Unknown Draggable ID"
   ).color
+}
+
+export function showNotification(message: string) {
+  notifications.show({
+    message: message,
+    withCloseButton: false,
+    autoClose: 3000,
+    radius: 0,
+    icon: <></>,
+    className: "notification-bg",
+    styles: {
+      root: {
+        height: 90,
+        transition: 'ease-in-out'
+      },
+      description: {
+        fontWeight: 500,
+        fontSize: 18,
+        fontFamily:  "IBM Plex Sans",
+        color: '#cacaca',
+      },
+    },
+  })
 }

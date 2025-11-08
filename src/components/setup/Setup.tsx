@@ -30,7 +30,7 @@ export function Setup(props: {
 }) {
 
   const globalProps = useGameStore();
-  const { subscribe, unsubscribe, sendMessage } = useWebSocket();
+  const {subscribe, unsubscribe, sendMessage} = useWebSocket();
 
   const [active, setActive] = useState(0);
   const [playerName, setPlayerName] = useState("");
@@ -497,15 +497,15 @@ export function Setup(props: {
               </Table.Thead>
               <Table.Tbody>
                 {
-                players.map(pl =>
-                  <Table.Tr key={pl.id}>
-                    <Table.Td style={{ textAlign: 'left' }}>{pl.name}</Table.Td>
-                    <Table.Td style={{ textAlign: 'left' }}>{pl.characterName}</Table.Td>
-                    <Table.Td style={{ textAlign: 'left' }}>{pl.color}</Table.Td>
-                    <Table.Td style={{ textAlign: 'left' }}>{pl.status}</Table.Td>
-                  </Table.Tr>
-                )
-              }
+                  players.map(pl =>
+                    <Table.Tr key={pl.id}>
+                      <Table.Td style={{textAlign: 'left'}}>{pl.name}</Table.Td>
+                      <Table.Td style={{textAlign: 'left'}}>{pl.characterName}</Table.Td>
+                      <Table.Td style={{textAlign: 'left'}}>{pl.color}</Table.Td>
+                      <Table.Td style={{textAlign: 'left'}}>{pl.status}</Table.Td>
+                    </Table.Tr>
+                  )
+                }
               </Table.Tbody>
             </Table>
 

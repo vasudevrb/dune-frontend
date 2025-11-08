@@ -1,11 +1,12 @@
 import '@mantine/core/styles.css'
 import '@mantine/carousel/styles.css';
+import '@mantine/notifications/styles.css';
 import '../css/App.css'
 import {Box, Drawer, MantineProvider, type MantineThemeOverride, Stack} from '@mantine/core';
 import {useDisclosure} from "@mantine/hooks";
 import {ImperiumRow} from "./ImperiumRow.tsx";
 import {Players} from "./Players.tsx";
-import {Setup} from "./setup/Setup.tsx";
+import {Notifications} from '@mantine/notifications';
 import {useEffect, useState} from "react";
 import type {PlayerModel} from "../model/PlayerModel.tsx";
 import {PLACE_AGENT, START_GAME, UPDATE_LOCATION, UPDATE_PLAYER} from "../const/Actions.tsx";
@@ -20,6 +21,7 @@ import {produce} from "immer";
 import {moveThisPlayerToLast, placeAgent, placeSpy, recallAgent, recallSpy, setFactionInfluence} from "../const/GameUtils.tsx";
 import type {AgentLocationModel} from "../model/AgentLocationModel.tsx";
 import {useGameStore} from "../store/GameStore.tsx";
+import {Setup2} from "./setup/Setup2.tsx";
 
 function Content(props: {
   game: GameModel
@@ -146,7 +148,7 @@ function Game() {
 
   const setupComponent = () => {
     return (
-      <Setup
+      <Setup2
         gameStartHandler={(players: PlayerModel[]) => gameStartHandler(players)}
       />
     )
@@ -209,6 +211,7 @@ function Game() {
   return (
     <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToWindowEdges]}>
       <MantineProvider theme={duneTheme}>
+        <Notifications position={"bottom-right"}/>
         {gameStarted ? contentComponent() : setupComponent()}
       </MantineProvider>
     </DndContext>
@@ -222,7 +225,7 @@ function App() {
 
   return (
     <WebSocketProvider gameId={gameId} playerName={playerName}>
-      <Game/>
+        <Game/>
     </WebSocketProvider>
   )
 }

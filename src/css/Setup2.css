@@ -1,0 +1,35 @@
+.text-setup-step-name {
+  color: #d1d1d1;
+  padding: 25px;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 500;
+}
+
+.setup-action-button-text {
+  position: absolute;
+  padding: 16px;
+  top: 50%;
+  left: 50%;
+  color: #d1d1d1;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.setup-action-button {
+  transition: filter 0.4s ease-in-out;
+}
+
+.setup-action-button-next {
+  transition: filter 0.4s ease-in-out;
+}
+
+.setup-action-button-next:hover {
+  filter: drop-shadow(0 0 1em #94664d);
+}
+
+.setup-action-button-selected {
+  filter: drop-shadow(0 0 1em #94664d);
+}

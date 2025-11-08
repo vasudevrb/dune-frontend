@@ -39,4 +39,25 @@
   margin: 0;
 }
 
+.notification-bg {
+  background: linear-gradient(
+    to right,
+    rgba(209, 152, 136, 0.25) 0%,
+    rgba(209, 152, 136, 0.20) 30%,
+    rgba(209, 152, 136, 0.15) 60%,
+    rgba(209, 152, 136, 0.1) 85%,
+    rgba(209, 152, 136, 0) 100%
+  ) no-repeat;
+  filter: drop-shadow(0 0 1em #94664d);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
 
+.mantine-Notification-icon {
+  display: none;
+}
+
+.mantine-Notification-root {
+  animation: fadeIn 1s !important;
+  transition: none !important;
+}
