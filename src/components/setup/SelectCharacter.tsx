@@ -3,6 +3,9 @@ import {useGameStore} from "../../store/GameStore.tsx";
 import {SERVER_BASE_URL} from "../../const/Util.tsx";
 import {type MouseEventHandler, useEffect, useState} from "react";
 
+import {ADD_TO_GAME} from "../../const/Actions.tsx";
+import {useWebSocket} from "../WebSocketContext.tsx";
+
 export interface DisplayableCharacter {
   characterName: string;
   urls: string[];
@@ -15,6 +18,7 @@ export function SelectCharacter(props: {
 }) {
   const baseUrl = SERVER_BASE_URL;
   const globalProps = useGameStore();
+  const {sendMessage} = useWebSocket();
   const [selectedCharacter, setSelectedCharacter] = useState<DisplayableCharacter>();
   const [shownCharacters, setShownCharacters] = useState<DisplayableCharacter[]>([]);
 
@@ -79,6 +83,30 @@ export function SelectCharacter(props: {
     return 0
   }
 
+  const onNextClick = async () => {
+    try {
+      await fetch(`${baseUrl}/pick-character`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          gameId: globalProps.gameId,
+          playerName: globalProps.playerName,
+          characterName: selectedCharacter?.characterName
+        })
+      }).then(() => {
+        sendMessage({
+          action: ADD_TO_GAME,
+          body: {gameId: globalProps.gameId, playerName: globalProps.playerName}
+        })
+        props.stepper();
+      })
+    } catch (err) {
+      console.log(`Error when picking character: ${err}`)
+    }
+  }
+
 
   return (
     <Group
@@ -122,7 +150,7 @@ export function SelectCharacter(props: {
           }
 
           <Button
-            onClick={stepper()}
+            onClick={onNextClick}
             className={`setup-action-button-next`}
             size="md"
             radius="0"
