@@ -5,6 +5,8 @@ export interface GameState {
   setGameId: (id: string) => void;
   playerName: string;
   setPlayerName: (playerName: string) => void;
+  imperiumRowOpened: boolean;
+  setImperiumRowOpened: (opened: boolean) => void;
 }
 
 export const useGameStore = create<GameState>((set) => ({
@@ -12,4 +14,6 @@ export const useGameStore = create<GameState>((set) => ({
   setGameId: (gameId: string) => set({gameId: gameId}),
   playerName: "",
   setPlayerName: (name: string) => set({ playerName: name }),
+  imperiumRowOpened: false,
+  setImperiumRowOpened: (opened: boolean) => set({ imperiumRowOpened: opened }),
 }));

@@ -38,6 +38,7 @@ import plus_icon from "../assets/plus.svg";
 import {useDisclosure} from "@mantine/hooks";
 import {useDraggable, useDroppable} from "@dnd-kit/core";
 import {createPortal} from "react-dom";
+import {useGameStore} from "../store/GameStore.tsx";
 
 function Agent(props: {player: PlayerModel, agentModel: AgentModel, index: number}) {
   const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
@@ -196,6 +197,7 @@ export function Player(props: {
   currentPlayer: string;
   firstPlayer: string;
 }) {
+  const globalProps = useGameStore();
   const [inHandCardsPopoverOpened, setInHandCardsPopoverState] = useDisclosure(false);
   const [objectivesPopoverOpened, setObjectivesPopoverState] = useDisclosure(false);
 
@@ -489,6 +491,7 @@ export function Player(props: {
     const getActionButton = (icon: string) => {
       return (
         <ActionIcon
+          onClick={() => globalProps.setImperiumRowOpened(true)}
           w={35}
           h={54}
           className={"player-resource-modifier-button"}

@@ -29,6 +29,17 @@ export const gameStartState: GameModel = {
       spies: []
     }
   ],
+  imperiumRow: [
+    {url: "http://localhost:8080/imperium_cards_starter/starter_6.jpg"},
+    {url: "http://localhost:8080/imperium_cards_starter/starter_2.jpg"},
+    {url: "http://localhost:8080/imperium_cards_starter/starter_3.jpg"},
+    {url: "http://localhost:8080/imperium_cards_starter/starter_1.jpg"},
+    {url: "http://localhost:8080/imperium_cards_starter/starter_1.jpg"}
+  ],
+  reserveRow: [
+    {url: "https://i.postimg.cc/90wJzHB8/Main-Deck-The-Spice-Must-Flow.jpg"},
+    {url: "https://i.postimg.cc/WzqXtc7m/5423452f6a46e4fabf737020b6b234d60ad6ea60-modified-1.jpg"}
+  ]
 }
 
 export const characterStartState: CharacterModel = {
@@ -223,6 +234,10 @@ export const PLAYER_4: PlayerModel = {
       {url: "http://localhost:8080/imperium_cards/imperium_26.jpg"},
       {url: "http://localhost:8080/imperium_cards/imperium_27.jpg"},
     ],
+    intrigueCards: [
+      {url: "http://localhost:8080/imperium_cards/imperium_26.jpg"},
+      {url: "http://localhost:8080/imperium_cards/imperium_27.jpg"},
+    ]
   }
 }
 

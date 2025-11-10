@@ -2,8 +2,7 @@ import '@mantine/core/styles.css'
 import '@mantine/carousel/styles.css';
 import '@mantine/notifications/styles.css';
 import '../css/App.css'
-import {Box, Drawer, MantineProvider, type MantineThemeOverride, Stack, Text} from '@mantine/core';
-import {useDisclosure} from "@mantine/hooks";
+import {Box, MantineProvider, type MantineThemeOverride, Stack, Text} from '@mantine/core';
 import {ImperiumRow} from "./ImperiumRow.tsx";
 import {Players} from "./Players.tsx";
 import {Notifications} from '@mantine/notifications';
@@ -12,7 +11,7 @@ import type {PlayerModel} from "../model/PlayerModel.tsx";
 import {CARD_USED, PLACE_AGENT, START_GAME, UPDATE_LOCATION, UPDATE_PLAYER} from "../const/Actions.tsx";
 import {InHandCards} from "./InHandCards.tsx";
 import {useWebSocket, WebSocketProvider} from "./WebSocketContext.tsx";
-import {cardPreviewStartState, gameStartState} from "../const/Util.tsx";
+import {cardPreviewStartState, gameStartState, PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4} from "../const/Util.tsx";
 import {GameBoard} from "./GameBoard.tsx";
 import {DndContext, type DragEndEvent} from "@dnd-kit/core";
 import {restrictToWindowEdges} from '@dnd-kit/modifiers';
@@ -29,7 +28,6 @@ function Content(props: {
   game: GameModel
 }) {
   const {subscribe, unsubscribe} = useWebSocket();
-  const [opened, {close}] = useDisclosure(false);
   const [agentCardPreview, setAgentCardPreview] = useState<AgentCardPreview>(cardPreviewStartState);
 
   useEffect(() => {
@@ -89,24 +87,8 @@ function Content(props: {
     )
   }
 
-  return <Box
-    w={"100%"}
-    h={"100%"}>
-    <Drawer className="drawer-1"
-            withCloseButton={false}
-            position="bottom"
-            opened={opened}
-            onClose={close}
-            overlayProps={{backgroundOpacity: 0.5, blur: 4}}
-            styles={{
-              content: {
-                height: 'auto'
-              },
-            }}>
-
-      <ImperiumRow/>
-    </Drawer>
-
+  return <Box w={"100%"} h={"100%"}>
+    <ImperiumRow game={props.game}/>
     {getCardPreview()}
 
     <Stack
@@ -135,9 +117,10 @@ function Game() {
   const { playerName } = useGameStore();
   const {subscribe, unsubscribe, sendMessage} = useWebSocket();
 
-  const [gameStarted, setGameStarted] = useState(false);
+  const [gameStarted, setGameStarted] = useState(true);
   const [game, setGame] = useState<GameModel>({
-    ...gameStartState
+    ...gameStartState,
+    players: [PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4]
   });
 
   const gameStartHandler = (players: PlayerModel[]) => {

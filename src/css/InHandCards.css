@@ -31,6 +31,7 @@
   font-weight: 500;
   font-size: 18px;
   writing-mode: vertical-lr;
+  text-align: center;
   text-orientation: mixed;
   transform: rotate(-180deg);
 }

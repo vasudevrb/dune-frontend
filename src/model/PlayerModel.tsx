@@ -18,6 +18,7 @@ export interface PlayerModel {
     inHandCards: CardModel[];
     inPlayCards: CardModel[];
     discardedCards: CardModel[];
+    intrigueCards: CardModel[];
   }
 }
 
