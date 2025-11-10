@@ -2,17 +2,17 @@ import '@mantine/core/styles.css'
 import '@mantine/carousel/styles.css';
 import '@mantine/notifications/styles.css';
 import '../css/App.css'
-import {Box, Drawer, MantineProvider, type MantineThemeOverride, Stack} from '@mantine/core';
+import {Box, Drawer, MantineProvider, type MantineThemeOverride, Stack, Text} from '@mantine/core';
 import {useDisclosure} from "@mantine/hooks";
 import {ImperiumRow} from "./ImperiumRow.tsx";
 import {Players} from "./Players.tsx";
 import {Notifications} from '@mantine/notifications';
 import {useEffect, useState} from "react";
 import type {PlayerModel} from "../model/PlayerModel.tsx";
-import {PLACE_AGENT, START_GAME, UPDATE_LOCATION, UPDATE_PLAYER} from "../const/Actions.tsx";
+import {CARD_USED, PLACE_AGENT, START_GAME, UPDATE_LOCATION, UPDATE_PLAYER} from "../const/Actions.tsx";
 import {InHandCards} from "./InHandCards.tsx";
 import {useWebSocket, WebSocketProvider} from "./WebSocketContext.tsx";
-import {gameStartState} from "../const/Util.tsx";
+import {cardPreviewStartState, gameStartState} from "../const/Util.tsx";
 import {GameBoard} from "./GameBoard.tsx";
 import {DndContext, type DragEndEvent} from "@dnd-kit/core";
 import {restrictToWindowEdges} from '@dnd-kit/modifiers';
@@ -22,11 +22,72 @@ import {moveThisPlayerToLast, placeAgent, placeSpy, recallAgent, recallSpy, setF
 import type {AgentLocationModel} from "../model/AgentLocationModel.tsx";
 import {useGameStore} from "../store/GameStore.tsx";
 import {Setup2} from "./setup/Setup2.tsx";
+import {Card} from "./Card.tsx";
+import type {AgentCardPreview} from "../model/AgentCardPreview.tsx";
 
 function Content(props: {
   game: GameModel
 }) {
+  const {subscribe, unsubscribe} = useWebSocket();
   const [opened, {close}] = useDisclosure(false);
+  const [agentCardPreview, setAgentCardPreview] = useState<AgentCardPreview>(cardPreviewStartState);
+
+  useEffect(() => {
+    const componentName = "content_component";
+    console.log(`In ${componentName}. Subscribing to WS messages`)
+
+    const actions = [CARD_USED]
+    subscribe(actions, componentName, {
+      onMessage: (action: string, body: any) => {
+        if (action === CARD_USED) {
+          setAgentCardPreview({...body, show: true});
+          setTimeout(() => {
+            setAgentCardPreview(prev => ({...prev, show: false}))
+          }, 5000);
+        }
+      }
+    });
+
+    return () => {
+      unsubscribe(actions, componentName)
+    }
+  })
+
+  const getCardPreview = () => {
+    const show = agentCardPreview.show ? "show" : ""
+    const color = props.game
+      .players
+      .find(p => p.name === agentCardPreview.playerName)
+      ?.color
+    let bgColor;
+    switch (color) {
+      case "RED":
+        bgColor = "card-used-preview-red";
+        break;
+      case "BLUE":
+        bgColor = "card-used-preview-blue";
+        break;
+      case "GREEN":
+        bgColor = "card-used-preview-green";
+        break;
+      default:
+        bgColor = "card-used-preview-gold";
+        break;
+    }
+    return (
+      <Stack
+        className={`card-used-preview ${show} ${bgColor}`}
+        p={"40"}
+        style={{
+          position: "absolute",
+          top: "10%",
+          zIndex: 5,
+        }}>
+        <Text className={"card-used-preview-text"}>{agentCardPreview.playerName}</Text>
+        <Card src={agentCardPreview.url}/>
+      </Stack>
+    )
+  }
 
   return <Box
     w={"100%"}
@@ -46,6 +107,8 @@ function Content(props: {
       <ImperiumRow/>
     </Drawer>
 
+    {getCardPreview()}
+
     <Stack
       className="board-area"
       h={"100%"}
@@ -53,7 +116,7 @@ function Content(props: {
       style={{ position: "relative", minHeight: 0 }}
       gap={0}>
       <GameBoard game={props.game}/>
-      <InHandCards />
+      <InHandCards player={props.game.players.find(p => p.isThisPlayer)!!}/>
     </Stack>
 
     <Box h={"100%"}
@@ -83,12 +146,21 @@ function Game() {
     sendMessage({action: START_GAME})
   }
 
-  const updateGame = (game: GameModel) => {
-    setGame(() =>
-    produce(game, draft => {
-      draft.players.findIndex(player => {
-        player.isThisPlayer = player.name === playerName;
-      });
+  const updateGame = (updatedGame: GameModel) => {
+    setGame((currentGame) =>
+    produce(updatedGame, draft => {
+      draft.players = draft.players
+        .map(player => {
+          if (player.name === playerName) {
+            player.isThisPlayer = true;
+            const currentPlayerData = currentGame.players.find(p => p.name === player.name)
+            player.private = currentPlayerData ? currentPlayerData.private : undefined;
+          } else {
+            player.isThisPlayer = false;
+          }
+          return player;
+        })
+
       draft.players = moveThisPlayerToLast(draft.players);
     }));
   }
@@ -119,7 +191,6 @@ function Game() {
     const actions = [START_GAME, UPDATE_PLAYER, UPDATE_LOCATION]
     subscribe(actions, componentName, {
       onMessage: (action: string, body: any) => {
-        console.log(`Message received: ${action}: ${body}`);
         if (action === START_GAME) {
           setGameStarted(true);
           updateGame(body);

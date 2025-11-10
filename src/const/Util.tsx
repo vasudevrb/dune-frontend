@@ -3,11 +3,18 @@ import type {GameModel} from "../model/GameModel.tsx";
 import {assertExists} from "./GameUtils.tsx";
 import type {Active} from "@dnd-kit/core";
 import {notifications} from "@mantine/notifications";
+import type {AgentCardPreview} from "../model/AgentCardPreview.tsx";
 
 export const SERVER_BASE_URL = "http://localhost:8080";
 
 export const range = (start: number, end: number): number[] =>
   Array.from({length: end - start + 1}, (_, i) => start + i);
+
+export const cardPreviewStartState: AgentCardPreview = {
+  url: undefined,
+  playerName: "",
+  show: false
+}
 
 export const gameStartState: GameModel = {
   gameId: "",
@@ -200,7 +207,23 @@ export const PLAYER_4: PlayerModel = {
     {id: `control_flag-${EMPEROR_SHADDAM.name}#1`},
     {id: `control_flag-${EMPEROR_SHADDAM.name}#2`},
     {id: `control_flag-${EMPEROR_SHADDAM.name}#3`},
-  ]
+  ],
+  private: {
+    inHandCards: [
+      {url: "http://localhost:8080/imperium_cards_starter/starter_6.jpg"},
+      {url: "http://localhost:8080/imperium_cards_starter/starter_2.jpg"},
+      {url: "http://localhost:8080/imperium_cards_starter/starter_3.jpg"},
+      {url: "http://localhost:8080/imperium_cards_starter/starter_1.jpg"},
+      {url: "http://localhost:8080/imperium_cards_starter/starter_1.jpg"}
+    ],
+    inPlayCards: [
+      {url: "http://localhost:8080/imperium_cards_starter/starter_5.jpg"},
+    ],
+    discardedCards: [
+      {url: "http://localhost:8080/imperium_cards/imperium_26.jpg"},
+      {url: "http://localhost:8080/imperium_cards/imperium_27.jpg"},
+    ],
+  }
 }
 
 export function createId(items: (string | number)[]): string {

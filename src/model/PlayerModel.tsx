@@ -14,6 +14,11 @@ export interface PlayerModel {
   swordmasterUnlocked: boolean;
   makerHookUnlocked: boolean;
   combat: CombatModel;
+  private?: {
+    inHandCards: CardModel[];
+    inPlayCards: CardModel[];
+    discardedCards: CardModel[];
+  }
 }
 
 interface ResourcesModel {
@@ -88,4 +93,8 @@ export interface SpyModel {
 export interface ControlFlagModel {
   id: string;
   atLocation?: number;
+}
+
+export interface CardModel {
+  url: string;
 }

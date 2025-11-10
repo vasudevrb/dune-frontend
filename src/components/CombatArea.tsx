@@ -99,7 +99,7 @@ export function CombatArea(props: { game: GameModel }) {
       w={"500px"}
       style={{
         position: "absolute",
-        bottom: "60px",
+        bottom: "80px",
         right: "320px",
       }}>
       {getConflictCard()}

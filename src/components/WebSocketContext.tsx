@@ -94,9 +94,11 @@ export const WebSocketProvider: React.FC<Props> = ({ gameId, playerName, childre
       onConnect: () => {
         console.log(`Connected as ${playerName}`);
         client.subscribe(`/topic/game/${gameId}`, (msg) => {
+          console.log(`Public message received: ${JSON.stringify(msg.body)}`);
           dispatchMessageToComponents(msg.body)
         });
         client.subscribe(`/user/queue/game/${gameId}`, (msg) => {
+          console.log(`Private message received: ${JSON.stringify(msg.body)}`);
           dispatchMessageToComponents(msg.body)
         });
       },

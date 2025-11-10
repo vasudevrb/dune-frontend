@@ -163,7 +163,7 @@ export function Lobby(props: {
       <Stack gap={0} align={"center"}>
         {getPlayerInfoRow(paddedPlayers.slice(0, 2))}
         {getPlayerInfoRow(paddedPlayers.slice(2, 4))}
-        {props.players.length >= 3 &&
+        {props.players.length >= 1 &&
           <Button
             onClick={onNextClick}
             className={`setup-action-button-next`}

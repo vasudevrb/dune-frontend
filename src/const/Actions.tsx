@@ -5,3 +5,5 @@ export const ADD_TO_GAME = "ADD_TO_GAME"
 export const UPDATE_PLAYER = "UPDATE_PLAYER"
 export const UPDATE_LOCATION = "UPDATE_LOCATION"
 export const PLACE_AGENT = "PLACE_AGENT"
+
+export const CARD_USED = "CARD_USED"

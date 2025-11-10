@@ -16,21 +16,22 @@
   margin-top: 4rem;
   transition: filter 0.4s ease-in-out;
 }
+
 .text-button:hover {
   filter: drop-shadow(0 0 1em #94664d);
 }
+
 .text-button.react:hover {
   filter: drop-shadow(0 0 1em #94664d);
 }
 
-.mantine-Drawer-content	 {
+.mantine-Drawer-content {
   background-size: cover;
   background: linear-gradient(
     to top,
-    rgba(255, 172, 51, 0.2) 0%,   /* bright near bottom */
-    rgba(255, 172, 51, 0.15) 20%,
+    rgba(255, 172, 51, 0.2) 0%, /* bright near bottom */ rgba(255, 172, 51, 0.15) 20%,
     rgba(255, 172, 51, 0.1) 40%,
-    rgba(255, 172, 51, 0) 70%     /* fully transparent higher up */
+    rgba(255, 172, 51, 0) 70% /* fully transparent higher up */
   ) no-repeat;
 }
 
@@ -60,4 +61,77 @@
 .mantine-Notification-root {
   animation: fadeIn 1s !important;
   transition: none !important;
+}
+
+.card-used-preview {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  pointer-events: none;
+}
+
+.card-used-preview.show {
+  opacity: 1;
+}
+
+.card-used-preview::before {
+  pointer-events: none;
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 500px;
+  height: 500px;
+  filter: blur(20px);
+  z-index: -1;
+}
+
+.card-used-preview-red::before {
+  background: radial-gradient(
+    circle at left center,
+    rgba(183, 65, 14, 1) 0%,
+    rgba(183, 65, 14, 0.9) 20%,
+    rgba(183, 65, 14, 0.7) 40%,
+    rgba(183, 65, 14, 0.3) 70%,
+    rgba(183, 65, 14, 0.0) 90%
+  ) no-repeat;
+}
+
+.card-used-preview-green::before {
+  background: radial-gradient(
+    circle at left center,
+    rgba(44, 95, 52, 1) 0%,
+    rgba(44, 95, 52, 0.9) 20%,
+    rgba(44, 95, 52, 0.7) 40%,
+    rgba(44, 95, 52, 0.3) 70%,
+    rgba(44, 95, 52, 0.0) 90%
+  ) no-repeat;
+}
+
+.card-used-preview-blue::before {
+  background: radial-gradient(
+    circle at left center,
+    rgba(0, 71, 171, 1) 0%,
+    rgba(0, 71, 171, 0.9) 20%,
+    rgba(0, 71, 171, 0.7) 40%,
+    rgba(0, 71, 171, 0.3) 70%,
+    rgba(0, 71, 171, 0.0) 90%
+  ) no-repeat;
+}
+
+.card-used-preview-gold::before {
+  background: radial-gradient(
+    circle at left center,
+    rgba(101, 70, 15, 1) 0%,
+    rgba(101, 70, 15, 0.9) 20%,
+    rgba(101, 70, 15, 0.7) 40%,
+    rgba(101, 70, 15, 0.3) 70%,
+    rgba(101, 70, 15, 0.0) 90%
+  ) no-repeat;
+}
+
+.card-used-preview-text {
+  color: #ffffff;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-size: 18px;
+  font-weight: 700;
 }

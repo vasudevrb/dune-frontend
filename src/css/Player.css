@@ -80,8 +80,6 @@
   clip-path: polygon(0% 85%, 15% 100%, 100% 100%, 100% 0%, 0% 0%);
 }
 
-
-
 .player-info {
   display: flex;
   width: 100%;
@@ -99,8 +97,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   color: #ffffff;
+  font-family: "IBM Plex Sans", sans-serif;
   text-shadow: 0 0 6px rgba(255,255,255,0.7);
-  font-family: 'Sora', sans-serif;
 }
 
 .player-resource-modifier-button {

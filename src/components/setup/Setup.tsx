@@ -60,7 +60,6 @@ export function Setup(props: {
     const actions = [ADD_TO_GAME, GET_CHARACTER_READY_STATES, START_GAME]
     subscribe(actions, componentName, {
       onMessage: (action: string, body: any) => {
-        console.log(`Message received: ${body}`);
         if (action === GET_CHARACTER_READY_STATES) {
           handlePlayerInfoResponse(body)
         } else if (action === START_GAME) {
