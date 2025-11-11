@@ -54,7 +54,7 @@ export function InHandCards(props: {
 
     switch (cardType) {
       case CardType.HAND: return [useButton,  discardButton, trashButton];
-      case CardType.PLAY: return [useButton, discardButton, trashButton];
+      case CardType.PLAY: return [useButton, trashButton];
       case CardType.DISCARD: return [useButton, trashButton];
       case CardType.INTRIGUE: return [useButton, trashButton];
     }

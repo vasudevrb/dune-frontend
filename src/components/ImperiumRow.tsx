@@ -1,5 +1,5 @@
 import '../css/ImperiumRow.css'
-import {ScrollArea, Divider, Drawer, Text} from "@mantine/core";
+import {ScrollArea, Divider, Drawer, Text, Space} from "@mantine/core";
 import {Card, CardButtonType} from "./Card.tsx";
 import {useGameStore} from "../store/GameStore.tsx";
 import type {CardModel} from "../model/PlayerModel.tsx";
@@ -21,6 +21,10 @@ export function ImperiumRow(props: {
 }) {
   const {sendMessage} = useWebSocket();
   const globalProps = useGameStore();
+
+  if (!props.game.imperiumRow) {
+    return <></>
+  }
 
   const getSectionLabel = (cardType: ImperiumCardType) => {
     switch (cardType) {
@@ -88,6 +92,7 @@ export function ImperiumRow(props: {
       <div style={{display: 'flex', gap: 16, padding: 16}}>
         {getCardSection(ImperiumCardType.IMPERIUM, props.game.imperiumRow)}
         {getCardSection(ImperiumCardType.RESERVE, props.game.reserveRow)}
+        <Space w={16}/>
       </div>
     </ScrollArea>
     </Drawer>

@@ -117,10 +117,9 @@ function Game() {
   const { playerName } = useGameStore();
   const {subscribe, unsubscribe, sendMessage} = useWebSocket();
 
-  const [gameStarted, setGameStarted] = useState(true);
+  const [gameStarted, setGameStarted] = useState(false);
   const [game, setGame] = useState<GameModel>({
     ...gameStartState,
-    players: [PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4]
   });
 
   const gameStartHandler = (players: PlayerModel[]) => {
