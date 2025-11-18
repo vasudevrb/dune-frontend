@@ -1,5 +1,5 @@
 import type {AgentLocationModel} from "../model/AgentLocationModel.tsx";
-import {Box, Group, type MantineStyleProp, type StyleProp} from "@mantine/core";
+import {Center, Group, type MantineStyleProp, type StyleProp} from "@mantine/core";
 import agent_icon_blue from '../assets/agents/agent_blue.svg';
 import type {Property} from "csstype";
 import agent_icon_red from "../assets/agents/agent_red.svg";
@@ -55,7 +55,6 @@ function Agent(props: {
 
 export function AgentLocation(props: {
   location: AgentLocationModel;
-  agentsContainerStyle?: { top: Property.Top, left: Property.Left };
   style?: MantineStyleProp
   w?: StyleProp<Property.Width>
   h?: StyleProp<Property.Height>
@@ -72,7 +71,7 @@ export function AgentLocation(props: {
   });
 
   return (
-    <Box
+    <Center
       ref={setNodeRef}
       pos={"absolute"}
       w={props.w}
@@ -84,12 +83,8 @@ export function AgentLocation(props: {
       <Group
         className="locations-agent-icon-container"
         align="center"
-        gap={0}
-        style={{
-          position: "absolute",
-          top: props.agentsContainerStyle?.top,
-          left: props.agentsContainerStyle?.left,
-        }}>
+        justify={"center"}
+        gap={0}>
         {
           props.location.agents.map((agent) =>
            <Agent
@@ -100,6 +95,6 @@ export function AgentLocation(props: {
           )
         }
       </Group>
-    </Box>
+    </Center>
   )
 }

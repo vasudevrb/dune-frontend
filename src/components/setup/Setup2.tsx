@@ -68,7 +68,7 @@ export function Setup2(props: {
       gap={0}>
       {getStepper()}
       <Divider h={"100%"} orientation={"vertical"} color={"#fafafa32"}/>
-      {(step === 0) && <CreateOrJoinGame stepper={() => setStep(prev => prev + 1)}/>}
+      {(step === 0) && <CreateOrJoinGame stepper={(toStep) => setStep(toStep)}/>}
       {step === 1 && <SelectCharacter stepper={() => setStep(prev => prev + 1)}/>}
       {step === 2 && <Lobby players={players} gameStartHandler={props.gameStartHandler}/>}
 

@@ -12,12 +12,20 @@ import {randomId} from "@mantine/hooks";
 import {ObjectiveType, type PlayerModel} from "../../model/PlayerModel.tsx";
 import {playerStartState} from "../../const/Util.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
+import {useEffect} from "react";
+import {GET_CHARACTER_READY_STATES} from "../../const/Actions.tsx";
+import {useWebSocket} from "../WebSocketContext.tsx";
 
 export function Lobby(props: {
   players: LobbyPlayer[];
   gameStartHandler: (players: PlayerModel[]) => void
 }) {
+  const {sendMessage} = useWebSocket();
   const globalProps = useGameStore();
+
+  useEffect(() => {
+    sendMessage({action: GET_CHARACTER_READY_STATES})
+  }, []);
 
   const getAgentIcon = (color: string) => {
     switch (color) {

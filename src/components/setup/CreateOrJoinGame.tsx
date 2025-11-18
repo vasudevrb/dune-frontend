@@ -8,7 +8,7 @@ import joinGameImage from "../../assets/join_game_bg.png";
 import {RESUME_GAME} from "../../const/Actions.tsx";
 
 export function CreateOrJoinGame(props: {
-  stepper: () => void
+  stepper: (toStep: number) => void
 }) {
   const baseUrl = SERVER_BASE_URL;
   const {sendMessage} = useWebSocket();
@@ -108,14 +108,29 @@ export function CreateOrJoinGame(props: {
       const newId = await getGameId();
       if (newId) {
         globalProps.setGameId(newId);
-        props.stepper()
+        props.stepper(1)
       }
     } else {
-      const joinGameResponse = await joinGame();
-      if (joinGameResponse.alreadyPresentInGame) {
-        sendMessage({action: RESUME_GAME})
-      } else {
-        props.stepper ()
+      const response = await joinGame();
+      switch(response.joinGameState) {
+        case "JOINED":
+          props.stepper(1)
+          break;
+        case "PREVIOUSLY_JOINED":
+          props.stepper(1)
+          break;
+        case "IN_LOBBY":
+          props.stepper(2)
+          break;
+        case "IN_GAME":
+          sendMessage({action: RESUME_GAME})
+          break;
+        case "CANNOT_JOIN_MAX_PLAYERS":
+          showNotification("This game already has 4 players.")
+          break;
+        case "CANNOT_JOIN_GAME_STARTED":
+          showNotification("This game has already started. You cannot join now.")
+          break;
       }
     }
   }

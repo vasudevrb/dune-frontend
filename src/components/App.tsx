@@ -101,12 +101,13 @@ function Content(props: {
       <InHandCards player={props.game.players.find(p => p.isThisPlayer)!!}/>
     </Stack>
 
-    <Box h={"100%"}
-         pos={"absolute"}
-         style={{
-           right: "0",
-           top: "0"
-         }}>
+    <Box
+      h={"100%"}
+      pos={"absolute"}
+      style={{
+        right: "0",
+        top: "0"
+      }}>
       <Players game={props.game}/>
     </Box>
   </Box>
@@ -117,9 +118,10 @@ function Game() {
   const { playerName } = useGameStore();
   const {subscribe, unsubscribe, sendMessage} = useWebSocket();
 
-  const [gameStarted, setGameStarted] = useState(false);
+  const [gameStarted, setGameStarted] = useState(true);
   const [game, setGame] = useState<GameModel>({
     ...gameStartState,
+    players: [PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4]
   });
 
   const gameStartHandler = (players: PlayerModel[]) => {
