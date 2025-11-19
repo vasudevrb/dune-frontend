@@ -231,7 +231,6 @@ function Game() {
       produce(current, draft => {
         if (activeData.location === "player" && overData.location === "boardspace") {
           if (activeData.type === "agent") {
-            console.log("Placing agent")
             placeAgent(draft, active.id, overData.id)
             action = PLACE_AGENT
           } else {

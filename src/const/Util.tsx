@@ -5,6 +5,7 @@ import type {Active} from "@dnd-kit/core";
 import {notifications} from "@mantine/notifications";
 import type {AgentCardPreview} from "../model/AgentCardPreview.tsx";
 import {locations} from "../model/AgentLocationModel.tsx";
+import {spyLocations} from "../model/SpyLocationModel.tsx";
 
 export const SERVER_BASE_URL = "http://localhost:8080";
 
@@ -23,6 +24,7 @@ export const gameStartState: GameModel = {
   firstPlayer: "P1",
   currentPlayer: "P2",
   locations: locations,
+  spyLocations: spyLocations,
   imperiumRow: [],
   reserveRow: []
 }

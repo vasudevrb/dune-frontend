@@ -9,6 +9,8 @@ import type {AgentLocationModel} from "../model/AgentLocationModel.tsx";
 import {assertExists} from "../const/GameUtils.tsx";
 import {Faction} from "./Faction.tsx";
 import {FactionType} from "../model/PlayerModel.tsx";
+import type {SpyLocationModel} from "../model/SpyLocationModel.tsx";
+import {SpyLocation} from "./SpyLocation.tsx";
 
 export function GameBoard(props: { game: GameModel }) {
 
@@ -28,6 +30,27 @@ export function GameBoard(props: { game: GameModel }) {
           top: `${top}`,
           left: `${left}`,
         }}/>
+    )
+  }
+
+  const getSpyDroppable = (
+    spyLocation: SpyLocationModel,
+    top: Property.Top,
+    left: Property.Left
+  ) => {
+    return (
+      <SpyLocation
+        key={`spy-droppable-${spyLocation.id}`}
+        spyLocation={spyLocation}
+        w={"5%"}
+        h={"2.5%"}
+        bg={"#ffffff33"}
+        style={{
+          position: "absolute",
+          top: `${top}`,
+          left: `${left}`,
+        }}
+      />
     )
   }
 
@@ -67,6 +90,33 @@ export function GameBoard(props: { game: GameModel }) {
     })
   }
 
+  const getSpyDroppables = () => {
+    const droppableOffsets = [
+      {id: 1, top: "13.7%", left: "22.5%"},
+      {id: 2, top: "38.3%", left: "22.5%"},
+      {id: 3, top: "62.7%", left: "22.5%"},
+      {id: 4, top: "87.3%", left: "22.5%"},
+      {id: 5, top: "53.8%", left: "41%"},
+      {id: 6, top: "46.5%", left: "59.5%"},
+      {id: 7, top: "41.8%", left: "83.9%"},
+      {id: 8, top: "41.6%", left: "35.8%"},
+      {id: 9, top: "30.1%", left: "52.4%"},
+      {id: 10, top: "25.6%", left: "72.8%"},
+      {id: 11, top: "10.8%", left: "44.8%"},
+      {id: 12, top: "9.7%", left: "75.5%"},
+      {id: 13, top: "10.3%", left: "93.5%"},
+    ];
+    const spyLocations = props.game.spyLocations;
+
+    return droppableOffsets.map((offset) => {
+      const spyLocation = assertExists(
+        spyLocations.find(sl => sl.id === offset.id),
+        `Location with id: ${offset.id} not found `
+      )
+      return getSpyDroppable(spyLocation, offset.top, offset.left);
+    })
+  }
+
   const getBoard = () => {
     return (
       <Stack>
@@ -75,7 +125,7 @@ export function GameBoard(props: { game: GameModel }) {
           height: 1998 * 0.75,
           position: "relative", display: 'flex', gap: 8}}>
           {getAgentDroppables()}
-
+          {getSpyDroppables()}
           <Faction
             factionType={FactionType.Emperor}
             players={props.game.players}

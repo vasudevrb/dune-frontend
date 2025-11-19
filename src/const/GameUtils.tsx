@@ -63,7 +63,7 @@ export function recallAgent(game: GameModel, agentId: UniqueIdentifier, location
   location.agents = location.agents.filter(agent => agent.agentId != agentId)
 }
 
-export function placeSpy(game: GameModel, spyId: UniqueIdentifier, locationId: number) {
+export function placeSpy(game: GameModel, spyId: UniqueIdentifier, spyLocationId: number) {
   const player = assertExists(
     game.players.find(p => p.spies.some(spy => spy.id === spyId)),
     `Player with spyId: ${spyId} not found.`
@@ -74,38 +74,38 @@ export function placeSpy(game: GameModel, spyId: UniqueIdentifier, locationId: n
     `Spy with id ${spyId} not found.`
   )
 
-  const location = assertExists(
-    game.locations.find(location => location.id === locationId),
-    `Location with id ${locationId} not found.`
+  const spyLocation = assertExists(
+    game.spyLocations.find(sl => sl.id === spyLocationId),
+    `Spy Location with id ${spyLocationId} not found.`
   )
 
   player.spies = player.spies.filter(spy => spy.id != spyId)
-  location.spies.push({
+  spyLocation.spies.push({
     spyId: spy.id,
     color: player.color,
     playerName: player.name
   });
-  spy.atLocation = locationId;
+  spy.atLocation = spyLocationId;
 }
 
-export function recallSpy(game: GameModel, spyId: UniqueIdentifier, locationId: number) {
-  const location = assertExists(
-    game.locations.find(location => location.id === locationId),
-    `Location with id ${locationId} not found.`
+export function recallSpy(game: GameModel, spyId: UniqueIdentifier, spyLocationId: number) {
+  const spyLocation = assertExists(
+    game.spyLocations.find(sl => sl.id === spyLocationId),
+    `Spy Location with id ${spyLocationId} not found.`
   )
 
-  const locSpy = assertExists(
-    location.spies.find(spy => spy.spyId === spyId),
-    `Spy with id ${spyId} at ${locationId} not found.`
+  const spy = assertExists(
+    spyLocation.spies.find(spy => spy.spyId === spyId),
+    `Spy with id ${spyId} at ${spyLocationId} not found.`
   )
 
   const player = assertExists(
-    game.players.find(p => p.name === locSpy.playerName),
+    game.players.find(p => p.name === spy.playerName),
     `Player with spyId: ${spyId} not found.`
   )
 
   player.spies.push({id: spyId.toString()})
-  location.spies = location.spies.filter(spy => spy.spyId != spyId)
+  spyLocation.spies = spyLocation.spies.filter(spy => spy.spyId != spyId)
 }
 
 export function setFactionInfluence(game:GameModel, playerName: string, factionType: FactionType, influence: number) {

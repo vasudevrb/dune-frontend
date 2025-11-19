@@ -1,6 +1,5 @@
-import type {AgentLocationModel} from "../model/AgentLocationModel.tsx";
 import type {Property} from "csstype";
-import {Box, Group, type MantineStyleProp, type StyleProp} from "@mantine/core";
+import {Center, Group, type MantineStyleProp, type StyleProp} from "@mantine/core";
 import {useDraggable, useDroppable} from "@dnd-kit/core";
 import {CSS} from "@dnd-kit/utilities";
 import spy_icon_red from "../assets/spies/spy_red.png";
@@ -8,7 +7,7 @@ import spy_icon_blue from "../assets/spies/spy_blue.png";
 import spy_icon_gold from "../assets/spies/spy_gold.png";
 import spy_icon_green from "../assets/spies/spy_green.png";
 import {createPortal} from "react-dom";
-import {createId} from "../const/Util.tsx";
+import type {SpyLocationModel} from "../model/SpyLocationModel.tsx";
 
 function Spy(props: {
   spyId: string;
@@ -51,7 +50,7 @@ function Spy(props: {
 }
 
 export function SpyLocation(props: {
-  location: AgentLocationModel;
+  spyLocation: SpyLocationModel;
   agentsContainerStyle?: { top: Property.Top, left: Property.Left };
   style?: MantineStyleProp
   w?: StyleProp<Property.Width>
@@ -61,15 +60,16 @@ export function SpyLocation(props: {
   bg?: string;
 }) {
   const {setNodeRef} = useDroppable({
-    id: `spy-droppable-${createId([props.location.name, props.location.id])}`,
+    id: `spy-droppable-${props.spyLocation.id}`,
     data: {
       location: "boardspace",
-      type: "spy"
+      type: "spy",
+      id: props.spyLocation.id,
     }
   });
 
   return (
-    <Box
+    <Center
       ref={setNodeRef}
       pos={"absolute"}
       w={props.w}
@@ -81,14 +81,10 @@ export function SpyLocation(props: {
       <Group
         className="locations-spy-icon-container"
         align="center"
-        gap={0}
-        style={{
-          position: "absolute",
-          top: props.agentsContainerStyle?.top,
-          left: props.agentsContainerStyle?.left,
-        }}>
+        justify={"center"}
+        gap={0}>
         {
-          props.location.spies.map((spy) =>
+          props.spyLocation.spies.map((spy) =>
             <Spy
               spyId={spy.spyId}
               color={spy.color}
@@ -97,6 +93,6 @@ export function SpyLocation(props: {
           )
         }
       </Group>
-    </Box>
+    </Center>
   )
 }
