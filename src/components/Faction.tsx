@@ -1,15 +1,10 @@
 import '../css/Faction.css'
 import {FactionType, type PlayerModel} from "../model/PlayerModel.tsx";
-import {Box, Group, Image} from "@mantine/core";
-import fremen_image from '../assets/locations/fremen_faction.png';
-import bene_gesserit_image from '../assets/locations/bene_gesserit_faction.png';
-import emperor_image from '../assets/locations/emperor_faction.png';
-import spacing_guild_image from '../assets/locations/spacing_guild_faction.png';
+import {Group, Space, Stack} from "@mantine/core";
 import faction_marker_red from '../assets/faction_marker/faction_marker_red.svg';
 import faction_marker_blue from '../assets/faction_marker/faction_marker_blue.svg';
 import faction_marker_green from '../assets/faction_marker/faction_marker_green.svg';
 import faction_marker_gold from '../assets/faction_marker/faction_marker_gold.svg';
-import {range} from "../const/Util.tsx";
 import {useDraggable, useDroppable} from "@dnd-kit/core";
 import {CSS} from "@dnd-kit/utilities";
 import {createPortal} from "react-dom";
@@ -99,16 +94,6 @@ export function FactionTrack(props: {
   influenceLevel: number,
   players: PlayerModel[],
 }) {
-  const bottomPositions: string[] = [
-    "1%",
-    "16%",
-    "31%",
-    "46%",
-    "61%",
-    "73%",
-    "85%",
-  ]
-
   const factionTrackDroppable = useDroppable({
     id: `faction-track-${props.factionType}-${props.influenceLevel}`,
     data: {
@@ -130,27 +115,14 @@ export function FactionTrack(props: {
   }
 
   return (
-    <Box
-      ref={factionTrackDroppable.setNodeRef}
-      w={"35%"}
-      h={"13%"}
-      style={{
-        position: "absolute",
-        bottom: `${bottomPositions[props.influenceLevel]}`,
-        left: "5%",
-      }}>
       <Group
+        ref={factionTrackDroppable.setNodeRef}
         w={"100%"}
         h={"100%"}
-        mt={"2%"}
-        ms={"8%"}
-        gap={"1%"}
+        gap={"5"}
         align={"stretch"}>
-        {
-          props.players.map((player) => getInfluenceMarker(player))
-        }
+        {props.players.map((player) => getInfluenceMarker(player))}
       </Group>
-    </Box>
   )
 }
 
@@ -161,36 +133,67 @@ export function Faction(props: {
   top: Property.Top,
   left: Property.Left,
 }) {
-  const getFactionBoardImage = () => {
-    switch (props.factionType) {
-      case FactionType.Fremen :
-        return fremen_image;
-      case FactionType.BeneGesserit :
-        return bene_gesserit_image;
-      case FactionType.Emperor :
-        return emperor_image;
-      case FactionType.SpacingGuild:
-        return spacing_guild_image;
-    }
-  }
-
-  const getFactionTracks = () => {
-    return range(0, 6).map(influence =>
-    <FactionTrack
-      key={`${props.factionType}-${influence}`}
-      factionType={props.factionType}
-      influenceLevel={influence}
-      players={props.players}/>
-    );
-  }
-
   return (
-    <Box style={{
-      position: "relative",
+    <Stack
+      gap={0}
+      style={{
+      position: "absolute",
       top: props.top,
       left: props.left,
     }}>
-      {getFactionTracks()}
-    </Box>
+      <FactionTrack
+        key={`${props.factionType}-6`}
+        factionType={props.factionType}
+        influenceLevel={6}
+        players={props.players}/>
+
+      <Space h={20}/>
+
+      <FactionTrack
+        key={`${props.factionType}-5`}
+        factionType={props.factionType}
+        influenceLevel={5}
+        players={props.players}/>
+
+      <Space h={20}/>
+
+      <FactionTrack
+        key={`${props.factionType}-4`}
+        factionType={props.factionType}
+        influenceLevel={4}
+        players={props.players}/>
+
+      <Space h={30}/>
+
+      <FactionTrack
+        key={`${props.factionType}-3`}
+        factionType={props.factionType}
+        influenceLevel={3}
+        players={props.players}/>
+
+      <Space h={30}/>
+
+      <FactionTrack
+        key={`${props.factionType}-2`}
+        factionType={props.factionType}
+        influenceLevel={2}
+        players={props.players}/>
+
+      <Space h={30}/>
+
+      <FactionTrack
+        key={`${props.factionType}-1`}
+        factionType={props.factionType}
+        influenceLevel={1}
+        players={props.players}/>
+
+      <Space h={30}/>
+
+      <FactionTrack
+        key={`${props.factionType}-0`}
+        factionType={props.factionType}
+        influenceLevel={0}
+        players={props.players}/>
+    </Stack>
   )
 }

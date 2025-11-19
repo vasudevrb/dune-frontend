@@ -7,6 +7,8 @@ import {CombatArea} from "./CombatArea.tsx";
 import type {Property} from "csstype";
 import type {AgentLocationModel} from "../model/AgentLocationModel.tsx";
 import {assertExists} from "../const/GameUtils.tsx";
+import {Faction} from "./Faction.tsx";
+import {FactionType} from "../model/PlayerModel.tsx";
 
 export function GameBoard(props: { game: GameModel }) {
 
@@ -17,7 +19,7 @@ export function GameBoard(props: { game: GameModel }) {
   ) => {
     return (
       <AgentLocation
-        key={location.id}
+        key={`agent-droppable-${location.id}`}
         w={"9.5%"}
         h={"7%"}
         location={location}
@@ -50,9 +52,9 @@ export function GameBoard(props: { game: GameModel }) {
       {id: 17, top: "2.7%", left: "64.5%"},
       {id: 18, top: "12.7%", left: "30%"},
       {id: 19, top: "12.7%", left: "50%"},
-      {id: 19, top: "12.7%", left: "64.5%"},
-      {id: 20, top: "4%", left: "84%"},
-      {id: 20, top: "12.5%", left: "84%"},
+      {id: 20, top: "12.7%", left: "64.5%"},
+      {id: 21, top: "4%", left: "84%"},
+      {id: 22, top: "12.5%", left: "84%"},
     ];
     const locations = props.game.locations;
 
@@ -73,6 +75,31 @@ export function GameBoard(props: { game: GameModel }) {
           height: 1998 * 0.75,
           position: "relative", display: 'flex', gap: 8}}>
           {getAgentDroppables()}
+
+          <Faction
+            factionType={FactionType.Emperor}
+            players={props.game.players}
+            top={"2.2%"}
+            left={"3.8%"}/>
+
+          <Faction
+            factionType={FactionType.SpacingGuild}
+            players={props.game.players}
+            top={"26.7%"}
+            left={"3.8%"}/>
+
+          <Faction
+            factionType={FactionType.BeneGesserit}
+            players={props.game.players}
+            top={"51.2%"}
+            left={"3.8%"}/>
+
+          <Faction
+            factionType={FactionType.Fremen}
+            players={props.game.players}
+            top={"75.8%"}
+            left={"3.8%"}/>
+
           <img
             src={board}
             alt="Large"

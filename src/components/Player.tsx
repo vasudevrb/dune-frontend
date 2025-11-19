@@ -516,7 +516,11 @@ export function Player(props: {
         <Group w={"48%"} className={"players-spy-icon-container"} justify="center">
           {
             props.playerModel.spies.map((spy, index) =>
-              <Spy player={props.playerModel} spyModel={spy} index={index}/>
+              <Spy
+                key={spy.id}
+                player={props.playerModel}
+                spyModel={spy}
+                index={index}/>
             )
           }
         </Group>

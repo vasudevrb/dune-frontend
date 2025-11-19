@@ -25,6 +25,7 @@ export function Card(props: {
   const getImageButton = (button: CardButton) => {
     return (
       <ActionIcon
+        key={`button:${button.type}-${button.label}`}
         onClick={button.onclick}
         w={31}
         h={50}
