@@ -4,6 +4,7 @@ import {assertExists} from "./GameUtils.tsx";
 import type {Active} from "@dnd-kit/core";
 import {notifications} from "@mantine/notifications";
 import type {AgentCardPreview} from "../model/AgentCardPreview.tsx";
+import {locations} from "../model/AgentLocationModel.tsx";
 
 export const SERVER_BASE_URL = "http://localhost:8080";
 
@@ -21,14 +22,7 @@ export const gameStartState: GameModel = {
   players: [],
   firstPlayer: "P1",
   currentPlayer: "P2",
-  locations: [
-    {
-      name: "Deep Desert",
-      id: 1,
-      agents: [],
-      spies: []
-    }
-  ],
+  locations: locations,
   imperiumRow: [],
   reserveRow: []
 }

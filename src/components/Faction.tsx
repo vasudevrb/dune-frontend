@@ -13,6 +13,7 @@ import {range} from "../const/Util.tsx";
 import {useDraggable, useDroppable} from "@dnd-kit/core";
 import {CSS} from "@dnd-kit/utilities";
 import {createPortal} from "react-dom";
+import type {Property} from "csstype";
 
 function FactionInfluenceMarker(props: {
   player: PlayerModel,
@@ -156,7 +157,9 @@ export function FactionTrack(props: {
 
 export function Faction(props: {
   factionType: FactionType
-  players: PlayerModel[]
+  players: PlayerModel[],
+  top: Property.Top,
+  left: Property.Left,
 }) {
   const getFactionBoardImage = () => {
     switch (props.factionType) {
@@ -182,13 +185,12 @@ export function Faction(props: {
   }
 
   return (
-    <Box pos={"relative"}>
+    <Box style={{
+      position: "relative",
+      top: props.top,
+      left: props.left,
+    }}>
       {getFactionTracks()}
-      <Image
-        maw={"335px"}
-        fit={"contain"}
-        src={getFactionBoardImage()}
-        alt="Location"/>
     </Box>
   )
 }

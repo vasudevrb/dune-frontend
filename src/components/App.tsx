@@ -232,10 +232,10 @@ function Game() {
         if (activeData.location === "player" && overData.location === "boardspace") {
           if (activeData.type === "agent") {
             console.log("Placing agent")
-            placeAgent(draft, active.id, draft.locations[0].id)
+            placeAgent(draft, active.id, overData.id)
             action = PLACE_AGENT
           } else {
-            placeSpy(draft, active.id, draft.locations[0].id)
+            placeSpy(draft, active.id, overData.id)
           }
         } else if (activeData.location === "boardspace" && overData.location === "player") {
           if (activeData.type === "agent"){

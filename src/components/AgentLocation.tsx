@@ -66,7 +66,8 @@ export function AgentLocation(props: {
     id: `agent-droppable-${createId([props.location.name, props.location.id])}`,
     data: {
       location: "boardspace",
-      type: "agent"
+      type: "agent",
+      id: props.location.id
     }
   });
 
