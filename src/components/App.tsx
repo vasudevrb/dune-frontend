@@ -118,10 +118,9 @@ function Game() {
   const { playerName } = useGameStore();
   const {subscribe, unsubscribe, sendMessage} = useWebSocket();
 
-  const [gameStarted, setGameStarted] = useState(true);
+  const [gameStarted, setGameStarted] = useState(false);
   const [game, setGame] = useState<GameModel>({
-    ...gameStartState,
-    players: [PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4]
+    ...gameStartState
   });
 
   const gameStartHandler = (players: PlayerModel[]) => {
@@ -131,6 +130,7 @@ function Game() {
   }
 
   const updateGame = (updatedGame: GameModel) => {
+    console.log("Updating game: ", updatedGame);
     setGame((currentGame) =>
     produce(updatedGame, draft => {
       draft.players = draft.players
@@ -255,7 +255,7 @@ function Game() {
         case PLACE_AGENT:
           sendMessage({action: "PLACE_AGENT", body: {
               agentId: active.id,
-              locationId: game.locations[0].id,
+              locationId: overData.id,
             }});
           break;
       }

@@ -6,18 +6,12 @@ export interface AgentLocationModel {
     color: string;
     playerName: string
   }[];
-  spies: {
-    spyId: string;
-    color: string;
-    playerName: string;
-  }[]
 }
 
 const emptyLocation: AgentLocationModel = {
   name: "",
   id: 0,
-  agents: [],
-  spies: []
+  agents: []
 }
 
 export const locations: AgentLocationModel[] = [
