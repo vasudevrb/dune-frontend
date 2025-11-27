@@ -27,7 +27,10 @@ export function Players(props: { game: GameModel }) {
       offsetScrollbars={false}
       type={"never"}
       scrollbars="y">
-      <Stack gap="0" style={{minHeight: '100%'}}>
+      <Stack
+        gap="0"
+        maw={"300px"}
+        style={{minHeight: '100%'}}>
         {getPlayerElements(p => !p.isThisPlayer)}
         {getPlayerElements(p => p.isThisPlayer)}
       </Stack>

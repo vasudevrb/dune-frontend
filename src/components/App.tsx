@@ -17,7 +17,7 @@ import {DndContext, type DragEndEvent} from "@dnd-kit/core";
 import {restrictToWindowEdges} from '@dnd-kit/modifiers';
 import type {GameModel} from "../model/GameModel.tsx";
 import {produce} from "immer";
-import {moveThisPlayerToLast, placeAgent, placeSpy, recallAgent, recallSpy, setFactionInfluence} from "../const/GameUtils.tsx";
+import {moveThisPlayerToLast, placeAgent, placeSpy, recallAgent, recallSpy, setFactionInfluence, setFeydSignetStatus} from "../const/GameUtils.tsx";
 import type {AgentLocationModel} from "../model/AgentLocationModel.tsx";
 import {useGameStore} from "../store/GameStore.tsx";
 import {Setup2} from "./setup/Setup2.tsx";
@@ -118,9 +118,10 @@ function Game() {
   const { playerName } = useGameStore();
   const {subscribe, unsubscribe, sendMessage} = useWebSocket();
 
-  const [gameStarted, setGameStarted] = useState(false);
+  const [gameStarted, setGameStarted] = useState(true);
   const [game, setGame] = useState<GameModel>({
-    ...gameStartState
+    ...gameStartState,
+    players: [PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4]
   });
 
   const gameStartHandler = (players: PlayerModel[]) => {
@@ -246,6 +247,8 @@ function Game() {
           if (activeData.factionType === overData.factionType) {
             setFactionInfluence(draft, activeData.playerName, overData.factionType, overData.influenceLevel)
           }
+        } else if (activeData.location === 'feyd-rautha' && overData.location === 'feyd-rautha') {
+          setFeydSignetStatus(draft, overData.signetValue)
         }
       })
     );
@@ -263,7 +266,7 @@ function Game() {
   }
 
   return (
-    <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToWindowEdges]}>
+    <DndContext onDragEnd={handleDragEnd} modifiers={[restrictToWindowEdges]} autoScroll={false}>
       <MantineProvider theme={duneTheme}>
         <Notifications position={"bottom-right"}/>
         {gameStarted ? contentComponent() : setupComponent()}

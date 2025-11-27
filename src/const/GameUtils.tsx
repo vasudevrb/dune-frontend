@@ -129,3 +129,11 @@ export function setFactionInfluence(game:GameModel, playerName: string, factionT
       break;
   }
 }
+
+export function setFeydSignetStatus(game: GameModel, newSignetStatus: number) {
+  const thisPlayer = assertExists(
+    game.players.find(p => p.isThisPlayer),
+    `This player not found.`
+  )
+  thisPlayer.character.additionalInfo.signetStatus = newSignetStatus;
+}

@@ -65,6 +65,7 @@ export interface CharacterModel {
   name: string;
   urls: string[];
   avatarUrl: string;
+  additionalInfo: any;
 }
 
 export interface CombatModel {

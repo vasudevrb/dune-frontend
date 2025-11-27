@@ -32,7 +32,8 @@ export const gameStartState: GameModel = {
 export const characterStartState: CharacterModel = {
   name: "",
   urls: [],
-  avatarUrl: ""
+  avatarUrl: "",
+  additionalInfo: {}
 }
 
 export const playerStartState: PlayerModel = {
@@ -91,7 +92,8 @@ export const playerStartState: PlayerModel = {
 export const PRINCESS_IRULAN: CharacterModel = {
   name: "Princess Irulan",
   urls: ["http://localhost:8080/characters/princess_irulan.jpg"],
-  avatarUrl: "http://localhost:8080/avatars/princess_irulan.jpg"
+  avatarUrl: "http://localhost:8080/avatars/princess_irulan.jpg",
+  additionalInfo: {}
 }
 export const PLAYER_1: PlayerModel = {
   ...playerStartState,
@@ -126,7 +128,8 @@ export const PLAYER_1: PlayerModel = {
 export const MUAD_DIB: CharacterModel = {
   name: "Muad-Dib",
   urls: ["http://localhost:8080/characters/muaddib.jpg"],
-  avatarUrl: "http://localhost:8080/avatars/muaddib.jpg"
+  avatarUrl: "http://localhost:8080/avatars/muaddib.jpg",
+  additionalInfo: {}
 }
 export const PLAYER_2: PlayerModel = {
   ...playerStartState,
@@ -154,7 +157,8 @@ export const PLAYER_2: PlayerModel = {
 export const GURNEY_HALLECK: CharacterModel = {
   name: "Gurney Halleck",
   urls: ["http://localhost:8080/characters/gurney_halleck.jpg"],
-  avatarUrl: "http://localhost:8080/avatars/gurney_halleck.jpg"
+  avatarUrl: "http://localhost:8080/avatars/gurney_halleck.jpg",
+  additionalInfo: {}
 }
 export const PLAYER_3: PlayerModel = {
   ...playerStartState,
@@ -180,31 +184,34 @@ export const PLAYER_3: PlayerModel = {
   makerHookUnlocked: true,
 }
 
-export const EMPEROR_SHADDAM: CharacterModel = {
-  name: "Emperor Shaddam",
-  urls: ["http://localhost:8080/characters/shaddam_corrino.jpg"],
-  avatarUrl: "http://localhost:8080/avatars/shaddam_corrino.jpg"
+export const FEYD_RAUTHA: CharacterModel = {
+  name: "Feyd Rautha",
+  urls: ["http://localhost:8080/characters/feyd_rautha.jpg"],
+  avatarUrl: "http://localhost:8080/avatars/feyd_rautha.jpg",
+  additionalInfo: {
+    signetStatus: 0
+  }
 }
 export const PLAYER_4: PlayerModel = {
   ...playerStartState,
   name: "P4",
   isThisPlayer: true,
-  character: EMPEROR_SHADDAM,
+  character: FEYD_RAUTHA,
   color: "GREEN",
   agents: [
-    {id: `agent-${EMPEROR_SHADDAM.name}#1`},
-    {id: `agent-${EMPEROR_SHADDAM.name}#2`},
-    {id: `agent-${EMPEROR_SHADDAM.name}#3`},
+    {id: `agent-${FEYD_RAUTHA.name}#1`},
+    {id: `agent-${FEYD_RAUTHA.name}#2`},
+    {id: `agent-${FEYD_RAUTHA.name}#3`},
   ],
   spies: [
-    {id: `spy-${EMPEROR_SHADDAM.name}#1`},
-    {id: `spy-${EMPEROR_SHADDAM.name}#2`},
-    {id: `spy-${EMPEROR_SHADDAM.name}#3`},
+    {id: `spy-${FEYD_RAUTHA.name}#1`},
+    {id: `spy-${FEYD_RAUTHA.name}#2`},
+    {id: `spy-${FEYD_RAUTHA.name}#3`},
   ],
   controlFlags: [
-    {id: `control_flag-${EMPEROR_SHADDAM.name}#1`},
-    {id: `control_flag-${EMPEROR_SHADDAM.name}#2`},
-    {id: `control_flag-${EMPEROR_SHADDAM.name}#3`},
+    {id: `control_flag-${FEYD_RAUTHA.name}#1`},
+    {id: `control_flag-${FEYD_RAUTHA.name}#2`},
+    {id: `control_flag-${FEYD_RAUTHA.name}#3`},
   ],
   private: {
     inHandCards: [

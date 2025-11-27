@@ -8,6 +8,7 @@ import troop_icon from '../assets/combat/troop.png';
 import strength_icon from '../assets/combat/strength.png';
 import worm_icon from '../assets/combat/worm.png';
 import first_player_icon from '../assets/agents/first_player_token.png';
+import signet_ring from '../assets/cards/signet_ring.png';
 import agent_icon_disabled from '../assets/agents/agent_disabled.svg';
 import agent_icon_red from '../assets/agents/agent_red.svg';
 import agent_icon_blue from '../assets/agents/agent_blue.svg';
@@ -39,6 +40,7 @@ import {useDisclosure} from "@mantine/hooks";
 import {useDraggable, useDroppable} from "@dnd-kit/core";
 import {createPortal} from "react-dom";
 import {useGameStore} from "../store/GameStore.tsx";
+import {FeydSignet} from "./FeydSignet.tsx";
 
 function Agent(props: {player: PlayerModel, agentModel: AgentModel, index: number}) {
   const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
@@ -559,20 +561,35 @@ export function Player(props: {
     )
   }
 
+  const getFeydSignetComponent = () => {
+    if (props.playerModel.character.name !== "Feyd Rautha") return;
+    return (
+      <>
+        <Image draggable={false} fit={"contain"} w={"100%"} h={40} src={signet_ring}/>
+        <FeydSignet characterModel={props.playerModel.character}/>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+      </>
+    )
+  }
+
   const getThisPlayer = () => {
     return (
-      <Stack className={`current-player-container ${currentPlayerStyleClass}`} gap={"5"} ref={playerDroppable.setNodeRef}>
-        <Group align={"flex-start"}>
+      <Stack
+        className={`current-player-container ${currentPlayerStyleClass}`}
+        gap={"5"}>
+        <Group align={"flex-start"} ref={playerDroppable.setNodeRef}>
           {getAvatar()}
           {getNameAndResources()}
           {getAgents()}
         </Group>
         {getSpiesAndFlags()}
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        {getFeydSignetComponent()}
         <Space h={"md"}/>
         {getResourceModifierElements()}
-        <Divider orientation={"horizontal"} m={"md"} color={"#313131ff"}/>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getCombatModifierElements()}
-        <Divider orientation={"horizontal"} m={"md"} color={"#313131ff"}/>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getActions()}
       </Stack>
     )
