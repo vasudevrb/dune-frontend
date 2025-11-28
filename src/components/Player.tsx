@@ -483,15 +483,17 @@ export function Player(props: {
   const getAvatar = () => {
     return (
       <Box pos={"relative"} w={65} h={65}>
-        <Tooltip label="First player">
-          <Image
-            pos={"absolute"}
-            m={4}
-            w={25}
-            style={{zIndex: 10}}
-            src={first_player_icon}
-            hidden={props.firstPlayer != props.playerModel.name}/>
-        </Tooltip>
+        {props.firstPlayer === props.playerModel.name &&
+          <Tooltip label="First player">
+            <Image
+              pos={"absolute"}
+              m={4}
+              w={25}
+              style={{zIndex: 10}}
+              src={first_player_icon}
+              hidden={props.firstPlayer != props.playerModel.name}/>
+          </Tooltip>
+        }
         <Avatar
           radius="xs"
           size="65"
@@ -510,8 +512,8 @@ export function Player(props: {
         type={"never"}>
         <div style={{display: 'flex'}}>
           <Box pos={"relative"} w={50} h={50}>
-            <img width={50} src={vp_icon} alt="Resource icon"/>
-            <Text size="1.4em" className={"player-resource-modifier-text"}>2</Text>
+            <Image w={50} src={vp_icon}/>
+            <Text size="1.4em" className={"player-resource-modifier-text"}>{props.playerModel.victoryPoints}</Text>
           </Box>
         </div>
       </ScrollArea>
