@@ -8,10 +8,10 @@ import {Players} from "./Players.tsx";
 import {Notifications} from '@mantine/notifications';
 import {useEffect, useState} from "react";
 import type {PlayerModel} from "../model/PlayerModel.tsx";
-import {CARD_USED, PLACE_AGENT, START_GAME, UPDATE_LOCATION, UPDATE_PLAYER} from "../const/Actions.tsx";
+import {CARD_USED, PLACE_AGENT, SHOW_NOTIFICATION, START_GAME, UPDATE_LOCATION, UPDATE_PLAYER} from "../const/Actions.tsx";
 import {InHandCards} from "./InHandCards.tsx";
 import {useWebSocket, WebSocketProvider} from "./WebSocketContext.tsx";
-import {cardPreviewStartState, gameStartState, PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4} from "../const/Util.tsx";
+import {cardPreviewStartState, gameStartState, PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4, showNotification} from "../const/Util.tsx";
 import {GameBoard} from "./GameBoard.tsx";
 import {DndContext, type DragEndEvent} from "@dnd-kit/core";
 import {restrictToWindowEdges} from '@dnd-kit/modifiers';
@@ -118,10 +118,9 @@ function Game() {
   const { playerName } = useGameStore();
   const {subscribe, unsubscribe, sendMessage} = useWebSocket();
 
-  const [gameStarted, setGameStarted] = useState(true);
+  const [gameStarted, setGameStarted] = useState(false);
   const [game, setGame] = useState<GameModel>({
     ...gameStartState,
-    players: [PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4]
   });
 
   const gameStartHandler = (players: PlayerModel[]) => {
@@ -173,7 +172,7 @@ function Game() {
     const componentName = "game_component";
     console.log(`In ${componentName}. Subscribing to WS messages`)
 
-    const actions = [START_GAME, UPDATE_PLAYER, UPDATE_LOCATION]
+    const actions = [START_GAME, UPDATE_PLAYER, UPDATE_LOCATION, SHOW_NOTIFICATION]
     subscribe(actions, componentName, {
       onMessage: (action: string, body: any) => {
         if (action === START_GAME) {
@@ -183,6 +182,8 @@ function Game() {
           updatePlayer(body)
         } else if (action === UPDATE_LOCATION) {
           updateLocation(body);
+        } else if (action === SHOW_NOTIFICATION) {
+          showNotification(body.message);
         }
       }
     });

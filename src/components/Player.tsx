@@ -1,6 +1,6 @@
 import '../css/Player.css'
 import {CSS} from '@dnd-kit/utilities';
-import {ActionIcon, Avatar, Box, Divider, Group, Image, Popover, Space, Stack, Text, Tooltip} from "@mantine/core";
+import {ActionIcon, Avatar, Box, Button, Divider, Group, Image, Popover, Stack, Text, Tooltip} from "@mantine/core";
 import water_icon from '../assets/resources/water.png';
 import spice_icon from '../assets/resources/spice.png';
 import solari_icon from '../assets/resources/solari.png';
@@ -25,7 +25,8 @@ import control_flag_green from '../assets/control_flags/control_flag_green.png';
 import vp_icon from '../assets/resources/victory_point.png';
 import objective_card_icon from '../assets/cards/objective_card.jpg'
 import imperium_card from '../assets/cards/imperium_card.jpg';
-import intrigue_card from '../assets/cards/intrigue_card.jpg';
+import draw_intrigue_card from '../assets/cards/draw_intrigue_card.png';
+import steal_intrigue_card from '../assets/cards/steal_intrigue_card.png';
 import draw_card from '../assets/cards/draw_card.png';
 import desert_mouse from '../assets/objectives/desert_mouse.png';
 import crysknife from '../assets/objectives/crysknife.png';
@@ -41,6 +42,8 @@ import {useDraggable, useDroppable} from "@dnd-kit/core";
 import {createPortal} from "react-dom";
 import {useGameStore} from "../store/GameStore.tsx";
 import {FeydSignet} from "./FeydSignet.tsx";
+import {useWebSocket} from "./WebSocketContext.tsx";
+import {DRAW_CARD} from "../const/Actions.tsx";
 
 function Agent(props: {player: PlayerModel, agentModel: AgentModel, index: number}) {
   const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
@@ -199,6 +202,8 @@ export function Player(props: {
   currentPlayer: string;
   firstPlayer: string;
 }) {
+  const {sendMessage} = useWebSocket();
+
   const globalProps = useGameStore();
   const [inHandCardsPopoverOpened, setInHandCardsPopoverState] = useDisclosure(false);
   const [objectivesPopoverOpened, setObjectivesPopoverState] = useDisclosure(false);
@@ -490,25 +495,51 @@ export function Player(props: {
   }
 
   const getActions = () => {
-    const getActionButton = (icon: string) => {
+    const getIconButton = (
+      icon: string,
+      onClick?: () => void,
+    ) => {
       return (
         <ActionIcon
-          onClick={() => globalProps.setImperiumRowOpened(true)}
-          w={35}
+          onClick={onClick}
+          w={45}
           h={54}
           className={"player-resource-modifier-button"}
           variant={"none"}
           radius={"0"}>
-          <Image src={icon} alt="Action button"/>
+          <Image fit="contain" w={50} height={54} src={icon}/>
         </ActionIcon>
       )
     }
+    const getTextButton = (
+      label: string,
+      variant?: string
+    ) => {
+      return (
+        <Button
+          className={`setup-action-button-next`}
+          color={"#A08170"}
+          size="md"
+          radius="0"
+          variant={variant ? variant : "filled"}>{label}</Button>
+      )
+    }
     return (
-      <Group w={"100%"} gap={"xs"}>
-        {getActionButton(draw_card)}
-        {getActionButton(imperium_card)}
-        {getActionButton(intrigue_card)}
-      </Group>
+      <>
+        <Group w={"100%"} gap={"xs"}>
+          {getIconButton(draw_card, () => {
+            sendMessage({action: DRAW_CARD})
+          })}
+          {getIconButton(draw_intrigue_card)}
+          {getIconButton(steal_intrigue_card)}
+        </Group>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <Group w={"100%"} gap={"xs"} justify={"flex-end"}>
+          {getTextButton("REVEAL", "outline")}
+          {getTextButton("END TURN")}
+        </Group>
+
+      </>
     )
   }
 
@@ -585,7 +616,6 @@ export function Player(props: {
         {getSpiesAndFlags()}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getFeydSignetComponent()}
-        <Space h={"md"}/>
         {getResourceModifierElements()}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getCombatModifierElements()}

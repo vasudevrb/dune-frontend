@@ -89,6 +89,14 @@
   color: #fafafa
 }
 
+.player-action-button {
+  transition: filter 0.4s ease-in-out;
+}
+
+.player-action-button:hover {
+  filter: drop-shadow(0 0 1em #94664d);
+}
+
 .player-resource-modifier-text {
   position: absolute;
   padding: 0;
