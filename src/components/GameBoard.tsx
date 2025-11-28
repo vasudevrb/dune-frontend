@@ -1,6 +1,6 @@
 import '../css/GameBoard.css'
 import {Box, ScrollArea, Space, Stack} from "@mantine/core";
-import board from '../assets/board.png';
+import board from '../assets/board.jpg';
 import {AgentLocation} from "./AgentLocation.tsx";
 import type {GameModel} from "../model/GameModel.tsx";
 import {CombatArea} from "./CombatArea.tsx";
@@ -150,6 +150,8 @@ export function GameBoard(props: { game: GameModel }) {
             top={"75.8%"}
             left={"3.8%"}/>
 
+          <CombatArea game={props.game}/>
+
           <img
             src={board}
             alt="Large"
@@ -180,8 +182,6 @@ export function GameBoard(props: { game: GameModel }) {
         scrollHideDelay={0}>
         {getBoard()}
       </ScrollArea>
-
-      <CombatArea game={props.game}/>
     </Box>
   )
 }
