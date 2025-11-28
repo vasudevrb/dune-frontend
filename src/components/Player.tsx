@@ -1,6 +1,6 @@
 import '../css/Player.css'
 import {CSS} from '@dnd-kit/utilities';
-import {ActionIcon, Avatar, Box, Button, Divider, Group, Image, Popover, Stack, Text, Tooltip} from "@mantine/core";
+import {ActionIcon, Avatar, Box, Button, Divider, Flex, Group, Image, Popover, ScrollArea, Stack, Text, Tooltip} from "@mantine/core";
 import water_icon from '../assets/resources/water.png';
 import spice_icon from '../assets/resources/spice.png';
 import solari_icon from '../assets/resources/solari.png';
@@ -23,21 +23,14 @@ import control_flag_blue from '../assets/control_flags/control_flag_blue.png';
 import control_flag_gold from '../assets/control_flags/control_flag_gold.png';
 import control_flag_green from '../assets/control_flags/control_flag_green.png';
 import vp_icon from '../assets/resources/victory_point.png';
-import objective_card_icon from '../assets/cards/objective_card.jpg'
-import imperium_card from '../assets/cards/imperium_card.jpg';
 import draw_intrigue_card from '../assets/cards/draw_intrigue_card.png';
 import steal_intrigue_card from '../assets/cards/steal_intrigue_card.png';
 import draw_card from '../assets/cards/draw_card.png';
-import desert_mouse from '../assets/objectives/desert_mouse.png';
-import crysknife from '../assets/objectives/crysknife.png';
-import ornithopter from '../assets/objectives/ornothopter.png';
-import objective_any from '../assets/objectives/any.png';
-import {type AgentModel, CombatModifierType, type ControlFlagModel, ObjectiveType, type PlayerModel, type SpyModel} from "../model/PlayerModel.tsx";
-import {type JSX, type MouseEventHandler, type ReactElement} from "react";
+import {type AgentModel, CombatModifierType, type ControlFlagModel, type PlayerModel, type SpyModel} from "../model/PlayerModel.tsx";
+import {type JSX} from "react";
 import {range} from "../const/Util.tsx";
 import minus_icon from "../assets/minus.svg";
 import plus_icon from "../assets/plus.svg";
-import {useDisclosure} from "@mantine/hooks";
 import {useDraggable, useDroppable} from "@dnd-kit/core";
 import {createPortal} from "react-dom";
 import {useGameStore} from "../store/GameStore.tsx";
@@ -45,7 +38,7 @@ import {FeydSignet} from "./FeydSignet.tsx";
 import {useWebSocket} from "./WebSocketContext.tsx";
 import {DRAW_CARD} from "../const/Actions.tsx";
 
-function Agent(props: {player: PlayerModel, agentModel: AgentModel, index: number}) {
+function Agent(props: { player: PlayerModel, agentModel: AgentModel, index: number }) {
   const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
     id: props.agentModel.id,
     data: {
@@ -79,7 +72,7 @@ function Agent(props: {player: PlayerModel, agentModel: AgentModel, index: numbe
     const availableBefore = agentAvailability.slice(0, index).filter(a => a).length;
     const numAgentsUsed = props.player.agents.filter(a => a.atLocation).length;
 
-    return availableBefore <  numAgentsUsed ? "GRAY" : props.player.color
+    return availableBefore < numAgentsUsed ? "GRAY" : props.player.color
   }
 
   const agentIcon = getAgentIcon(getAgentColor(props.index))
@@ -98,15 +91,15 @@ function Agent(props: {player: PlayerModel, agentModel: AgentModel, index: numbe
   const node = (
     <img
       {...draggableProps}
-      width={40}
+      width={25}
       src={agentIcon}
       alt="Agent icon"
       className={"players-agent-icon"}/>
   )
-  return isDragging ? createPortal(node, document.body): node
+  return isDragging ? createPortal(node, document.body) : node
 }
 
-function Spy(props: {player: PlayerModel, spyModel: SpyModel, index: number}) {
+function Spy(props: { player: PlayerModel, spyModel: SpyModel, index: number }) {
   const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
     id: props.spyModel.id,
     data: {
@@ -148,10 +141,10 @@ function Spy(props: {player: PlayerModel, spyModel: SpyModel, index: number}) {
       alt="Spy icon"
       className={"players-spy-icon"}/>
   )
-  return isDragging ? createPortal(node, document.body): node
+  return isDragging ? createPortal(node, document.body) : node
 }
 
-function ControlFlag(props: {player: PlayerModel, controlFlagModel: ControlFlagModel, index: number}) {
+function ControlFlag(props: { player: PlayerModel, controlFlagModel: ControlFlagModel, index: number }) {
   const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
     id: props.controlFlagModel.id,
     data: {
@@ -193,7 +186,7 @@ function ControlFlag(props: {player: PlayerModel, controlFlagModel: ControlFlagM
       alt="Control flag icon"
       className={"players-control-flag-icon"}/>
   )
-  return isDragging ? createPortal(node, document.body): node
+  return isDragging ? createPortal(node, document.body) : node
 }
 
 
@@ -205,8 +198,6 @@ export function Player(props: {
   const {sendMessage} = useWebSocket();
 
   const globalProps = useGameStore();
-  const [inHandCardsPopoverOpened, setInHandCardsPopoverState] = useDisclosure(false);
-  const [objectivesPopoverOpened, setObjectivesPopoverState] = useDisclosure(false);
 
   const playerDroppable = useDroppable({
     id: `this-player-container`,
@@ -215,7 +206,6 @@ export function Player(props: {
       type: "spy,agent"
     }
   });
-
 
   const getAgents = () => {
     const elements: JSX.Element[] = [];
@@ -229,31 +219,8 @@ export function Player(props: {
       );
     })
     return (
-      <Stack className="players-agent-icon-container" h="100" align="stretch" style={{marginLeft: 'auto'}}>
-        {elements}
-      </Stack>
+      <Flex direction={"row"} pr={8} gap={0}>{elements}</Flex>
     );
-  }
-
-  const getAvatar = () => {
-    return (
-      <Stack align={"center"} gap={"5"}>
-        <Avatar className={"player-avatar"}
-                radius="xs"
-                size="lg"
-                src={props.playerModel.character.avatarUrl}/>
-
-        {
-          !props.playerModel.isThisPlayer &&
-          <Group align="center" gap={"5"}>
-            <Text fw="700" size="md" className={"player-container-text"}>
-              {props.playerModel.victoryPoints}
-            </Text>
-            <img width={15} src={vp_icon} alt="Victory points"/>
-          </Group>
-        }
-      </Stack>
-    )
   }
 
   const getResourceIconByType = (resourceType: string) => {
@@ -271,133 +238,61 @@ export function Player(props: {
     const getResource = (quantity: number, resourceType: string) => {
       const icon = getResourceIconByType(resourceType);
       return (
-        <Group align="center" gap={"5"}>
-          <Text size="md" className={"player-container-text"}>{quantity}</Text>
-          <img width={15} src={icon} alt="Resource icon"/>
-        </Group>
+        <Box pos={"relative"} w={40} h={40}>
+          <Image w={40} src={icon}/>
+          <Text size="1.2rem" className={"player-resource-modifier-text"}>{quantity}</Text>
+        </Box>
       )
     }
-    const divider = () => {
-      return <Divider orientation="vertical" m={"0"} color={"#cacaca"}/>
-    }
 
     return (
-      <Group align="center" gap={"xs"}>
+      <>
         {getResource(props.playerModel.resources.water, "water")}
-        {divider()}
         {getResource(props.playerModel.resources.spice, "spice")}
-        {divider()}
         {getResource(props.playerModel.resources.solari, "solari")}
-      </Group>
-    )
-  }
-
-  const getIconPopover = (
-    targetIcon: string,
-    dropdown: ReactElement,
-    popoverOpened: boolean,
-    setPopoverState: { open: MouseEventHandler; close: MouseEventHandler; }
-  ) => {
-    return (
-      <Popover radius={"0"} position="top" shadow="md" opened={popoverOpened}>
-        <Popover.Target>
-          <img width={20}
-               onMouseEnter={setPopoverState.open}
-               onMouseLeave={setPopoverState.close}
-               src={targetIcon}
-               alt="Popover"/>
-        </Popover.Target>
-        <Popover.Dropdown className="cards-popover" style={{pointerEvents: 'none'}}>
-          {dropdown}
-        </Popover.Dropdown>
-      </Popover>
+      </>
     )
   }
 
   const getCardStats = () => {
     const getCardStat = (cardType: string, num: number) => {
       return (
-        <Stack align="center" gap={"0"}>
+        <Stack align="center" ps={"8"} pe={8} gap={"0"}>
           <Text size="md" c={"#fafafa"}>{num}</Text>
           <Text size="xs" c={"#fafafa"}>{cardType}</Text>
         </Stack>
       )
     }
     return (
-      <Group align="center" justify={"center"} gap={"5"}>
-        {getCardStat("In hand", props.playerModel.numCards.inHand)}
-        <Divider orientation="vertical" m={"0"} color={"#cacaca55"}/>
-        {getCardStat("In discard", props.playerModel.numCards.inDiscardPile)}
-        <Divider orientation="vertical" m={"0"} color={"#cacaca55"}/>
-        {getCardStat("In draw", props.playerModel.numCards.inDrawPile)}
-        <Divider orientation="vertical" m={"0"} color={"#cacaca55"}/>
-        {getCardStat("Intrigues", props.playerModel.numCards.intrigues)}
-      </Group>
+        <>
+          {getCardStat("Hand", props.playerModel.numCards.inHand)}
+          {getCardStat("Discard", props.playerModel.numCards.inDiscardPile)}
+          {getCardStat("Draw", props.playerModel.numCards.inDrawPile)}
+          {getCardStat("Intrigues", props.playerModel.numCards.intrigues)}
+        </>
     )
   }
 
-  const getObjectiveStats = () => {
-    const getObjectiveImage = (objectiveType: ObjectiveType) => {
-      switch (objectiveType) {
-        case ObjectiveType.DesertMouse: return desert_mouse;
-        case ObjectiveType.Crysknife: return crysknife;
-        case ObjectiveType.Ornithopter: return ornithopter;
-        default: return objective_any;
-      }
-    }
-    return (
-      <Group align="center" justify={"center"} gap={"xs"}>
-        {
-          props.playerModel.objectives.map((obj, index) =>
-            <img key={index} width={20} src={getObjectiveImage(obj)} alt="Objective"/>
-          )
-        }
-      </Group>
-    )
-  }
-
-  const getCardElements = () => {
-    return (
-      <Group align="center" gap={"xs"}>
-        {
-          getIconPopover(
-            imperium_card,
-            getCardStats(),
-            inHandCardsPopoverOpened,
-            setInHandCardsPopoverState
-          )
-        }
-        <Divider orientation="vertical" m={"0"} color={"#363636"}/>
-        {
-          getIconPopover(
-            objective_card_icon,
-            getObjectiveStats(),
-            objectivesPopoverOpened,
-            setObjectivesPopoverState
-          )
-        }
-      </Group>
-    )
-  }
-
-  const getNameAndResources = () => {
-    return (
-      <Stack align="stretch" style={{flex: 1, textAlign: 'center'}} gap={5}>
-        <Group align="center" gap={"5"}>
-          <Text ta="left" fw={500} className={"player-container-text"}>
-            {props.playerModel.character.name}
-          </Text>
-          <Tooltip label="First player">
-            <img width={25}
-                 src={first_player_icon}
-                 alt="First player token"
-                 hidden={props.firstPlayer != props.playerModel.name}/>
-          </Tooltip>
-        </Group>
-
+  const getResourcesDisplay = () => {
+    const resources = (
+      <>
         {getResourcesDisplayElements()}
-        {getCardElements()}
-      </Stack>
+        <Divider orientation="vertical" m={"8"} color={"#cacaca44"}/>
+      </>
+    )
+    return (
+      <ScrollArea
+        w={"100%"}
+        pt={"10"}
+        className={"fadeScroll"}
+        scrollbars={"x"}
+        offsetScrollbars={false}
+        type={"never"}>
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          {!props.playerModel.isThisPlayer ? resources : <></>}
+          {getCardStats()}
+        </div>
+      </ScrollArea>
     )
   }
 
@@ -464,9 +359,12 @@ export function Player(props: {
   const getCombatModifierElements = () => {
     const getCombatModifierIconByType = (modifierType: CombatModifierType) => {
       switch (modifierType) {
-        case CombatModifierType.Troop: return troop_icon;
-        case CombatModifierType.Worm: return worm_icon;
-        default: return strength_icon;
+        case CombatModifierType.Troop:
+          return troop_icon;
+        case CombatModifierType.Worm:
+          return worm_icon;
+        default:
+          return strength_icon;
       }
     }
     const getCombatLabel = (modifierType: CombatModifierType) => {
@@ -557,7 +455,7 @@ export function Player(props: {
             )
           }
         </Group>
-        <Divider orientation="vertical" m={"0"} color={"#cacaca"}/>
+        <Divider orientation="vertical" m={"0"} color={"#cacaca44"}/>
         <Group w={"48%"} h={"100%"} className={"players-control-flag-icon-container"} justify="center">
           {
             props.playerModel.controlFlags.map((cf, index) =>
@@ -571,24 +469,80 @@ export function Player(props: {
 
   const getCurrentPlayerStyleClass = () => {
     switch (props.playerModel.color) {
-      case "RED": return "player-container-current-player-red";
-      case "BLUE": return "player-container-current-player-blue";
-      case "GOLD": return "player-container-current-player-gold";
-      default: return "player-container-current-player-green";
+      case "RED":
+        return "player-container-current-player-red";
+      case "BLUE":
+        return "player-container-current-player-blue";
+      case "GOLD":
+        return "player-container-current-player-gold";
+      default:
+        return "player-container-current-player-green";
     }
   }
 
+  const getAvatar = () => {
+    return (
+      <Box pos={"relative"} w={65} h={65}>
+        <Tooltip label="First player">
+          <Image
+            pos={"absolute"}
+            m={4}
+            w={25}
+            style={{zIndex: 10}}
+            src={first_player_icon}
+            hidden={props.firstPlayer != props.playerModel.name}/>
+        </Tooltip>
+        <Avatar
+          radius="xs"
+          size="65"
+          src={props.playerModel.character.avatarUrl}/>
+      </Box>
+    )
+  }
+
+  const getVPAndAlliances = () => {
+    return (
+      <ScrollArea
+        w={"100%"}
+        className={"fadeScroll"}
+        scrollbars={"x"}
+        offsetScrollbars={false}
+        type={"never"}>
+        <div style={{display: 'flex'}}>
+          <Box pos={"relative"} w={50} h={50}>
+            <img width={50} src={vp_icon} alt="Resource icon"/>
+            <Text size="1.4em" className={"player-resource-modifier-text"}>2</Text>
+          </Box>
+        </div>
+      </ScrollArea>
+    )
+  }
+
   const currentPlayerStyleClass = (props.playerModel.name === props.currentPlayer)
-  ? getCurrentPlayerStyleClass()
+    ? getCurrentPlayerStyleClass()
     : null;
 
   const getOppositionPlayer = () => {
     return (
-      <Group className={`player-container ${currentPlayerStyleClass}`}>
-        {getAvatar()}
-        {getNameAndResources()}
-        {getAgents()}
-      </Group>
+      <Stack
+        className={`player-container ${currentPlayerStyleClass}`}
+        w={"100%"}
+        gap={0}>
+        <Text ta="left" className={"player-container-text"}>
+          {props.playerModel.character.name}
+        </Text>
+        <Group
+          w={"100%"}
+          wrap={"nowrap"}
+          justify={"center"}
+          align="center"
+          gap={0}>
+          {getAvatar()}
+          {getVPAndAlliances()}
+          {getAgents()}
+        </Group>
+        {getResourcesDisplay()}
+      </Stack>
     )
   }
 
@@ -606,13 +560,24 @@ export function Player(props: {
   const getThisPlayer = () => {
     return (
       <Stack
+        ref={playerDroppable.setNodeRef}
         className={`current-player-container ${currentPlayerStyleClass}`}
         gap={"5"}>
-        <Group align={"flex-start"} ref={playerDroppable.setNodeRef}>
+        <Text ta="left" className={"player-container-text"}>
+          {props.playerModel.character.name}
+        </Text>
+        <Group
+          w={"100%"}
+          wrap={"nowrap"}
+          justify={"center"}
+          align="center"
+          gap={0}>
           {getAvatar()}
-          {getNameAndResources()}
+          {getVPAndAlliances()}
           {getAgents()}
         </Group>
+        {getResourcesDisplay()}
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getSpiesAndFlags()}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getFeydSignetComponent()}

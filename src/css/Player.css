@@ -1,6 +1,6 @@
 .player-container {
   width: 100%;
-  padding: 15px;
+  padding: 8px;
   margin-bottom: 15px;
   background-size: cover;
   background: url("../assets/container_bg_2.png") no-repeat;
@@ -18,18 +18,17 @@
 }
 
 .player-container-current-player-red {
-  background-size: cover;
   background: linear-gradient(
     to right,
     rgba(183, 65, 14, 0.6) 0%,
     rgba(183, 65, 14, 0.4) 20%,
     rgba(183, 65, 14, 0.25) 80%,
     rgba(183, 65, 14, 0.1) 100%
-  ) no-repeat;
+  ), url("../assets/container_bg_2.png") no-repeat;
+  background-size: cover;
 }
 
 .player-container-current-player-blue {
-  background-size: cover;
   background: linear-gradient(
     to right,
     rgba(0, 71, 171, 0.6) 0%,
@@ -37,32 +36,30 @@
     rgba(0, 71, 171, 0.25) 80%,
     rgba(0, 71, 171, 0.1) 100%
   ), url("../assets/container_bg_2.png") no-repeat;
+  background-size: cover;
 }
 
 .player-container-current-player-gold {
-  background-size: cover;
   background: linear-gradient(
     to right,
     rgba(101, 70, 15, 0.6) 0%,
     rgba(101, 70, 15, 0.4) 20%,
     rgba(101, 70, 15, 0.25) 80%,
     rgba(101, 70, 15, 0.1) 100%
-  ) no-repeat;
+  ), url("../assets/container_bg_2.png") no-repeat;
+  background-size: cover;
 }
 
 .player-container-current-player-green {
-  background-size: cover;
+
   background: linear-gradient(
     to right,
     rgba(44, 95, 52, 0.6) 0%,
     rgba(44, 95, 52, 0.4) 20%,
     rgba(44, 95, 52, 0.25) 80%,
     rgba(44, 95, 52, 0.1) 100%
-  ) no-repeat;
-}
-
-.player-avatar {
-  clip-path: polygon(0% 85%, 15% 100%, 100% 100%, 100% 0%, 0% 0%);
+  ), url("../assets/container_bg_2.png") no-repeat;
+  background-size: cover;
 }
 
 .player-info {
@@ -71,7 +68,10 @@
 }
 
 .player-container-text {
-  color: #fafafa
+  padding-bottom: 8px;
+  color: #FAFAFA;
+  font-weight: 500;
+  text-shadow: 0 0 5px rgba(31, 31, 31, 1);
 }
 
 .player-action-button {
@@ -89,24 +89,33 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #ffffff;
+  color: #FAFAFA;
+  font-weight: bold;
   font-family: "IBM Plex Sans", sans-serif;
-  text-shadow: 0 0 6px rgba(255,255,255,0.7);
+  text-shadow: 0 0 5px rgba(31, 31, 31, 1);
 }
 
 .player-resource-modifier-button {
   border-width: 2px;
 }
 
-.players-agent-icon-container .players-agent-icon:nth-child(1) {
-  filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.5))
-  drop-shadow(0px 0 0 #313131)
+.mantine-ScrollArea-content {
+  padding-left: 8px;
 }
 
-.players-agent-icon-container .players-agent-icon:nth-child(2),.players-agent-icon:nth-child(3) {
-  margin-top: -180%;
-  filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.5))
-  drop-shadow(0px 0 0 #94664d)
+.fadeScroll .mantine-ScrollArea-viewport {
+  mask-image: linear-gradient(
+    to left,
+    transparent 0,
+    black 20px,
+    black calc(100% - 20px),
+    transparent 100%
+  );
+}
+
+.players-agent-icon {
+  filter: drop-shadow(3px 3px 6px rgba(50, 50, 50, 0.5))
+  drop-shadow(0px 0 0 #313131)
 }
 
 .cards-popover {

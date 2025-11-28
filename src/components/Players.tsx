@@ -23,13 +23,14 @@ export function Players(props: { game: GameModel }) {
 
   return (
     <ScrollArea
+      className={"scroll-area-players"}
       h={"100%"}
       offsetScrollbars={false}
       type={"never"}
       scrollbars="y">
       <Stack
         gap="0"
-        maw={"300px"}
+        w={"300px"}
         style={{minHeight: '100%'}}>
         {getPlayerElements(p => !p.isThisPlayer)}
         {getPlayerElements(p => p.isThisPlayer)}
