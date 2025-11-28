@@ -94,43 +94,43 @@ export function CombatArea(props: { game: GameModel }) {
             style={{ transform: `rotate(90deg) scaleX(${flipX}) scaleY(${flipY})` }}
             alt="Maker hook"/>
         )
-
-        elements.push(
-          <IconGrid
-            icon={getTroopIcon(p.color)}
-            size={5}
-            pos={"absolute"}
-            anchorToCenter={true}
-            top={garrissonedTroopsPositions[index].top}
-            left={garrissonedTroopsPositions[index].left} />
-        )
-
-        const wormIcons = (
-          <IconGrid
-            icon={worm_icon}
-            size={4}
-            iconSize={45}
-            pos={"unset"}/>
-        )
-        const troopIcons = (
-          <IconGrid
-            icon={getTroopIcon(p.color)}
-            size={10}
-            pos={"unset"}/>
-        )
-        elements.push(
-          <Group
-            pos={"absolute"}
-            align={"flex-end"}
-            top={combatUnitsPositions[index].top}
-            left={combatUnitsPositions[index].left}
-            right={combatUnitsPositions[index].right}
-            bottom={combatUnitsPositions[index].bottom}>
-            {index === 2 || index === 3 ? troopIcons : wormIcons}
-            {index === 0 || index === 1 ? troopIcons: wormIcons}
-          </Group>
-        )
       }
+
+      elements.push(
+        <IconGrid
+          icon={getTroopIcon(p.color)}
+          size={p.combat.troopsInGarrison}
+          pos={"absolute"}
+          anchorToCenter={true}
+          top={garrissonedTroopsPositions[index].top}
+          left={garrissonedTroopsPositions[index].left} />
+      )
+
+      const wormIcons = (
+        <IconGrid
+          icon={worm_icon}
+          size={p.combat.wormsInCombat}
+          iconSize={45}
+          pos={"unset"}/>
+      )
+      const troopIcons = (
+        <IconGrid
+          icon={getTroopIcon(p.color)}
+          size={p.combat.troopsInCombat}
+          pos={"unset"}/>
+      )
+      elements.push(
+        <Group
+          pos={"absolute"}
+          align={"flex-end"}
+          top={combatUnitsPositions[index].top}
+          left={combatUnitsPositions[index].left}
+          right={combatUnitsPositions[index].right}
+          bottom={combatUnitsPositions[index].bottom}>
+          {index === 2 || index === 3 ? troopIcons : wormIcons}
+          {index === 0 || index === 1 ? troopIcons: wormIcons}
+        </Group>
+      )
     })
     return elements
   }

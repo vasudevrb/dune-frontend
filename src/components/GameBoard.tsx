@@ -44,7 +44,6 @@ export function GameBoard(props: { game: GameModel }) {
         spyLocation={spyLocation}
         w={"5%"}
         h={"2.5%"}
-        bg={"#ffffff33"}
         style={{
           position: "absolute",
           top: `${top}`,
