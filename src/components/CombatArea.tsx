@@ -5,6 +5,9 @@ import troop_icon_blue from "../assets/combat/troop_blue.png";
 import troop_icon_green from "../assets/combat/troop_green.png";
 import troop_icon_gold from "../assets/combat/troop_gold.png";
 import worm_icon from "../assets/combat/worm.png";
+import conflict_bg_1 from "../assets/conflicts/conflict_l1.jpg";
+import conflict_bg_2 from "../assets/conflicts/conflict_l2.jpg";
+import conflict_bg_3 from "../assets/conflicts/conflict_l3.jpg";
 import maker_hook_icon from "../assets/combat/maker_hook.png";
 import type {GameModel} from "../model/GameModel.tsx";
 import type {JSX} from "react";
@@ -13,20 +16,26 @@ import IconGrid from "./IconGrid.tsx";
 export function CombatArea(props: { game: GameModel }) {
 
   const getNextConflictBackground = () => {
+    const getBg = () => {
+      switch (props.game.nextConflictLevel) {
+        case 1: return conflict_bg_1;
+        case 2: return conflict_bg_2;
+        case 3: return conflict_bg_3;
+      }
+    }
+
     return (
       <Image
         w={"auto"}
         mah={"200px"}
         fit={"contain"}
-        bg={"#ff3636"}
-        radius={"10"}
-        src={"https://api.dunecardshub.com/uploads/images/conflict_1lvl_uprising_02.png"}
+        radius={"7"}
+        src={getBg()}
         style={{
           position: "absolute",
           top: "65.5%",
           left: "29%"
-        }}
-        alt="Combat icon"/>
+        }}/>
     )
   }
 
@@ -36,9 +45,8 @@ export function CombatArea(props: { game: GameModel }) {
         w={"auto"}
         mah={"200px"}
         fit={"contain"}
-        bg={"#ff3636"}
-        radius={"10"}
-        src={"https://api.dunecardshub.com/uploads/images/conflict_1lvl_uprising_02.png"}
+        radius={"7"}
+        src={props.game.currentConflict}
         style={{
           position: "absolute",
           top: "79.5%",

@@ -25,6 +25,8 @@ export const gameStartState: GameModel = {
   currentPlayer: "P2",
   locations: locations,
   spyLocations: spyLocations,
+  currentConflict: "http://localhost:8080/conflict_cards/level_2/conf_2_5.jpg",
+  nextConflictLevel: 1,
   imperiumRow: [],
   reserveRow: []
 }

@@ -9,6 +9,8 @@ export interface GameModel {
   spyLocations: SpyLocationModel[];
   imperiumRow: CardModel[];
   reserveRow: CardModel[];
+  currentConflict: string;
+  nextConflictLevel: number;
   currentPlayer: string;
   firstPlayer: string;
 }
