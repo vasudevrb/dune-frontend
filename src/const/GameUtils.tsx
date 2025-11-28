@@ -43,15 +43,15 @@ export function moveThisPlayerToLast(players: PlayerModel[]) {
   return [...players.slice(thisPlayerIndex + 1), ...players.slice(0, thisPlayerIndex + 1)];
 }
 
-export function recallAgent(game: GameModel, agentId: UniqueIdentifier, locationId: number) {
+export function recallAgent(game: GameModel, agentId: UniqueIdentifier) {
   const location = assertExists(
-    game.locations.find(location => location.id === locationId),
-    `Location with id ${locationId} not found.`
+    game.locations.find(location => location.agents.find(a => a.agentId === agentId)),
+    `Location containing agent with id ${agentId} not found.`
   )
 
   const locAgent = assertExists(
     location.agents.find(agent => agent.agentId === agentId),
-    `Agent with id ${agentId} at ${locationId} not found.`
+    `Agent with id ${agentId} not found.`
   )
 
   const player = assertExists(
@@ -88,15 +88,15 @@ export function placeSpy(game: GameModel, spyId: UniqueIdentifier, spyLocationId
   spy.atLocation = spyLocationId;
 }
 
-export function recallSpy(game: GameModel, spyId: UniqueIdentifier, spyLocationId: number) {
+export function recallSpy(game: GameModel, spyId: UniqueIdentifier) {
   const spyLocation = assertExists(
-    game.spyLocations.find(sl => sl.id === spyLocationId),
-    `Spy Location with id ${spyLocationId} not found.`
+    game.spyLocations.find(sl => sl.spies.find(spy => spy.spyId === spyId)),
+    `Spy Location containing a spy with id ${spyId} not found.`
   )
 
   const spy = assertExists(
     spyLocation.spies.find(spy => spy.spyId === spyId),
-    `Spy with id ${spyId} at ${spyLocationId} not found.`
+    `Spy with id ${spyId} not found.`
   )
 
   const player = assertExists(

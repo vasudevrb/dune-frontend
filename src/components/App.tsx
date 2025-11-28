@@ -8,7 +8,17 @@ import {Players} from "./Players.tsx";
 import {Notifications} from '@mantine/notifications';
 import {useEffect, useState} from "react";
 import type {PlayerModel} from "../model/PlayerModel.tsx";
-import {CARD_USED, PLACE_AGENT, SHOW_NOTIFICATION, START_GAME, UPDATE_LOCATION, UPDATE_PLAYER} from "../const/Actions.tsx";
+import {
+  CARD_USED,
+  PLACE_AGENT,
+  PLACE_SPY,
+  RECALL_AGENT,
+  RECALL_SPY,
+  SHOW_NOTIFICATION,
+  START_GAME,
+  UPDATE_LOCATION,
+  UPDATE_PLAYER
+} from "../const/Actions.tsx";
 import {InHandCards} from "./InHandCards.tsx";
 import {useWebSocket, WebSocketProvider} from "./WebSocketContext.tsx";
 import {cardPreviewStartState, gameStartState, PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4, showNotification} from "../const/Util.tsx";
@@ -237,12 +247,15 @@ function Game() {
             action = PLACE_AGENT
           } else {
             placeSpy(draft, active.id, overData.id)
+            action = PLACE_SPY
           }
         } else if (activeData.location === "boardspace" && overData.location === "player") {
           if (activeData.type === "agent"){
-            recallAgent(draft, active.id, draft.locations[0].id)
+            recallAgent(draft, active.id)
+            action = RECALL_AGENT
           } else {
-            recallSpy(draft, active.id, draft.locations[0].id)
+            recallSpy(draft, active.id)
+            action = RECALL_SPY
           }
         } else if (activeData.location === 'faction' && overData.location === 'faction') {
           if (activeData.factionType === overData.factionType) {
@@ -257,10 +270,26 @@ function Game() {
     if (action) {
       switch (action) {
         case PLACE_AGENT:
-          sendMessage({action: "PLACE_AGENT", body: {
+          sendMessage({action: PLACE_AGENT, body: {
               agentId: active.id,
               locationId: overData.id,
             }});
+          break;
+        case RECALL_AGENT:
+          sendMessage({action: RECALL_AGENT, body: {
+            agentId: active.id,
+            }});
+          break;
+        case PLACE_SPY:
+          sendMessage({action: PLACE_SPY, body: {
+            spyId: active.id,
+              spyLocationId: overData.id
+            }})
+          break;
+        case RECALL_SPY:
+          sendMessage({action: RECALL_SPY, body: {
+            spyId: active.id,
+            }})
           break;
       }
     }
