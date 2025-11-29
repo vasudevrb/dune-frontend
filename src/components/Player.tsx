@@ -26,7 +26,13 @@ import vp_icon from '../assets/resources/victory_point.png';
 import draw_intrigue_card from '../assets/cards/draw_intrigue_card.png';
 import steal_intrigue_card from '../assets/cards/steal_intrigue_card.png';
 import draw_card from '../assets/cards/draw_card.png';
-import {type AgentModel, CombatModifierType, type ControlFlagModel, type PlayerModel, type SpyModel} from "../model/PlayerModel.tsx";
+import {
+  type AgentModel,
+  CombatUnitType,
+  type ControlFlagModel,
+  type PlayerModel,
+  type SpyModel
+} from "../model/PlayerModel.tsx";
 import {type JSX} from "react";
 import {range} from "../const/Util.tsx";
 import minus_icon from "../assets/minus.svg";
@@ -36,7 +42,9 @@ import {createPortal} from "react-dom";
 import {useGameStore} from "../store/GameStore.tsx";
 import {FeydSignet} from "./FeydSignet.tsx";
 import {useWebSocket} from "./WebSocketContext.tsx";
-import {DRAW_CARD} from "../const/Actions.tsx";
+import {ADD_OR_REMOVE_COMBAT_UNIT, ADD_OR_REMOVE_RESOURCE, DRAW_CARD} from "../const/Actions.tsx";
+import {addOrRemoveCombatUnit, addOrRemoveResource} from "../const/GameUtils.tsx";
+import {produce} from "immer";
 
 function Agent(props: { player: PlayerModel, agentModel: AgentModel, index: number }) {
   const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
@@ -197,7 +205,7 @@ export function Player(props: {
 }) {
   const {sendMessage} = useWebSocket();
 
-  const globalProps = useGameStore();
+  const {gameState, setGameState, globalProps} = useGameStore();
 
   const playerDroppable = useDroppable({
     id: `this-player-container`,
@@ -296,9 +304,10 @@ export function Player(props: {
     )
   }
 
-  const getButton = (icon: string) => {
+  const getButton = (icon: string, onClick?: () => void) => {
     return (
       <ActionIcon
+        onClick={onClick}
         className={"player-resource-modifier-button"}
         variant={"outline"}
         radius={"0"}>
@@ -318,6 +327,21 @@ export function Player(props: {
     return <Divider orientation="vertical" color={"#31313123"}/>
   }
   const getResourceModifierElements = () => {
+    const resourceModifierAction = (add: boolean, resourceType: string) => {
+      let success = false;
+      setGameState(produce(gameState, draft => {
+        success = addOrRemoveResource(draft, resourceType, add)
+      }))
+      if (success) {
+        sendMessage({
+          action: ADD_OR_REMOVE_RESOURCE,
+          body: {
+            resourceType: resourceType,
+            add: add
+          }
+        })
+      }
+    }
     const getResourceLabel = (quantity: number, resourceType: string) => {
       const icon = getResourceIconByType(resourceType)
       return getLabelElement(icon, quantity)
@@ -325,9 +349,9 @@ export function Player(props: {
     const getResourceModifier = (quantity: number, resourceType: string) => {
       return (
         <Stack align="center" gap={"xs"}>
-          {getButton(plus_icon)}
+          {getButton(plus_icon, () =>  resourceModifierAction(true, resourceType))}
           {getResourceLabel(quantity, resourceType)}
-          {getButton(minus_icon)}
+          {getButton(minus_icon, () => resourceModifierAction(false, resourceType))}
         </Stack>
       )
     }
@@ -357,37 +381,52 @@ export function Player(props: {
   }
 
   const getCombatModifierElements = () => {
-    const getCombatModifierIconByType = (modifierType: CombatModifierType) => {
+    const combatModifierAction = (add: boolean, type: CombatUnitType) => {
+      let success = false;
+      setGameState(produce(gameState, draft => {
+        success = addOrRemoveCombatUnit(draft, type, add)
+      }))
+      if (success) {
+        sendMessage({
+          action: ADD_OR_REMOVE_COMBAT_UNIT,
+          body: {
+            unitType: type,
+            add: add
+          }
+        })
+      }
+    }
+    const getCombatModifierIconByType = (modifierType: CombatUnitType) => {
       switch (modifierType) {
-        case CombatModifierType.Troop:
+        case CombatUnitType.Troop:
           return troop_icon;
-        case CombatModifierType.Worm:
+        case CombatUnitType.Sandworm:
           return worm_icon;
         default:
           return strength_icon;
       }
     }
-    const getCombatLabel = (modifierType: CombatModifierType) => {
+    const getCombatLabel = (modifierType: CombatUnitType) => {
       const icon = getCombatModifierIconByType(modifierType)
       return getLabelElement(icon)
     }
-    const getCombatModifier = (modifierType: CombatModifierType) => {
+    const getCombatModifier = (modifierType: CombatUnitType) => {
       return (
         <Stack align="center" gap={"xs"}>
-          {getButton(plus_icon)}
+          {getButton(plus_icon, () => combatModifierAction(true, modifierType))}
           {getCombatLabel(modifierType)}
-          {getButton(minus_icon)}
+          {getButton(minus_icon, () => combatModifierAction(false, modifierType))}
         </Stack>
       )
     }
 
     return (
       <Group w={"100%"} justify="center" gap={"xs"}>
-        {getCombatModifier(CombatModifierType.Troop)}
+        {getCombatModifier(CombatUnitType.Troop)}
         {resourceModifierDivider()}
-        {getCombatModifier(CombatModifierType.Worm)}
+        {getCombatModifier(CombatUnitType.Sandworm)}
         {resourceModifierDivider()}
-        {getCombatModifier(CombatModifierType.Strength)}
+        {getCombatModifier(CombatUnitType.Strength)}
       </Group>
     )
   }

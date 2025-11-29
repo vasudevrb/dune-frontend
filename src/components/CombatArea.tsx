@@ -178,7 +178,8 @@ export function CombatArea() {
       }
 
       let normalizedStrength = p.combat.strength > 20 ? p.combat.strength - 20: p.combat.strength;
-      normalizedStrength = Math.min(normalizedStrength, 20);
+      normalizedStrength = Math.min(Math.max(normalizedStrength, 0), 20)
+
       elements.push(
         <Image
           pos={"absolute"}

@@ -22,7 +22,7 @@ export interface PlayerModel {
   }
 }
 
-interface ResourcesModel {
+export interface ResourcesModel {
   water: number,
   spice: number,
   solari: number
@@ -34,14 +34,6 @@ interface FactionInfluencesModel {
   SpacingGuild: number,
   Emperor: number
 }
-
-export const CombatModifierType = {
-  Troop: "Troop",
-  Worm: "Worm",
-  Strength: "Strength",
-} as const;
-
-export type CombatModifierType = keyof typeof CombatModifierType;
 
 export const ObjectiveType = {
   DesertMouse: "DesertMouse",
@@ -60,6 +52,14 @@ export const FactionType = {
 } as const;
 
 export type FactionType = keyof typeof FactionType;
+
+export const CombatUnitType = {
+  Troop: "Troop",
+  Sandworm: "Sandworm",
+  Strength: "Strength",
+} as const;
+
+export type CombatUnitType = keyof typeof CombatUnitType;
 
 export interface CharacterModel {
   name: string;

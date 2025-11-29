@@ -12,7 +12,7 @@ import {
   SHOW_NOTIFICATION,
   START_GAME, TRASH_CARD, UPDATE_COMBAT,
   UPDATE_LOCATION,
-  UPDATE_PLAYER, USE_CARD
+  UPDATE_PLAYER, UPDATE_RESOURCES, USE_CARD
 } from "../const/Actions.tsx";
 import {Box, MantineProvider, type MantineThemeOverride, Stack, Text} from "@mantine/core";
 import {Card} from "./Card.tsx";
@@ -21,7 +21,7 @@ import {GameBoard} from "./GameBoard.tsx";
 import {InHandCards} from "./InHandCards.tsx";
 import {Players} from "./Players.tsx";
 import {useGameStore} from "../store/GameStore.tsx";
-import type {CombatModel, PlayerModel} from "../model/PlayerModel.tsx";
+import type {CombatModel, PlayerModel, ResourcesModel} from "../model/PlayerModel.tsx";
 import {produce} from "immer";
 import {
   assertExists,
@@ -204,10 +204,21 @@ export function Game() {
     setGameState(produce(gameState, draft => {
       const player = assertExists(
         draft.players.find(p => p.name == playerName),
-        `Player with nema ${playerName} not found`
+        `Player with name ${playerName} not found`
       )
 
       player.combat = combat;
+    }))
+  }
+
+  const updateResources = (playerName: string, resources: ResourcesModel) => {
+    setGameState(produce(gameState, draft => {
+      const player = assertExists(
+        draft.players.find(p => p.name == playerName),
+        `Player with name ${playerName} not found`
+      )
+
+      player.resources = resources;
     }))
   }
 
@@ -215,7 +226,14 @@ export function Game() {
     const componentName = "game_component";
     console.log(`In ${componentName}. Subscribing to WS messages`)
 
-    const actions = [START_GAME, UPDATE_PLAYER, UPDATE_LOCATION, SHOW_NOTIFICATION, UPDATE_COMBAT]
+    const actions = [
+      START_GAME,
+      UPDATE_PLAYER,
+      UPDATE_LOCATION,
+      SHOW_NOTIFICATION,
+      UPDATE_COMBAT,
+      UPDATE_RESOURCES
+    ]
     subscribe(actions, componentName, {
       onMessage: (action: string, body: any) => {
         if (action === START_GAME) {
@@ -227,6 +245,8 @@ export function Game() {
           updateLocation(body);
         } else if (action === UPDATE_COMBAT){
           updateCombat(body.playerName, body.combat);
+        } else if (action === UPDATE_RESOURCES){
+          updateResources(body.playerName, body.resources);
         } else if (action === SHOW_NOTIFICATION) {
           showNotification(body.message);
         }

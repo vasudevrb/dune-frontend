@@ -1,6 +1,6 @@
 import type {GameModel} from "../model/GameModel.tsx";
 import type {UniqueIdentifier} from "@dnd-kit/core";
-import {FactionType, type PlayerModel} from "../model/PlayerModel.tsx";
+import { CombatUnitType, FactionType, type PlayerModel} from "../model/PlayerModel.tsx";
 import {showNotification} from "./Util.tsx";
 
 export const TroopMovementLocation = {
@@ -182,6 +182,80 @@ function moveTroopToGarrison(player: PlayerModel) {
   player.combat.strength-=2;
   player.combat.troopsInGarrison++;
   return true;
+}
+
+export function addOrRemoveCombatUnit(game: GameModel, unit: CombatUnitType, add: boolean) {
+  const player = assertExists(
+    game.players.find(p => p.isThisPlayer),
+    `This player not found.`
+  )
+
+  switch (unit) {
+    case CombatUnitType.Troop:
+      if (add) {
+        player.combat.troopsInGarrison++;
+        return true;
+      } else if (player.combat.troopsInGarrison > 0) {
+        player.combat.troopsInGarrison--;
+        return true;
+      }
+      return false;
+    case CombatUnitType.Sandworm:
+      if (add) {
+        player.combat.wormsInCombat++
+        return true
+      } else if (player.combat.wormsInCombat > 0) {
+        player.combat.wormsInCombat--;
+        return true
+      }
+      return false;
+    case CombatUnitType.Strength:
+      if (add) {
+        player.combat.strength++;
+        return true
+      } else if (player.combat.strength > 0) {
+        player.combat.strength--;
+        return true
+      }
+      return false;
+  }
+}
+
+export function addOrRemoveResource(game: GameModel, resourceType: string, add: boolean) {
+  const player = assertExists(
+    game.players.find(p => p.isThisPlayer),
+    `This player not found.`
+  )
+
+  switch (resourceType) {
+    case "water":
+      if (add) {
+        player.resources.water++;
+        return true
+      } else if (player.resources.water > 0) {
+        player.resources.water--;
+        return true
+      }
+      return false;
+    case "spice":
+      if (add) {
+        player.resources.spice++;
+        return true;
+      } else if (player.resources.spice > 0) {
+        player.resources.spice--;
+        return true
+      }
+      return false;
+    case "solari":
+      if (add) {
+        player.resources.solari++;
+        return true
+      } else if (player.resources.solari > 0) {
+        player.resources.solari--;
+        return true
+      }
+      return false;
+  }
 }
 
 function moveTroopToSupply(player: PlayerModel) {
