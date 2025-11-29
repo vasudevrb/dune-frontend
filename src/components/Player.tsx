@@ -42,7 +42,7 @@ import {createPortal} from "react-dom";
 import {useGameStore} from "../store/GameStore.tsx";
 import {FeydSignet} from "./FeydSignet.tsx";
 import {useWebSocket} from "./WebSocketContext.tsx";
-import {ADD_OR_REMOVE_COMBAT_UNIT, ADD_OR_REMOVE_RESOURCE, DRAW_CARD} from "../const/Actions.tsx";
+import {ADD_OR_REMOVE_COMBAT_UNIT, ADD_OR_REMOVE_RESOURCE, DRAW_CARD, END_TURN, GAIN_INTRIGUE_CARD, STEAL_INTRIGUE_CARD} from "../const/Actions.tsx";
 import {addOrRemoveCombatUnit, addOrRemoveResource} from "../const/GameUtils.tsx";
 import {produce} from "immer";
 
@@ -205,7 +205,8 @@ export function Player(props: {
 }) {
   const {sendMessage} = useWebSocket();
 
-  const {gameState, setGameState, globalProps} = useGameStore();
+  const isThisPlayerCurrentPlayer = props.playerModel.name === props.currentPlayer;
+  const {gameState, setGameState, setImperiumRowOpened} = useGameStore();
 
   const playerDroppable = useDroppable({
     id: `this-player-container`,
@@ -431,6 +432,10 @@ export function Player(props: {
     )
   }
 
+  const endTurnAction = () => {
+    sendMessage({action: END_TURN})
+  }
+
   const getActions = () => {
     const getIconButton = (
       icon: string,
@@ -450,10 +455,12 @@ export function Player(props: {
     }
     const getTextButton = (
       label: string,
-      variant?: string
+      onClick?: () => void,
+      variant?: string,
     ) => {
       return (
         <Button
+          onClick={onClick}
           className={`setup-action-button-next`}
           color={"#A08170"}
           size="md"
@@ -464,16 +471,18 @@ export function Player(props: {
     return (
       <>
         <Group w={"100%"} gap={"xs"}>
-          {getIconButton(draw_card, () => {
-            sendMessage({action: DRAW_CARD})
-          })}
-          {getIconButton(draw_intrigue_card)}
-          {getIconButton(steal_intrigue_card)}
+          {getIconButton(draw_card, () => {sendMessage({action: DRAW_CARD})})}
+          {getIconButton(draw_intrigue_card, () => {sendMessage({action: GAIN_INTRIGUE_CARD})})}
+          {getIconButton(steal_intrigue_card, () => {sendMessage({action: STEAL_INTRIGUE_CARD})})}
+        </Group>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <Group w={"100%"} gap={"xs"}>
+          {getTextButton("Imperium Row", () => setImperiumRowOpened(true))}
         </Group>
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         <Group w={"100%"} gap={"xs"} justify={"flex-end"}>
-          {getTextButton("REVEAL", "outline")}
-          {getTextButton("END TURN")}
+          {getTextButton("REVEAL", undefined, "outline")}
+          {isThisPlayerCurrentPlayer && getTextButton("END TURN", () => endTurnAction())}
         </Group>
 
       </>
@@ -559,7 +568,7 @@ export function Player(props: {
     )
   }
 
-  const currentPlayerStyleClass = (props.playerModel.name === props.currentPlayer)
+  const currentPlayerStyleClass = isThisPlayerCurrentPlayer
     ? getCurrentPlayerStyleClass()
     : null;
 
