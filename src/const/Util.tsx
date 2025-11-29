@@ -117,10 +117,16 @@ export const PLAYER_1: PlayerModel = {
     {id: `control_flag-${PRINCESS_IRULAN.name}#3`},
   ],
   factionInfluences: {
-    Fremen: 0,
-    BeneGesserit: 0,
-    SpacingGuild: 0,
-    Emperor: 0
+    Fremen: 2,
+    BeneGesserit: 1,
+    SpacingGuild: 3,
+    Emperor: 2
+  },
+  combat: {
+    troopsInCombat: 2,
+    troopsInGarrison: 4,
+    wormsInCombat: 1,
+    strength: 9
   },
   makerHookUnlocked: true,
 }
@@ -151,7 +157,13 @@ export const PLAYER_2: PlayerModel = {
     {id: `control_flag-${MUAD_DIB.name}#1`},
     {id: `control_flag-${MUAD_DIB.name}#2`},
     {id: `control_flag-${MUAD_DIB.name}#3`},
-  ]
+  ],
+  combat: {
+    troopsInCombat: 4,
+    troopsInGarrison: 2,
+    wormsInCombat: 2,
+    strength: 17
+  },
 }
 
 export const GURNEY_HALLECK: CharacterModel = {
@@ -182,6 +194,12 @@ export const PLAYER_3: PlayerModel = {
     {id: `control_flag-${GURNEY_HALLECK.name}#3`},
   ],
   makerHookUnlocked: true,
+  combat: {
+    troopsInCombat: 8,
+    troopsInGarrison: 4,
+    wormsInCombat: 3,
+    strength: 23
+  },
 }
 
 export const FEYD_RAUTHA: CharacterModel = {
@@ -232,7 +250,13 @@ export const PLAYER_4: PlayerModel = {
       {url: "http://localhost:8080/imperium_cards/imperium_26.jpg"},
       {url: "http://localhost:8080/imperium_cards/imperium_27.jpg"},
     ]
-  }
+  },
+  combat: {
+    troopsInCombat: 1,
+    troopsInGarrison: 15,
+    wormsInCombat: 0,
+    strength: 4
+  },
 }
 
 export function createId(items: (string | number)[]): string {

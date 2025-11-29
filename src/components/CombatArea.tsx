@@ -9,6 +9,14 @@ import conflict_bg_1 from "../assets/conflicts/conflict_l1.jpg";
 import conflict_bg_2 from "../assets/conflicts/conflict_l2.jpg";
 import conflict_bg_3 from "../assets/conflicts/conflict_l3.jpg";
 import maker_hook_icon from "../assets/combat/maker_hook.png";
+import combat_marker_red_1 from "../assets/combat/combat_marker_red_1.png";
+import combat_marker_red_2 from "../assets/combat/combat_marker_red_2.png";
+import combat_marker_blue_1 from "../assets/combat/combat_marker_blue_1.png";
+import combat_marker_blue_2 from "../assets/combat/combat_marker_blue_2.png";
+import combat_marker_green_1 from "../assets/combat/combat_marker_green_1.png";
+import combat_marker_green_2 from "../assets/combat/combat_marker_green_2.png";
+import combat_marker_gold_1 from "../assets/combat/combat_marker_gold_1.png";
+import combat_marker_gold_2 from "../assets/combat/combat_marker_gold_2.png";
 import minus_icon from "../assets/minus.svg";
 import plus_icon from "../assets/plus.svg";
 import cross_icon from "../assets/cross.svg";
@@ -74,6 +82,15 @@ export function CombatArea() {
     }
   }
 
+  const getCombatMarkerIcon = (color: string, strength: number) => {
+    switch (color) {
+      case "RED": return strength > 20 ? combat_marker_red_2 : combat_marker_red_1;
+      case "BLUE": return strength > 20 ? combat_marker_blue_2 : combat_marker_blue_1;
+      case "GREEN": return strength > 20 ? combat_marker_green_2 : combat_marker_green_1;
+      case "GOLD": return strength > 20 ? combat_marker_gold_2 : combat_marker_gold_1;
+    }
+  }
+
   const moveTroop = (destination: TroopMovementLocation) => {
     let success = false;
     setGameState(produce(gameState, (draft) => {
@@ -114,6 +131,34 @@ export function CombatArea() {
       {top: "78%", left: "66%"},
     ]
 
+    const combatMarkerPositions = [
+      {top: "94%", left: "43.5%"},
+      {top: "91%", left: "50.8%"},
+      {top: "91%", left: "55.1%"},
+      {top: "91%", left: "59.4%"},
+      {top: "91%", left: "63.8%"},
+      {top: "91%", left: "68.1%"},
+      {top: "91%", left: "72.5%"},
+      {top: "91%", left: "76.8%"},
+      {top: "91%", left: "81.2%"},
+      {top: "91%", left: "85.5%"},
+      {top: "91%", left: "90%"},
+      {top: "95.6%", left: "50.8%"},
+      {top: "95.6%", left: "55.1%"},
+      {top: "95.6%", left: "59.4%"},
+      {top: "95.6%", left: "63.8%"},
+      {top: "95.6%", left: "68.1%"},
+      {top: "95.6%", left: "72.5%"},
+      {top: "95.6%", left: "76.8%"},
+      {top: "95.6%", left: "81.2%"},
+      {top: "95.6%", left: "85.5%"},
+      {top: "95.6%", left: "90%"},
+    ]
+
+    const combatMarkerDeviations = [
+      "-20px", "-10px", "10px", "20px"
+    ]
+
     gameState.players.forEach((p, index) => {
       if (p.isThisPlayer) index = 3;
 
@@ -131,6 +176,18 @@ export function CombatArea() {
             alt="Maker hook"/>
         )
       }
+
+      let normalizedStrength = p.combat.strength > 20 ? p.combat.strength - 20: p.combat.strength;
+      normalizedStrength = Math.min(normalizedStrength, 20);
+      elements.push(
+        <Image
+          pos={"absolute"}
+          w={40}
+          top={combatMarkerPositions[normalizedStrength].top}
+          left={combatMarkerPositions[normalizedStrength].left}
+          src={getCombatMarkerIcon(p.color, p.combat.strength)}
+          style={{transform: `translate(-50%, -50%) translateY(${combatMarkerDeviations[index]})`}}/>
+      )
 
       elements.push(
         <IconGrid

@@ -167,6 +167,7 @@ function moveTroopToCombat(player: PlayerModel) {
   }
 
   player.combat.troopsInCombat++;
+  player.combat.strength+=2;
   player.combat.troopsInGarrison--;
   return true;
 }
@@ -178,6 +179,7 @@ function moveTroopToGarrison(player: PlayerModel) {
   }
 
   player.combat.troopsInCombat--;
+  player.combat.strength-=2;
   player.combat.troopsInGarrison++;
   return true;
 }
@@ -189,5 +191,6 @@ function moveTroopToSupply(player: PlayerModel) {
   }
 
   player.combat.troopsInCombat--;
+  player.combat.strength-=2;
   return true;
 }
