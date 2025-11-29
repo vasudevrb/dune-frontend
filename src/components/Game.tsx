@@ -10,9 +10,9 @@ import {
   RECALL_AGENT,
   RECALL_SPY,
   SHOW_NOTIFICATION,
-  START_GAME, UPDATE_COMBAT,
+  START_GAME, TRASH_CARD, UPDATE_COMBAT,
   UPDATE_LOCATION,
-  UPDATE_PLAYER
+  UPDATE_PLAYER, USE_CARD
 } from "../const/Actions.tsx";
 import {Box, MantineProvider, type MantineThemeOverride, Stack, Text} from "@mantine/core";
 import {Card} from "./Card.tsx";
@@ -52,7 +52,14 @@ function Content() {
     subscribe(actions, componentName, {
       onMessage: (action: string, body: any) => {
         if (action === CARD_USED) {
-          setAgentCardPreview({...body, show: true});
+          let type;
+          switch (body.type) {
+            case USE_CARD: type = "played"; break;
+            case TRASH_CARD: type = "trashed"; break;
+            default: type = "discarded"; break;
+          }
+          const message = body.playerName + " " + type
+          setAgentCardPreview({...body, message: message, show: true});
           setTimeout(() => {
             setAgentCardPreview(prev => ({...prev, show: false}))
           }, 5000);
@@ -95,7 +102,7 @@ function Content() {
           top: "10%",
           zIndex: 5,
         }}>
-        <Text className={"card-used-preview-text"}>{agentCardPreview.playerName}</Text>
+        <Text className={"card-used-preview-text"}>{agentCardPreview.message}</Text>
         <Card src={agentCardPreview.url}/>
       </Stack>
     )
@@ -144,7 +151,7 @@ export function Game() {
   const [gameStarted, setGameStarted] = useState(false);
 
   useEffect(() => {
-    const setup = true;
+    const setup = false;
     if (setup) {
       setGameStarted(true);
       setGameState({

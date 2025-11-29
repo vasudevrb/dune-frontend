@@ -4,10 +4,10 @@
 }
 
 .scroll-area-players {
-  padding-top: 10px;
   height: 100%;
 }
 
 .scroll-area-players .mantine-ScrollArea-content {
+  padding-top: 10px;
   height: 100%;
 }
