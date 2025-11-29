@@ -1,6 +1,10 @@
 import {create} from "zustand/react";
+import type {GameModel} from "../model/GameModel.tsx";
+import {gameStartState} from "../const/Util.tsx";
 
 export interface GameState {
+  gameState: GameModel;
+  setGameState: (state: GameModel) => void;
   gameId: string;
   setGameId: (id: string) => void;
   playerName: string;
@@ -10,6 +14,8 @@ export interface GameState {
 }
 
 export const useGameStore = create<GameState>((set) => ({
+  gameState: gameStartState,
+  setGameState: (state: GameModel) => set({gameState: state}),
   gameId: "",
   setGameId: (gameId: string) => set({gameId: gameId}),
   playerName: "",

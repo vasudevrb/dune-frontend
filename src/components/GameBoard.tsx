@@ -11,8 +11,12 @@ import {Faction} from "./Faction.tsx";
 import {FactionType} from "../model/PlayerModel.tsx";
 import type {SpyLocationModel} from "../model/SpyLocationModel.tsx";
 import {SpyLocation} from "./SpyLocation.tsx";
+import {useGameStore} from "../store/GameStore.tsx";
+import {gameStartState} from "../const/Util.tsx";
 
-export function GameBoard(props: { game: GameModel }) {
+export function GameBoard() {
+
+  const {gameState} = useGameStore();
 
   const getAgentDroppable = (
     location: AgentLocationModel,
@@ -78,7 +82,7 @@ export function GameBoard(props: { game: GameModel }) {
       {id: 21, top: "4%", left: "84%"},
       {id: 22, top: "12.5%", left: "84%"},
     ];
-    const locations = props.game.locations;
+    const locations = gameState.locations;
 
     return droppableOffsets.map((offset) => {
       const location = assertExists(
@@ -105,7 +109,7 @@ export function GameBoard(props: { game: GameModel }) {
       {id: 12, top: "9.7%", left: "75.5%"},
       {id: 13, top: "10.3%", left: "93.5%"},
     ];
-    const spyLocations = props.game.spyLocations;
+    const spyLocations = gameState.spyLocations;
 
     return droppableOffsets.map((offset) => {
       const spyLocation = assertExists(
@@ -127,29 +131,29 @@ export function GameBoard(props: { game: GameModel }) {
           {getSpyDroppables()}
           <Faction
             factionType={FactionType.Emperor}
-            players={props.game.players}
+            players={gameState.players}
             top={"2.2%"}
             left={"3.8%"}/>
 
           <Faction
             factionType={FactionType.SpacingGuild}
-            players={props.game.players}
+            players={gameState.players}
             top={"26.7%"}
             left={"3.8%"}/>
 
           <Faction
             factionType={FactionType.BeneGesserit}
-            players={props.game.players}
+            players={gameState.players}
             top={"51.2%"}
             left={"3.8%"}/>
 
           <Faction
             factionType={FactionType.Fremen}
-            players={props.game.players}
+            players={gameState.players}
             top={"75.8%"}
             left={"3.8%"}/>
 
-          <CombatArea game={props.game}/>
+          <CombatArea/>
 
           <img
             src={board}

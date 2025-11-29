@@ -1,6 +1,12 @@
 import type {GameModel} from "../model/GameModel.tsx";
 import type {UniqueIdentifier} from "@dnd-kit/core";
 import {FactionType, type PlayerModel} from "../model/PlayerModel.tsx";
+import {showNotification} from "./Util.tsx";
+
+export const TroopMovementLocation = {
+  Combat: "Combat", Garrison: "Garrison", Supply: "Supply",
+} as const;
+export type TroopMovementLocation = keyof typeof TroopMovementLocation;
 
 export function getAgent(game: GameModel, agentId: string) {
  return game.players
@@ -136,4 +142,52 @@ export function setFeydSignetStatus(game: GameModel, newSignetStatus: number) {
     `This player not found.`
   )
   thisPlayer.character.additionalInfo.signetStatus = newSignetStatus;
+}
+
+export function moveUnit(game: GameModel, destination: TroopMovementLocation) {
+  const thisPlayer = assertExists(
+    game.players.find(p => p.isThisPlayer),
+    `This player not found.`
+  )
+
+  switch (destination) {
+    case TroopMovementLocation.Combat:
+      return moveTroopToCombat(thisPlayer);
+    case TroopMovementLocation.Garrison:
+      return moveTroopToGarrison(thisPlayer);
+    case  TroopMovementLocation.Supply:
+      return moveTroopToSupply(thisPlayer);
+  }
+}
+
+function moveTroopToCombat(player: PlayerModel) {
+  if (player.combat.troopsInGarrison < 1) {
+    showNotification("No troops available in garrison");
+    return false;
+  }
+
+  player.combat.troopsInCombat++;
+  player.combat.troopsInGarrison--;
+  return true;
+}
+
+function moveTroopToGarrison(player: PlayerModel) {
+  if (player.combat.troopsInCombat < 1) {
+    showNotification("No troops participating in the conflict");
+    return false;
+  }
+
+  player.combat.troopsInCombat--;
+  player.combat.troopsInGarrison++;
+  return true;
+}
+
+function moveTroopToSupply(player: PlayerModel) {
+  if (player.combat.troopsInCombat < 1) {
+    showNotification("No troops participating in the conflict");
+    return false;
+  }
+
+  player.combat.troopsInCombat--;
+  return true;
 }

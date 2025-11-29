@@ -1,6 +1,6 @@
 import '../css/Player.css'
 import {CSS} from '@dnd-kit/utilities';
-import {ActionIcon, Avatar, Box, Button, Divider, Flex, Group, Image, Popover, ScrollArea, Stack, Text, Tooltip} from "@mantine/core";
+import {ActionIcon, Avatar, Box, Button, Divider, Flex, Group, Image, ScrollArea, Stack, Text, Tooltip} from "@mantine/core";
 import water_icon from '../assets/resources/water.png';
 import spice_icon from '../assets/resources/spice.png';
 import solari_icon from '../assets/resources/solari.png';

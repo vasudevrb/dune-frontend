@@ -1,7 +1,5 @@
 import {type CharacterModel, ObjectiveType, type PlayerModel} from "../model/PlayerModel.tsx";
 import type {GameModel} from "../model/GameModel.tsx";
-import {assertExists} from "./GameUtils.tsx";
-import type {Active} from "@dnd-kit/core";
 import {notifications} from "@mantine/notifications";
 import type {AgentCardPreview} from "../model/AgentCardPreview.tsx";
 import {locations} from "../model/AgentLocationModel.tsx";
@@ -246,13 +244,6 @@ export function createId(items: (string | number)[]): string {
         .toLowerCase()
     )
     .join('#');
-}
-
-export function findDraggableColor(gameModel: GameModel, activeDraggable: Active) {
-  return assertExists(
-    gameModel.players.find(p => p.agents.some(a => a.id === activeDraggable.id)),
-    "Unknown Draggable ID"
-  ).color
 }
 
 export function showNotification(message: string) {

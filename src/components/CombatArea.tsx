@@ -1,5 +1,5 @@
 import '../css/CombatArea.css'
-import {Image, Group} from "@mantine/core";
+import {Image, Group, ActionIcon} from "@mantine/core";
 import troop_icon_red from "../assets/combat/troop_red.png";
 import troop_icon_blue from "../assets/combat/troop_blue.png";
 import troop_icon_green from "../assets/combat/troop_green.png";
@@ -9,15 +9,24 @@ import conflict_bg_1 from "../assets/conflicts/conflict_l1.jpg";
 import conflict_bg_2 from "../assets/conflicts/conflict_l2.jpg";
 import conflict_bg_3 from "../assets/conflicts/conflict_l3.jpg";
 import maker_hook_icon from "../assets/combat/maker_hook.png";
-import type {GameModel} from "../model/GameModel.tsx";
+import minus_icon from "../assets/minus.svg";
+import plus_icon from "../assets/plus.svg";
+import cross_icon from "../assets/cross.svg";
 import type {JSX} from "react";
 import IconGrid from "./IconGrid.tsx";
+import {useGameStore} from "../store/GameStore.tsx";
+import {produce} from "immer";
+import {moveUnit, TroopMovementLocation} from "../const/GameUtils.tsx";
+import {useWebSocket} from "./WebSocketContext.tsx";
+import {MOVE_COMBAT_UNIT} from "../const/Actions.tsx";
 
-export function CombatArea(props: { game: GameModel }) {
+export function CombatArea() {
 
+  const {gameState, setGameState} = useGameStore();
+  const {sendMessage} = useWebSocket();
   const getNextConflictBackground = () => {
     const getBg = () => {
-      switch (props.game.nextConflictLevel) {
+      switch (gameState.nextConflictLevel) {
         case 1: return conflict_bg_1;
         case 2: return conflict_bg_2;
         case 3: return conflict_bg_3;
@@ -46,7 +55,7 @@ export function CombatArea(props: { game: GameModel }) {
         mah={"200px"}
         fit={"contain"}
         radius={"7"}
-        src={props.game.currentConflict}
+        src={gameState.currentConflict}
         style={{
           position: "absolute",
           top: "79.5%",
@@ -62,6 +71,23 @@ export function CombatArea(props: { game: GameModel }) {
       case "BLUE": return troop_icon_blue;
       case "GREEN": return troop_icon_green;
       default: return troop_icon_gold;
+    }
+  }
+
+  const moveTroop = (destination: TroopMovementLocation) => {
+    let success = false;
+    setGameState(produce(gameState, (draft) => {
+      success = moveUnit(draft, destination)
+    }));
+
+    if (success) {
+      sendMessage({
+        action: MOVE_COMBAT_UNIT,
+        body: {
+          unitType: "troop",
+          destination: destination,
+        }
+      });
     }
   }
 
@@ -88,7 +114,9 @@ export function CombatArea(props: { game: GameModel }) {
       {top: "78%", left: "66%"},
     ]
 
-    props.game.players.forEach((p, index) => {
+    gameState.players.forEach((p, index) => {
+      if (p.isThisPlayer) index = 3;
+
       if (p.makerHookUnlocked) {
         const flipY = index === 2 || index === 3? "-1": "1";
         const flipX = index === 1 || index === 2 ? "-1": "1";
@@ -140,6 +168,45 @@ export function CombatArea(props: { game: GameModel }) {
         </Group>
       )
     })
+
+    elements.push(
+      <ActionIcon
+        onClick={() => moveTroop(TroopMovementLocation.Combat)}
+        pos={"absolute"}
+        right={"25%"}
+        bottom={"12%"}
+        className={"player-resource-modifier-button"}
+        variant={"outline"}
+        radius={"0"}>
+        <img width={30} src={plus_icon} alt="Resource modifier button"/>
+      </ActionIcon>
+    )
+
+    elements.push(
+      <ActionIcon
+        onClick={() => moveTroop(TroopMovementLocation.Garrison)}
+        pos={"absolute"}
+        right={"22.5%"}
+        bottom={"12%"}
+        className={"player-resource-modifier-button"}
+        variant={"outline"}
+        radius={"0"}>
+        <img width={30} src={minus_icon} alt="Resource modifier button"/>
+      </ActionIcon>
+    )
+
+    elements.push(
+      <ActionIcon
+        onClick={() => moveTroop(TroopMovementLocation.Supply)}
+        pos={"absolute"}
+        right={"20%"}
+        bottom={"12%"}
+        className={"player-resource-modifier-button"}
+        variant={"outline"}
+        radius={"0"}>
+        <img width={30} src={cross_icon} alt="Resource modifier button"/>
+      </ActionIcon>
+    )
     return elements
   }
 
@@ -148,7 +215,6 @@ export function CombatArea(props: { game: GameModel }) {
       {getConflictCard()}
       {getNextConflictBackground()}
       {getCombatComponents()}
-
     </>
   )
 }
