@@ -8,12 +8,15 @@ import spy_icon_gold from "../assets/spies/spy_gold.png";
 import spy_icon_green from "../assets/spies/spy_green.png";
 import {createPortal} from "react-dom";
 import type {SpyLocationModel} from "../model/SpyLocationModel.tsx";
+import {canMoveComponent} from "../const/GameUtils.tsx";
+import {useGameStore} from "../store/GameStore.tsx";
 
 function Spy(props: {
   spyId: string;
   color: string;
   playerName: string
 }) {
+  const {gameState} = useGameStore();
   const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
     id: `${props.spyId}`,
     data: {
@@ -34,7 +37,7 @@ function Spy(props: {
     else if (color === "GREEN") return spy_icon_green;
   }
 
-  const node = (
+  const node = (canMoveComponent(gameState, props.playerName) ?
     <img
       ref={setNodeRef}
       style={draggedStyle}
@@ -44,6 +47,13 @@ function Spy(props: {
       src={getSpyIcon(props.color)}
       alt="Spy icon"
       className={"locations-spy-icon"}/>
+      :
+      <img
+        draggable={false}
+        width={25}
+        src={getSpyIcon(props.color)}
+        alt="Spy icon"
+        className={"locations-spy-icon"}/>
   )
 
   return isDragging ? createPortal(node, document.body): node

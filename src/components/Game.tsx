@@ -21,7 +21,7 @@ import {
   SHOW_NOTIFICATION,
   START_GAME, TRASH_CARD, UPDATE_COMBAT, UPDATE_GAME,
   UPDATE_LOCATION,
-  UPDATE_PLAYER, UPDATE_RESOURCES, USE_CARD
+  UPDATE_PLAYER, UPDATE_RESOURCES, UPDATE_SPY_LOCATION, USE_CARD
 } from "../const/Actions.tsx";
 import {Box, Group, MantineProvider, type MantineThemeOverride, Stack, Text} from "@mantine/core";
 import {Card} from "./Card.tsx";
@@ -48,6 +48,7 @@ import {DndContext, type DragEndEvent} from "@dnd-kit/core";
 import {restrictToWindowEdges} from "@dnd-kit/modifiers";
 import {Notifications} from "@mantine/notifications";
 import type {RevealCardsPreview} from "../model/RevealCardsPreview.tsx";
+import type {SpyLocationModel} from "../model/SpyLocationModel.tsx";
 
 function Content() {
   const {gameState} = useGameStore();
@@ -255,6 +256,13 @@ export function Game() {
     }));
   }
 
+  const updateSpyLocation = (location: SpyLocationModel) => {
+    setGameState(produce(gameState, draft => {
+      const loc = draft.spyLocations.findIndex(l => l.id === location.id);
+      draft.spyLocations[loc] = location;
+    }));
+  }
+
   const updateCombat = (playerName: string, combat: CombatModel) => {
     setGameState(produce(gameState, draft => {
       const player = assertExists(
@@ -286,6 +294,7 @@ export function Game() {
       UPDATE_PLAYER,
       UPDATE_GAME,
       UPDATE_LOCATION,
+      UPDATE_SPY_LOCATION,
       SHOW_NOTIFICATION,
       UPDATE_COMBAT,
       UPDATE_RESOURCES,
@@ -302,6 +311,8 @@ export function Game() {
           updatePlayer(body)
         } else if (action === UPDATE_LOCATION) {
           updateLocation(body);
+        } else if (action === UPDATE_SPY_LOCATION){
+          updateSpyLocation(body);
         } else if (action === UPDATE_COMBAT){
           updateCombat(body.playerName, body.combat);
         } else if (action === UPDATE_RESOURCES){

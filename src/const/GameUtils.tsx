@@ -320,3 +320,11 @@ export function gainOrLoseObjective(game: GameModel, gained: boolean, type: Obje
     return true;
   }
 }
+
+export function canMoveComponent(game: GameModel, playerName: string) {
+  const thisPlayer = assertExists(
+    game.players.find(p => p.isThisPlayer),
+    "This player not found"
+  )
+  return thisPlayer.name === playerName;
+}

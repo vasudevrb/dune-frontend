@@ -63,7 +63,6 @@ import {
   addOrRemoveCombatUnit,
   addOrRemoveResource,
   addOrRemoveVP,
-  assertExists,
   gainOrLoseAlliance,
   gainOrLoseObjective
 } from "../const/GameUtils.tsx";

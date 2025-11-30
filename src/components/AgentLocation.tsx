@@ -10,12 +10,15 @@ import {useDraggable, useDroppable} from "@dnd-kit/core";
 import {createId} from "../const/Util.tsx";
 import {CSS} from "@dnd-kit/utilities";
 import {createPortal} from "react-dom";
+import {canMoveComponent} from "../const/GameUtils.tsx";
+import {useGameStore} from "../store/GameStore.tsx";
 
 function Agent(props: {
   agentId: string;
   color: string;
   playerName: string
 }) {
+  const {gameState} = useGameStore();
   const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
     id: `${props.agentId}`,
     data: {
@@ -37,7 +40,7 @@ function Agent(props: {
     else if (color === "GRAY") return agent_icon_disabled;
   }
 
-  const node = (
+  const node = ( canMoveComponent(gameState, props.playerName) ?
     <img
       ref={setNodeRef}
       style={draggedStyle}
@@ -47,6 +50,13 @@ function Agent(props: {
       src={getAgentIcon(props.color)}
       alt="Agent icon"
       className={"locations-agent-icon"}/>
+      :
+      <img
+        draggable={false}
+        width={25}
+        src={getAgentIcon(props.color)}
+        alt="Agent icon"
+        className={"locations-agent-icon"}/>
   )
 
   return isDragging ? createPortal(node, document.body): node
