@@ -256,6 +256,24 @@ export function addOrRemoveResource(game: GameModel, resourceType: string, add: 
       }
       return false;
   }
+  return false;
+}
+
+export function addOrRemoveVP(game: GameModel, add: boolean) {
+  const player = assertExists(
+    game.players.find(p => p.isThisPlayer),
+    `This player not found.`
+  )
+  if (add) {
+    player.victoryPoints++;
+    return true;
+  }
+  else if (player.victoryPoints > 0) {
+    player.victoryPoints--;
+    return true;
+  }
+
+  return false;
 }
 
 function moveTroopToSupply(player: PlayerModel) {

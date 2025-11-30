@@ -44,14 +44,14 @@ import {FeydSignet} from "./FeydSignet.tsx";
 import {useWebSocket} from "./WebSocketContext.tsx";
 import {
   ADD_OR_REMOVE_COMBAT_UNIT,
-  ADD_OR_REMOVE_RESOURCE,
+  ADD_OR_REMOVE_RESOURCE, ADD_OR_REMOVE_VP,
   DRAW_CARD,
   END_TURN,
   GAIN_INTRIGUE_CARD,
   REVEAL,
   STEAL_INTRIGUE_CARD
 } from "../const/Actions.tsx";
-import {addOrRemoveCombatUnit, addOrRemoveResource} from "../const/GameUtils.tsx";
+import {addOrRemoveCombatUnit, addOrRemoveResource, addOrRemoveVP} from "../const/GameUtils.tsx";
 import {produce} from "immer";
 
 function Agent(props: { player: PlayerModel, agentModel: AgentModel, index: number }) {
@@ -365,14 +365,28 @@ export function Player(props: {
       )
     }
     const getVictoryPointModifier = () => {
+      const VPModifierAction = (add: boolean) => {
+        let success = false;
+        setGameState(produce(gameState, draft => {
+          success = addOrRemoveVP(draft, add)
+        }))
+        if (success) {
+          sendMessage({
+            action: ADD_OR_REMOVE_VP,
+            body: {
+              add: add
+            }
+          })
+        }
+      }
       const text = props.playerModel.victoryPoints
       const icon = vp_icon
 
       return (
         <Stack align="center" gap={"xs"}>
-          {getButton(plus_icon)}
+          {getButton(plus_icon, () => VPModifierAction(true))}
           {getLabelElement(icon, text)}
-          {getButton(minus_icon)}
+          {getButton(minus_icon, () => VPModifierAction(false))}
         </Stack>
       )
     }

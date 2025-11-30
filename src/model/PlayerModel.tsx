@@ -8,6 +8,7 @@ export interface PlayerModel {
   numCards: NumCardsModel;
   resources: ResourcesModel;
   factionInfluences: FactionInfluencesModel;
+  factionAlliances: FactionType[];
   agents: AgentModel[];
   spies: SpyModel[];
   controlFlags: ControlFlagModel[];
