@@ -2,6 +2,7 @@ import {useEffect, createContext, useRef, useContext, useCallback, useState} fro
 import * as React from "react";
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import {BASE_URL} from "../const/ApiConstants.tsx";
 
 interface WebSocketContextType {
   subscribe: (actions: string[], component: string, callback: MessageCallback) => void;
@@ -83,7 +84,7 @@ export const WebSocketProvider: React.FC<Props> = ({ gameId, playerName, childre
     console.log("WSContext: Dependencies now available. Creating WS connection");
 
     /* WS initialization and cleanup */
-    const ws = new SockJS(`http://localhost:8080/game`)
+    const ws = new SockJS(`${BASE_URL}/game`)
     const client = new Client({
       webSocketFactory: () => ws,
       reconnectDelay: 5000,

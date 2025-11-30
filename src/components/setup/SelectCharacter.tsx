@@ -1,10 +1,10 @@
 import {ActionIcon, Box, Button, Group, Image, Overlay, Stack, Text} from "@mantine/core";
 import {useGameStore} from "../../store/GameStore.tsx";
-import {SERVER_BASE_URL} from "../../const/Util.tsx";
 import {type MouseEventHandler, useEffect, useState} from "react";
 
 import {ADD_TO_GAME} from "../../const/Actions.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
+import {BASE_URL} from "../../const/ApiConstants.tsx";
 
 export interface DisplayableCharacter {
   characterName: string;
@@ -16,7 +16,7 @@ export interface DisplayableCharacter {
 export function SelectCharacter(props: {
   stepper: () => void
 }) {
-  const baseUrl = SERVER_BASE_URL;
+  const baseUrl = BASE_URL;
   const globalProps = useGameStore();
   const {sendMessage} = useWebSocket();
   const [selectedCharacter, setSelectedCharacter] = useState<DisplayableCharacter>();

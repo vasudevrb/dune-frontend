@@ -1,5 +1,5 @@
 import '../css/CombatArea.css'
-import {Image, Group, ActionIcon, Popover, Box, Stack, Text, Button} from "@mantine/core";
+import {Image, Group, ActionIcon, Popover, Stack, Text, Button} from "@mantine/core";
 import troop_icon_red from "../assets/combat/troop_red.png";
 import troop_icon_blue from "../assets/combat/troop_blue.png";
 import troop_icon_green from "../assets/combat/troop_green.png";

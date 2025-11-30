@@ -6,8 +6,6 @@ import {locations} from "../model/AgentLocationModel.tsx";
 import {spyLocations} from "../model/SpyLocationModel.tsx";
 import type {RevealCardsPreview} from "../model/RevealCardsPreview.tsx";
 
-export const SERVER_BASE_URL = "http://localhost:8080";
-
 export const range = (start: number, end: number): number[] =>
   Array.from({length: end - start + 1}, (_, i) => start + i);
 

@@ -130,7 +130,8 @@ export function Lobby(props: {
   }
 
   const onNextClick = () => {
-    const playerModels = props.players.map(pi => {
+    // @ts-ignore
+    const playerModels: PlayerModel[] = props.players.map(pi => {
       const characterModel = {
         name: pi.characterName,
         urls: pi.characterUrls,

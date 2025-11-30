@@ -3,11 +3,12 @@ import '../../css/Setup.css'
 import {useEffect, useState} from "react";
 import arrow_right_icon from "../../assets/arrow_right.svg";
 import {Carousel} from "@mantine/carousel";
-import type {PlayerModel} from "../../model/PlayerModel.tsx";
+import type {CharacterModel, PlayerModel} from "../../model/PlayerModel.tsx";
 import {ADD_TO_GAME, GET_CHARACTER_READY_STATES, RESUME_GAME, START_GAME} from "../../const/Actions.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
 import {playerStartState} from "../../const/Util.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
+import {BASE_URL} from "../../const/ApiConstants.tsx";
 
 export interface Character {
   characterName: string;
@@ -118,7 +119,7 @@ export function Setup(props: {
 
   const getGameId = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/create-game?playerName=${playerName}`)
+      const response = await fetch(`${BASE_URL}/create-game?playerName=${playerName}`)
         .then(res => res.json())
       console.log(response)
       return response.gameId
@@ -133,7 +134,7 @@ export function Setup(props: {
 
   const joinGame = async (id: string) => {
     try {
-      const response = await fetch(`http://localhost:8080/join-game?playerName=${playerName}&gameId=${id}`)
+      const response = await fetch(`${BASE_URL}/join-game?playerName=${playerName}&gameId=${id}`)
         .then(res => res.json())
       if (id === response.gameId) {
         return response.alreadyPresentInGame;
@@ -149,7 +150,7 @@ export function Setup(props: {
 
   const getCharacters = async (newGameId: string) => {
     try {
-      const response = await fetch(`http://localhost:8080/characters`, {
+      const response = await fetch(`${BASE_URL}/characters`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -199,7 +200,7 @@ export function Setup(props: {
   const selectCharacter = async (character: Character) => {
     setSelectedCharacter(character)
     try {
-      const response = await fetch(`http://localhost:8080/pick-character`, {
+      const response = await fetch(`${BASE_URL}/pick-character`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -223,10 +224,13 @@ export function Setup(props: {
 
   const handleStartGameClick = () => {
     const playerModels = players.map(pi => {
-      const characterModel = {
+      const characterModel: CharacterModel = {
         name: pi.characterName,
         urls: pi.characterUrls,
-        avatarUrl: pi.avatarUrl
+        avatarUrl: pi.avatarUrl,
+        additionalInfo: {
+          signetStatus: 0
+        }
       }
 
       return {

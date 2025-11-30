@@ -2,15 +2,16 @@ import {useWebSocket} from "../WebSocketContext.tsx";
 import {type ChangeEvent, type MouseEventHandler, useState} from "react";
 import {useGameStore} from "../../store/GameStore.tsx";
 import {ActionIcon, Box, Button, Group, Image, Overlay, Stack, Text, TextInput} from "@mantine/core";
-import {SERVER_BASE_URL, showNotification} from "../../const/Util.tsx";
+import {showNotification} from "../../const/Util.tsx";
 import createGameImage from "../../assets/create_game_bg.png";
 import joinGameImage from "../../assets/join_game_bg.png";
 import {RESUME_GAME} from "../../const/Actions.tsx";
+import {BASE_URL} from "../../const/ApiConstants.tsx";
 
 export function CreateOrJoinGame(props: {
   stepper: (toStep: number) => void
 }) {
-  const baseUrl = SERVER_BASE_URL;
+  const baseUrl = BASE_URL;
   const {sendMessage} = useWebSocket();
   const [isHost, setIsHost] = useState<boolean>(true);
   const globalProps = useGameStore();
@@ -18,7 +19,13 @@ export function CreateOrJoinGame(props: {
   const getGameId = async () => {
     const url = `${baseUrl}/create-game?playerName=${globalProps.playerName}`
     try {
-      const response = await fetch(url).then(res => res.json())
+      const response = await fetch(url, {
+        method: "GET",
+        headers: new Headers({
+          "ngrok-skip-browser-warning": "69420",
+        })
+      })
+        .then(res => res.json())
       return response.gameId
     } catch (err) {
       console.error(err);
