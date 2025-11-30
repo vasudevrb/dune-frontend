@@ -2,7 +2,6 @@ import '../css/GameBoard.css'
 import {Box, ScrollArea, Space, Stack} from "@mantine/core";
 import board from '../assets/board.jpg';
 import {AgentLocation} from "./AgentLocation.tsx";
-import type {GameModel} from "../model/GameModel.tsx";
 import {CombatArea} from "./CombatArea.tsx";
 import type {Property} from "csstype";
 import type {AgentLocationModel} from "../model/AgentLocationModel.tsx";
@@ -12,7 +11,7 @@ import {FactionType} from "../model/PlayerModel.tsx";
 import type {SpyLocationModel} from "../model/SpyLocationModel.tsx";
 import {SpyLocation} from "./SpyLocation.tsx";
 import {useGameStore} from "../store/GameStore.tsx";
-import {gameStartState} from "../const/Util.tsx";
+import {Swordmaster} from "./Swordmaster.tsx";
 
 export function GameBoard() {
 
@@ -154,6 +153,8 @@ export function GameBoard() {
             left={"3.8%"}/>
 
           <CombatArea/>
+
+          <Swordmaster left={"60.8%"} top={"16.3%"} />
 
           <img
             src={board}

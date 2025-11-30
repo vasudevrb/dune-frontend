@@ -1,0 +1,6 @@
+.swordmaster-popover {
+  border: none;
+  background: rgba(209, 152, 136, 0.4);
+  /*backdrop-filter: blur(10px);*/
+  /*-webkit-backdrop-filter: blur(10px);*/
+}
