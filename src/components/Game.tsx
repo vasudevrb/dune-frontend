@@ -2,19 +2,28 @@ import type {GameModel} from "../model/GameModel.tsx";
 import {useWebSocket} from "./WebSocketContext.tsx";
 import {useEffect, useState} from "react";
 import type {AgentCardPreview} from "../model/AgentCardPreview.tsx";
-import {cardPreviewStartState, gameStartState, PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4, showNotification} from "../const/Util.tsx";
+import {
+  cardPreviewStartState,
+  gameStartState,
+  PLAYER_1,
+  PLAYER_2,
+  PLAYER_3,
+  PLAYER_4,
+  revealPreviewStartState,
+  showNotification
+} from "../const/Util.tsx";
 import {
   CARD_USED,
   PLACE_AGENT,
   PLACE_SPY,
   RECALL_AGENT,
-  RECALL_SPY,
+  RECALL_SPY, REVEAL_CARDS, SET_FACTION_INFLUENCE,
   SHOW_NOTIFICATION,
   START_GAME, TRASH_CARD, UPDATE_COMBAT,
   UPDATE_LOCATION,
   UPDATE_PLAYER, UPDATE_RESOURCES, USE_CARD
 } from "../const/Actions.tsx";
-import {Box, MantineProvider, type MantineThemeOverride, Stack, Text} from "@mantine/core";
+import {Box, Group, MantineProvider, type MantineThemeOverride, Stack, Text} from "@mantine/core";
 import {Card} from "./Card.tsx";
 import {ImperiumRow} from "./ImperiumRow.tsx";
 import {GameBoard} from "./GameBoard.tsx";
@@ -38,17 +47,19 @@ import {Setup2} from "./setup/Setup2.tsx";
 import {DndContext, type DragEndEvent} from "@dnd-kit/core";
 import {restrictToWindowEdges} from "@dnd-kit/modifiers";
 import {Notifications} from "@mantine/notifications";
+import type {RevealCardsPreview} from "../model/RevealCardsPreview.tsx";
 
 function Content() {
   const {gameState} = useGameStore();
   const {subscribe, unsubscribe} = useWebSocket();
   const [agentCardPreview, setAgentCardPreview] = useState<AgentCardPreview>(cardPreviewStartState);
+  const [revealCardPreview, setRevealCardPreview] = useState<RevealCardsPreview>(revealPreviewStartState);
 
   useEffect(() => {
     const componentName = "content_component";
     console.log(`In ${componentName}. Subscribing to WS messages`)
 
-    const actions = [CARD_USED]
+    const actions = [CARD_USED, REVEAL_CARDS]
     subscribe(actions, componentName, {
       onMessage: (action: string, body: any) => {
         if (action === CARD_USED) {
@@ -63,6 +74,11 @@ function Content() {
           setTimeout(() => {
             setAgentCardPreview(prev => ({...prev, show: false}))
           }, 5000);
+        } else if (action === REVEAL_CARDS) {
+          setRevealCardPreview({...body, show:true})
+          setTimeout(() => {
+            setRevealCardPreview(prev => ({...prev, show: false}))
+          }, 7000);
         }
       }
     });
@@ -108,9 +124,48 @@ function Content() {
     )
   }
 
+  const getRevealPreview = () => {
+    const show = revealCardPreview.show ? "show" : ""
+    const color = gameState
+      .players
+      .find(p => p.name === revealCardPreview.playerName)
+      ?.color
+    let bgColor;
+    switch (color) {
+      case "RED":
+        bgColor = "card-used-preview-red";
+        break;
+      case "BLUE":
+        bgColor = "card-used-preview-blue";
+        break;
+      case "GREEN":
+        bgColor = "card-used-preview-green";
+        break;
+      default:
+        bgColor = "card-used-preview-gold";
+        break;
+    }
+    return (
+      <Stack
+        className={`card-used-preview ${show} ${bgColor}`}
+        p={"40"}
+        style={{
+          position: "absolute",
+          top: "10%",
+          zIndex: 5,
+        }}>
+        <Text style={{textAlign: "start"}} className={"card-used-preview-text"}>{revealCardPreview.playerName} revealed</Text>
+        <Group gap={5}>
+          {revealCardPreview.urls.map((url) => (<Card src={url}/>))}
+        </Group>
+      </Stack>
+    )
+  }
+
   return <Box w={"100%"} h={"100%"}>
     <ImperiumRow game={gameState}/>
     {getCardPreview()}
+    {getRevealPreview()}
 
     <Stack
       className="board-area"
@@ -232,7 +287,8 @@ export function Game() {
       UPDATE_LOCATION,
       SHOW_NOTIFICATION,
       UPDATE_COMBAT,
-      UPDATE_RESOURCES
+      UPDATE_RESOURCES,
+      REVEAL_CARDS
     ]
     subscribe(actions, componentName, {
       onMessage: (action: string, body: any) => {
@@ -304,6 +360,7 @@ export function Game() {
       } else if (activeData.location === 'faction' && overData.location === 'faction') {
         if (activeData.factionType === overData.factionType) {
           setFactionInfluence(draft, activeData.playerName, overData.factionType, overData.influenceLevel)
+          action = SET_FACTION_INFLUENCE
         }
       } else if (activeData.location === 'feyd-rautha' && overData.location === 'feyd-rautha') {
         setFeydSignetStatus(draft, overData.signetValue)
@@ -333,6 +390,12 @@ export function Game() {
           sendMessage({action: RECALL_SPY, body: {
               spyId: active.id,
             }})
+          break;
+          case SET_FACTION_INFLUENCE:
+            sendMessage({action: SET_FACTION_INFLUENCE, body: {
+              factionType: overData.factionType,
+                influenceLevel: overData.influenceLevel
+              }})
           break;
       }
     }

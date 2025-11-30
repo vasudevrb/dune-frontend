@@ -4,6 +4,7 @@ import {notifications} from "@mantine/notifications";
 import type {AgentCardPreview} from "../model/AgentCardPreview.tsx";
 import {locations} from "../model/AgentLocationModel.tsx";
 import {spyLocations} from "../model/SpyLocationModel.tsx";
+import type {RevealCardsPreview} from "../model/RevealCardsPreview.tsx";
 
 export const SERVER_BASE_URL = "http://localhost:8080";
 
@@ -13,6 +14,22 @@ export const range = (start: number, end: number): number[] =>
 export const cardPreviewStartState: AgentCardPreview = {
   url: undefined,
   playerName: "",
+  message: "",
+  show: false
+}
+
+export const revealPreviewStartState: RevealCardsPreview = {
+  urls: [
+    "http://localhost:8080/imperium_cards/imperium_26.jpg",
+    "http://localhost:8080/imperium_cards/imperium_27.jpg",
+    "http://localhost:8080/imperium_cards/imperium_28.jpg",
+    "http://localhost:8080/imperium_cards/imperium_28.jpg",
+    "http://localhost:8080/imperium_cards/imperium_28.jpg",
+    "http://localhost:8080/imperium_cards/imperium_28.jpg",
+    "http://localhost:8080/imperium_cards/imperium_28.jpg",
+    "http://localhost:8080/imperium_cards/imperium_30.jpg",
+  ],
+  playerName: "player 3",
   show: false
 }
 

@@ -42,7 +42,15 @@ import {createPortal} from "react-dom";
 import {useGameStore} from "../store/GameStore.tsx";
 import {FeydSignet} from "./FeydSignet.tsx";
 import {useWebSocket} from "./WebSocketContext.tsx";
-import {ADD_OR_REMOVE_COMBAT_UNIT, ADD_OR_REMOVE_RESOURCE, DRAW_CARD, END_TURN, GAIN_INTRIGUE_CARD, STEAL_INTRIGUE_CARD} from "../const/Actions.tsx";
+import {
+  ADD_OR_REMOVE_COMBAT_UNIT,
+  ADD_OR_REMOVE_RESOURCE,
+  DRAW_CARD,
+  END_TURN,
+  GAIN_INTRIGUE_CARD,
+  REVEAL,
+  STEAL_INTRIGUE_CARD
+} from "../const/Actions.tsx";
 import {addOrRemoveCombatUnit, addOrRemoveResource} from "../const/GameUtils.tsx";
 import {produce} from "immer";
 
@@ -436,6 +444,10 @@ export function Player(props: {
     sendMessage({action: END_TURN})
   }
 
+  const revealAction = () => {
+    sendMessage({action: REVEAL})
+  }
+
   const getActions = () => {
     const getIconButton = (
       icon: string,
@@ -481,7 +493,7 @@ export function Player(props: {
         </Group>
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         <Group w={"100%"} gap={"xs"} justify={"flex-end"}>
-          {getTextButton("REVEAL", undefined, "outline")}
+          {getTextButton("REVEAL", () => revealAction(), "outline")}
           {isThisPlayerCurrentPlayer && getTextButton("END TURN", () => endTurnAction())}
         </Group>
 
