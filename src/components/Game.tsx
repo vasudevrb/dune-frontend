@@ -17,7 +17,7 @@ import {
   PLACE_AGENT,
   PLACE_SPY,
   RECALL_AGENT,
-  RECALL_SPY, REVEAL_CARDS, SET_FACTION_INFLUENCE,
+  RECALL_SPY, REVEAL_CARDS, SET_FACTION_INFLUENCE, SET_FEYD_SIGNET_STATUS,
   SHOW_NOTIFICATION,
   START_GAME, TRASH_CARD, UPDATE_COMBAT,
   UPDATE_LOCATION,
@@ -364,6 +364,7 @@ export function Game() {
         }
       } else if (activeData.location === 'feyd-rautha' && overData.location === 'feyd-rautha') {
         setFeydSignetStatus(draft, overData.signetValue)
+        action = SET_FEYD_SIGNET_STATUS
       }
     }))
 
@@ -396,6 +397,9 @@ export function Game() {
               factionType: overData.factionType,
                 influenceLevel: overData.influenceLevel
               }})
+          break;
+        case SET_FEYD_SIGNET_STATUS:
+          sendMessage({action: SET_FEYD_SIGNET_STATUS, body: {status: overData.signetValue}})
           break;
       }
     }
