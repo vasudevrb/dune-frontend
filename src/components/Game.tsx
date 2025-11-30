@@ -19,7 +19,7 @@ import {
   RECALL_AGENT,
   RECALL_SPY, REVEAL_CARDS, SET_FACTION_INFLUENCE, SET_FEYD_SIGNET_STATUS,
   SHOW_NOTIFICATION,
-  START_GAME, TRASH_CARD, UPDATE_COMBAT,
+  START_GAME, TRASH_CARD, UPDATE_COMBAT, UPDATE_GAME,
   UPDATE_LOCATION,
   UPDATE_PLAYER, UPDATE_RESOURCES, USE_CARD
 } from "../const/Actions.tsx";
@@ -284,6 +284,7 @@ export function Game() {
     const actions = [
       START_GAME,
       UPDATE_PLAYER,
+      UPDATE_GAME,
       UPDATE_LOCATION,
       SHOW_NOTIFICATION,
       UPDATE_COMBAT,
@@ -294,6 +295,8 @@ export function Game() {
       onMessage: (action: string, body: any) => {
         if (action === START_GAME) {
           setGameStarted(true);
+          updateGame(body);
+        } else if (action === UPDATE_GAME){
           updateGame(body);
         } else if (action === UPDATE_PLAYER) {
           updatePlayer(body)

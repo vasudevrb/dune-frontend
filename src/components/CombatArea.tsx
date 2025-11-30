@@ -1,5 +1,5 @@
 import '../css/CombatArea.css'
-import {Image, Group, ActionIcon} from "@mantine/core";
+import {Image, Group, ActionIcon, Popover, Box, Stack, Text, Button} from "@mantine/core";
 import troop_icon_red from "../assets/combat/troop_red.png";
 import troop_icon_blue from "../assets/combat/troop_blue.png";
 import troop_icon_green from "../assets/combat/troop_green.png";
@@ -26,7 +26,8 @@ import {useGameStore} from "../store/GameStore.tsx";
 import {produce} from "immer";
 import {moveUnit, TroopMovementLocation} from "../const/GameUtils.tsx";
 import {useWebSocket} from "./WebSocketContext.tsx";
-import {MOVE_COMBAT_UNIT} from "../const/Actions.tsx";
+import {GET_NEXT_CONFLICT, MOVE_COMBAT_UNIT} from "../const/Actions.tsx";
+import {UnlockMakerHook} from "./UnlockMakerHook.tsx";
 
 export function CombatArea() {
 
@@ -58,18 +59,36 @@ export function CombatArea() {
 
   const getConflictCard = () => {
     return (
-      <Image
-        w={"auto"}
-        mah={"200px"}
-        fit={"contain"}
-        radius={"7"}
-        src={gameState.currentConflict}
-        style={{
-          position: "absolute",
-          top: "79.5%",
-          left: "29%"
-        }}
-        alt="Combat icon"/>
+      <Popover width={200} position="top" clickOutsideEvents={['mouseup', 'touchend']}>
+        <Popover.Target>
+          <Image
+            w={"auto"}
+            mah={"200px"}
+            fit={"contain"}
+            radius={"7"}
+            src={gameState.currentConflict}
+            style={{
+              position: "absolute",
+              top: "79.5%",
+              left: "29%"
+            }}
+            alt="Combat icon"/>
+        </Popover.Target>
+        <Popover.Dropdown className={"swordmaster-popover"}>
+          <Stack>
+            <Text c="#cacaca" size="xs">Get next conflict?</Text>
+            <Group>
+              <Button
+                onClick={() => sendMessage({action: GET_NEXT_CONFLICT})}
+                className={`setup-action-button-next`}
+                color={"#A08170"}
+                size="xs"
+                radius="0"
+                variant={"filled"}>Yes</Button>
+            </Group>
+          </Stack>
+        </Popover.Dropdown>
+      </Popover>
     )
   }
 
@@ -270,6 +289,7 @@ export function CombatArea() {
 
   return (
     <>
+      <UnlockMakerHook left={"89.2%"} top={"85.6%"} />
       {getConflictCard()}
       {getNextConflictBackground()}
       {getCombatComponents()}
