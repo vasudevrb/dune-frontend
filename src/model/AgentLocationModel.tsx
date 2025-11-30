@@ -6,12 +6,18 @@ export interface AgentLocationModel {
     color: string;
     playerName: string
   }[];
+  controlFlag?: {
+    controlFlagId: string;
+    color: string;
+    playerName: string;
+  }
 }
 
 const emptyLocation: AgentLocationModel = {
   name: "",
   id: 0,
-  agents: []
+  agents: [],
+  controlFlag: undefined
 }
 
 export const locations: AgentLocationModel[] = [

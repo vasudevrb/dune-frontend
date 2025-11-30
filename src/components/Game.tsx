@@ -14,9 +14,9 @@ import {
 } from "../const/Util.tsx";
 import {
   CARD_USED,
-  PLACE_AGENT,
+  PLACE_AGENT, PLACE_CONTROL_FLAG,
   PLACE_SPY,
-  RECALL_AGENT,
+  RECALL_AGENT, RECALL_CONTROL_FLAG,
   RECALL_SPY, REVEAL_CARDS, SET_FACTION_INFLUENCE, SET_FEYD_SIGNET_STATUS,
   SHOW_NOTIFICATION,
   START_GAME, TRASH_CARD, UPDATE_COMBAT, UPDATE_GAME,
@@ -35,9 +35,9 @@ import {produce} from "immer";
 import {
   assertExists,
   moveThisPlayerToLast,
-  placeAgent,
+  placeAgent, placeControlFlag,
   placeSpy,
-  recallAgent,
+  recallAgent, recallControlFlag,
   recallSpy,
   setFactionInfluence,
   setFeydSignetStatus
@@ -359,17 +359,23 @@ export function Game() {
         if (activeData.type === "agent") {
           placeAgent(draft, active.id, overData.id)
           action = PLACE_AGENT
-        } else {
+        } else if (activeData.type === "spy") {
           placeSpy(draft, active.id, overData.id)
           action = PLACE_SPY
+        } else if (activeData.type === "control_flag") {
+          placeControlFlag(draft, active.id, overData.id);
+          action = PLACE_CONTROL_FLAG
         }
       } else if (activeData.location === "boardspace" && overData.location === "player") {
         if (activeData.type === "agent"){
           recallAgent(draft, active.id)
           action = RECALL_AGENT
-        } else {
+        } else if (activeData.type === "spy") {
           recallSpy(draft, active.id)
           action = RECALL_SPY
+        } else if (activeData.type === "control_flag") {
+          recallControlFlag(draft, active.id)
+          action = RECALL_CONTROL_FLAG
         }
       } else if (activeData.location === 'faction' && overData.location === 'faction') {
         if (activeData.factionType === overData.factionType) {
@@ -385,32 +391,57 @@ export function Game() {
     if (action) {
       switch (action) {
         case PLACE_AGENT:
-          sendMessage({action: PLACE_AGENT, body: {
+          sendMessage({
+            action: PLACE_AGENT, body: {
               agentId: active.id,
               locationId: overData.id,
-            }});
+            }
+          });
           break;
         case RECALL_AGENT:
-          sendMessage({action: RECALL_AGENT, body: {
+          sendMessage({
+            action: RECALL_AGENT, body: {
               agentId: active.id,
-            }});
+            }
+          });
           break;
         case PLACE_SPY:
-          sendMessage({action: PLACE_SPY, body: {
+          sendMessage({
+            action: PLACE_SPY, body: {
               spyId: active.id,
               spyLocationId: overData.id
-            }})
+            }
+          })
           break;
         case RECALL_SPY:
-          sendMessage({action: RECALL_SPY, body: {
+          sendMessage({
+            action: RECALL_SPY, body: {
               spyId: active.id,
-            }})
+            }
+          })
           break;
-          case SET_FACTION_INFLUENCE:
-            sendMessage({action: SET_FACTION_INFLUENCE, body: {
+        case SET_FACTION_INFLUENCE:
+          sendMessage({
+            action: SET_FACTION_INFLUENCE, body: {
               factionType: overData.factionType,
-                influenceLevel: overData.influenceLevel
-              }})
+              influenceLevel: overData.influenceLevel
+            }
+          })
+          break;
+        case PLACE_CONTROL_FLAG:
+          sendMessage({
+            action: PLACE_CONTROL_FLAG, body: {
+              controlFlagId: active.id,
+              locationId: overData.id,
+            }
+          });
+          break;
+        case RECALL_CONTROL_FLAG:
+          sendMessage({
+            action: RECALL_CONTROL_FLAG, body: {
+              controlFlagId: active.id,
+            }
+          });
           break;
         case SET_FEYD_SIGNET_STATUS:
           sendMessage({action: SET_FEYD_SIGNET_STATUS, body: {status: overData.signetValue}})

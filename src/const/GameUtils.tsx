@@ -44,6 +44,40 @@ export function placeAgent(game: GameModel, agentId: UniqueIdentifier, locationI
   agent.atLocation = locationId;
 }
 
+export function placeControlFlag(game: GameModel, controlFlagId: UniqueIdentifier, locationId: number) {
+  const player = assertExists(
+    game.players.find(p => p.controlFlags.some(cf => cf.id === controlFlagId)),
+    `Player with control flag: ${controlFlagId} not found.`
+  )
+
+  const location = assertExists(
+    game.locations.find(location => location.id === locationId),
+    `Location with id ${locationId} not found.`
+  )
+
+  player.controlFlags = player.controlFlags.filter(cf => cf.id != controlFlagId)
+  location.controlFlag = {
+    controlFlagId: controlFlagId as string,
+    playerName: player.name,
+    color: player.color
+  }
+}
+
+export function recallControlFlag(game: GameModel, controlFlagId: UniqueIdentifier) {
+  const location = assertExists(
+    game.locations.find(location => location.controlFlag?.controlFlagId === controlFlagId),
+    `Location containing control flag with id ${controlFlagId} not found.`
+  )
+
+  const player = assertExists(
+    game.players.find(p => p.name === location.controlFlag?.playerName),
+    `Player with controlFlagId: ${controlFlagId} not found.`
+  )
+
+  player.controlFlags.push({id: controlFlagId.toString()})
+  location.controlFlag = undefined
+}
+
 export function moveThisPlayerToLast(players: PlayerModel[]) {
   const thisPlayerIndex = players.findIndex(player => player.isThisPlayer);
   return [...players.slice(thisPlayerIndex + 1), ...players.slice(0, thisPlayerIndex + 1)];

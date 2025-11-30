@@ -12,6 +12,7 @@ import type {SpyLocationModel} from "../model/SpyLocationModel.tsx";
 import {SpyLocation} from "./SpyLocation.tsx";
 import {useGameStore} from "../store/GameStore.tsx";
 import {Swordmaster} from "./Swordmaster.tsx";
+import {ControlFlagLocation} from "./ControlFlagLocation.tsx";
 
 export function GameBoard() {
 
@@ -155,6 +156,27 @@ export function GameBoard() {
           <CombatArea/>
 
           <Swordmaster left={"60.8%"} top={"16.3%"} />
+
+          <ControlFlagLocation
+            location={gameState.locations.find(l => l.id === 11)!!}
+            w={"55px"}
+            h={"60px"}
+            style={{top: "53%", left: "76.2%", transform: "translate(-50%, -50%)"}}
+          />
+
+          <ControlFlagLocation
+            location={gameState.locations.find(l => l.id === 14)!!}
+            w={"55px"}
+            h={"60px"}
+            style={{top: "39.6%", left: "62.8%", transform: "translate(-50%, -50%)"}}
+          />
+
+          <ControlFlagLocation
+            location={gameState.locations.find(l => l.id === 15)!!}
+            w={"55px"}
+            h={"60px"}
+            style={{top: "36.7%", left: "78.8%", transform: "translate(-50%, -50%)"}}
+          />
 
           <img
             src={board}

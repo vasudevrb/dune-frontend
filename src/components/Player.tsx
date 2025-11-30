@@ -236,7 +236,7 @@ export function Player(props: {
     id: `this-player-container`,
     data: {
       location: "player",
-      type: "spy,agent"
+      type: "spy,agent,control_flag"
     }
   });
 
