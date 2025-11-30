@@ -1,4 +1,4 @@
-import {type CharacterModel, ObjectiveType, type PlayerModel} from "../model/PlayerModel.tsx";
+import {type CharacterModel, FactionType, ObjectiveType, type PlayerModel} from "../model/PlayerModel.tsx";
 import type {GameModel} from "../model/GameModel.tsx";
 import {notifications} from "@mantine/notifications";
 import type {AgentCardPreview} from "../model/AgentCardPreview.tsx";
@@ -61,7 +61,10 @@ export const playerStartState: PlayerModel = {
   victoryPoints: 0,
   objectives: [
     ObjectiveType.DesertMouse,
-    ObjectiveType.Any,
+  ],
+  factionAlliances: [
+    FactionType.Fremen,
+    FactionType.SpacingGuild
   ],
   numCards: {
     inHand: 0,

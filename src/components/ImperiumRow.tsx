@@ -3,7 +3,7 @@ import {ScrollArea, Divider, Drawer, Text, Space} from "@mantine/core";
 import {Card, CardButtonType} from "./Card.tsx";
 import {useGameStore} from "../store/GameStore.tsx";
 import type {CardModel} from "../model/PlayerModel.tsx";
-import {ACQUIRE_CARD} from "../const/Actions.tsx";
+import {ACQUIRE_IMPERIUM_CARD, ACQUIRE_RESERVE_CARD} from "../const/Actions.tsx";
 import use_card_icon from "../assets/cards/use_card.png";
 import {useWebSocket} from "./WebSocketContext.tsx";
 import type {GameModel} from "../model/GameModel.tsx";
@@ -34,18 +34,19 @@ export function ImperiumRow(props: {
   }
 
   const getButtons = (cardType: ImperiumCardType, card: CardModel) => {
-    const getOnClickAction = (action: string) => {
-      return sendMessage({action: action, body: {url: card.url, source: cardType}})
+    const getOnClickAction = () => {
+      const action = cardType === ImperiumCardType.IMPERIUM ? ACQUIRE_IMPERIUM_CARD : ACQUIRE_RESERVE_CARD;
+      return sendMessage({action: action, body: {url: card.url}})
     }
-    const getTextButton = (action: string, label: string) => {
+    const getButton = (label: string) => {
       return {
         type: CardButtonType.Icon,
         label: label,
-        onclick: () => {getOnClickAction(action)}
+        onclick: () => {getOnClickAction()}
       }
     }
 
-    const acquireButton = getTextButton(ACQUIRE_CARD, use_card_icon)
+    const acquireButton = getButton(use_card_icon)
 
     return [acquireButton]
   }

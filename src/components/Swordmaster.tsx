@@ -6,11 +6,12 @@ import {UNLOCK_SWORDMASTER} from "../const/Actions.tsx";
 import {useGameStore} from "../store/GameStore.tsx";
 import {assertExists} from "../const/GameUtils.tsx";
 import {produce} from "immer";
+import {useDisclosure} from "@mantine/hooks";
 
 export function Swordmaster(
   props: {left: Property.Left, top: Property.Top},
 ) {
-
+  const [opened, {close, toggle}] = useDisclosure(false);
   const {gameState, setGameState} = useGameStore();
   const {sendMessage} = useWebSocket();
 
@@ -24,6 +25,7 @@ export function Swordmaster(
     }));
 
     sendMessage({action: UNLOCK_SWORDMASTER});
+    close()
   }
 
   return (
@@ -33,9 +35,9 @@ export function Swordmaster(
     left={props.left}
     style={{transform: `translate(-50%, -50%`}}
     >
-      <Popover width={200} position="bottom" clickOutsideEvents={['mouseup', 'touchend']}>
+      <Popover opened={opened} onChange={toggle} width={200} position="bottom" clickOutsideEvents={['mouseup', 'touchend']}>
         <Popover.Target>
-          <Box w={50} h={80} bg={"#cacaca11"} />
+          <Box w={50} h={80} bg={"#cacaca11"} onClick={toggle} />
         </Popover.Target>
         <Popover.Dropdown className={"swordmaster-popover"}>
           <Stack>

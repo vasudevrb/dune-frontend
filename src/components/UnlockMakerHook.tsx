@@ -6,10 +6,13 @@ import {UNLOCK_MAKER_HOOK} from "../const/Actions.tsx";
 import {useGameStore} from "../store/GameStore.tsx";
 import {assertExists} from "../const/GameUtils.tsx";
 import {produce} from "immer";
+import {useDisclosure} from "@mantine/hooks";
 
 export function UnlockMakerHook(
-  props: {left: Property.Left, top: Property.Top},
+  props: { left: Property.Left, top: Property.Top },
 ) {
+
+  const [opened, {close, toggle}] = useDisclosure(false);
 
   const {gameState, setGameState} = useGameStore();
   const {sendMessage} = useWebSocket();
@@ -24,18 +27,19 @@ export function UnlockMakerHook(
     }));
 
     sendMessage({action: UNLOCK_MAKER_HOOK});
+    close();
   }
 
   return (
     <Box
-    pos={"absolute"}
-    top={props.top}
-    left={props.left}
-    style={{transform: `translate(-50%, -50%`}}
+      pos={"absolute"}
+      top={props.top}
+      left={props.left}
+      style={{transform: `translate(-50%, -50%`}}
     >
-      <Popover width={200} position="bottom" clickOutsideEvents={['mouseup', 'touchend']}>
+      <Popover opened={opened} onChange={toggle} width={200} position="bottom" clickOutsideEvents={['mouseup', 'touchend']}>
         <Popover.Target>
-          <Box w={50} h={80} />
+          <Box w={50} h={80} onClick={toggle}/>
         </Popover.Target>
         <Popover.Dropdown className={"swordmaster-popover"}>
           <Stack>

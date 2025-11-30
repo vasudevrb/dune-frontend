@@ -1,6 +1,6 @@
 import type {GameModel} from "../model/GameModel.tsx";
 import type {UniqueIdentifier} from "@dnd-kit/core";
-import { CombatUnitType, FactionType, type PlayerModel} from "../model/PlayerModel.tsx";
+import {CombatUnitType, FactionType, type ObjectiveType, type PlayerModel} from "../model/PlayerModel.tsx";
 import {showNotification} from "./Util.tsx";
 
 export const TroopMovementLocation = {
@@ -285,4 +285,38 @@ function moveTroopToSupply(player: PlayerModel) {
   player.combat.troopsInCombat--;
   player.combat.strength-=2;
   return true;
+}
+
+export function gainOrLoseAlliance(game: GameModel, gained: boolean, type: FactionType) {
+  const thisPlayer = assertExists(
+    game.players.find(p => p.isThisPlayer),
+    "This player not found"
+  )
+  const alreadyHasAlliance = thisPlayer.factionAlliances.find(fa => fa === type)
+
+  if (gained && !alreadyHasAlliance) {
+    thisPlayer.factionAlliances.push(type);
+    return true;
+  } else if (!gained && alreadyHasAlliance) {
+    thisPlayer.factionAlliances = thisPlayer.factionAlliances.filter(fa => fa !== type);
+    return true;
+  }
+
+  return false;
+}
+
+export function gainOrLoseObjective(game: GameModel, gained: boolean, type: ObjectiveType) {
+  const thisPlayer = assertExists(
+    game.players.find(p => p.isThisPlayer),
+    "This player not found"
+  )
+
+  if (gained) {
+    thisPlayer.objectives.push(type);
+    return true;
+  } else if (!gained) {
+    const index = thisPlayer.objectives.indexOf(type);
+    thisPlayer.objectives.splice(index, 1);
+    return true;
+  }
 }

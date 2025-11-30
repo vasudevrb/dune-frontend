@@ -1,6 +1,6 @@
 import '../css/Player.css'
 import {CSS} from '@dnd-kit/utilities';
-import {ActionIcon, Avatar, Box, Button, Divider, Flex, Group, Image, ScrollArea, Stack, Text, Tooltip} from "@mantine/core";
+import {ActionIcon, Avatar, Box, Button, Divider, Flex, Group, Image, Popover, ScrollArea, Space, Stack, Text, Tooltip} from "@mantine/core";
 import water_icon from '../assets/resources/water.png';
 import spice_icon from '../assets/resources/spice.png';
 import solari_icon from '../assets/resources/solari.png';
@@ -14,6 +14,14 @@ import agent_icon_red from '../assets/agents/agent_red.svg';
 import agent_icon_blue from '../assets/agents/agent_blue.svg';
 import agent_icon_green from '../assets/agents/agent_green.svg';
 import agent_icon_gold from '../assets/agents/agent_gold.svg';
+import alliance_bene_gesserit from '../assets/alliances/alliance_bg.png';
+import alliance_fremen from '../assets/alliances/alliance_fremen.png';
+import alliance_emperor from '../assets/alliances/alliance_emperor.png';
+import alliance_spacing_guild from '../assets/alliances/alliance_spacing_guild.png';
+import objective_desert_mouse from '../assets/objectives/desert_mouse.png';
+import objective_ornithopter from '../assets/objectives/ornothopter.png';
+import objective_cryskife from '../assets/objectives/crysknife.png';
+import objective_any from '../assets/objectives/any.png';
 import spy_icon_red from '../assets/spies/spy_red.png';
 import spy_icon_green from '../assets/spies/spy_green.png';
 import spy_icon_blue from '../assets/spies/spy_blue.png';
@@ -29,7 +37,7 @@ import draw_card from '../assets/cards/draw_card.png';
 import {
   type AgentModel,
   CombatUnitType,
-  type ControlFlagModel,
+  type ControlFlagModel, FactionType, ObjectiveType,
   type PlayerModel,
   type SpyModel
 } from "../model/PlayerModel.tsx";
@@ -47,12 +55,20 @@ import {
   ADD_OR_REMOVE_RESOURCE, ADD_OR_REMOVE_VP,
   DRAW_CARD,
   END_TURN,
-  GAIN_INTRIGUE_CARD,
+  GAIN_INTRIGUE_CARD, GAIN_OR_LOSE_ALLIANCE, GAIN_OR_LOSE_OBJECTIVE,
   REVEAL,
   STEAL_INTRIGUE_CARD
 } from "../const/Actions.tsx";
-import {addOrRemoveCombatUnit, addOrRemoveResource, addOrRemoveVP} from "../const/GameUtils.tsx";
+import {
+  addOrRemoveCombatUnit,
+  addOrRemoveResource,
+  addOrRemoveVP,
+  assertExists,
+  gainOrLoseAlliance,
+  gainOrLoseObjective
+} from "../const/GameUtils.tsx";
 import {produce} from "immer";
+import {useDisclosure} from "@mantine/hooks";
 
 function Agent(props: { player: PlayerModel, agentModel: AgentModel, index: number }) {
   const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
@@ -213,6 +229,7 @@ export function Player(props: {
 }) {
   const {sendMessage} = useWebSocket();
 
+  const [opened, {close, toggle}] = useDisclosure(false);
   const isThisPlayerCurrentPlayer = props.playerModel.name === props.currentPlayer;
   const {gameState, setGameState, setImperiumRowOpened} = useGameStore();
 
@@ -576,6 +593,119 @@ export function Player(props: {
     )
   }
 
+  const allianceModifierAction = (gained: boolean, type: FactionType) => {
+    if (!props.playerModel.isThisPlayer) return;
+    let success;
+    setGameState(produce(gameState, draft => {
+      success = gainOrLoseAlliance(draft, gained, type)
+    }));
+    if (success) {
+      sendMessage({
+        action: GAIN_OR_LOSE_ALLIANCE,
+        body: {type: type, gained: gained}
+      })
+    }
+    close()
+  }
+
+  const objectiveModifierAction = (gained: boolean, type: ObjectiveType) => {
+    if (!props.playerModel.isThisPlayer) return;
+    let success;
+    setGameState(produce(gameState, draft => {
+      success = gainOrLoseObjective(draft, gained, type)
+    }));
+    if (success) {
+      sendMessage({
+        action: GAIN_OR_LOSE_OBJECTIVE,
+        body: {type: type, gained: gained}
+      })
+    }
+    close()
+  }
+
+  const getAllianceObjectiveModifier = () => {
+    if (!props.playerModel.isThisPlayer) return;
+
+    return (
+      <Popover opened={opened} onChange={toggle} width={200} position="bottom" clickOutsideEvents={['mouseup', 'touchend']}>
+        <Popover.Target>
+          <Image w={25} h={25} src={plus_icon} onClick={toggle}/>
+        </Popover.Target>
+        <Popover.Dropdown onClick={close} className={"swordmaster-popover"}>
+          <Stack>
+            <Text c="#cacaca" size="xs">Select Alliance or Objective</Text>
+            <Group>
+              <Image w={40} h={40} src={alliance_fremen} onClick={() => allianceModifierAction(true, FactionType.Fremen)}/>
+              <Image w={40} h={40} src={alliance_bene_gesserit} onClick={() => allianceModifierAction(true, FactionType.BeneGesserit)}/>
+              <Image w={40} h={40} src={alliance_spacing_guild} onClick={() => allianceModifierAction(true, FactionType.SpacingGuild)}/>
+              <Image w={40} h={40} src={alliance_emperor} onClick={() => allianceModifierAction(true, FactionType.Emperor)}/>
+            </Group>
+            <Group>
+              <Image w={35} h={35} src={objective_desert_mouse} onClick={() => objectiveModifierAction(true, ObjectiveType.DesertMouse)}/>
+              <Image w={35} h={35} src={objective_ornithopter} onClick={() => objectiveModifierAction(true, ObjectiveType.Ornithopter)}/>
+              <Image w={35} h={35} src={objective_cryskife} onClick={() => objectiveModifierAction(true, ObjectiveType.Crysknife)}/>
+              <Image w={35} h={35} src={objective_any} onClick={() => objectiveModifierAction(true, ObjectiveType.Any)}/>
+            </Group>
+          </Stack>
+        </Popover.Dropdown>
+      </Popover>
+    )
+  }
+
+  const getAlliances = () => {
+    const getFactionAllianceToken = (type: FactionType) => {
+      switch (type) {
+        case FactionType.Fremen:
+          return alliance_fremen;
+        case FactionType.BeneGesserit:
+          return alliance_bene_gesserit;
+        case FactionType.Emperor:
+          return alliance_emperor;
+        case FactionType.SpacingGuild:
+          return alliance_spacing_guild;
+      }
+    }
+
+    return (
+      <>
+        {props.playerModel.factionAlliances.map(type =>
+          <Image
+            onClick={() => allianceModifierAction(false, type)}
+            m={5}
+            w={35}
+            src={getFactionAllianceToken(type)}/>
+        )}
+      </>
+    )
+  }
+
+  const getObjectives = () => {
+    const getObjectiveToken = (type: ObjectiveType) => {
+      switch (type) {
+        case ObjectiveType.DesertMouse:
+          return objective_desert_mouse;
+        case ObjectiveType.Ornithopter:
+          return objective_ornithopter;
+        case ObjectiveType.Crysknife:
+          return objective_cryskife;
+        case ObjectiveType.Any:
+          return objective_any;
+      }
+    }
+
+    return (
+      <>
+        {props.playerModel.objectives.map(type =>
+          <Image
+            onClick={() => objectiveModifierAction(false, type)}
+            m={5}
+            w={35}
+            src={getObjectiveToken(type)}/>
+        )}
+      </>
+    )
+  }
+
   const getVPAndAlliances = () => {
     return (
       <ScrollArea
@@ -584,11 +714,16 @@ export function Player(props: {
         scrollbars={"x"}
         offsetScrollbars={false}
         type={"never"}>
-        <div style={{display: 'flex'}}>
+        <div style={{display: 'flex', alignItems: "center"}}>
           <Box pos={"relative"} w={50} h={50}>
             <Image w={50} src={vp_icon}/>
             <Text size="1.4em" className={"player-resource-modifier-text"}>{props.playerModel.victoryPoints}</Text>
           </Box>
+          <Divider orientation="vertical" m={"8"} color={"#cacaca44"}/>
+          {getAlliances()}
+          <Divider orientation="vertical" m={"8"} color={"#cacaca44"}/>
+          {getObjectives()}
+          {getAllianceObjectiveModifier()}
         </div>
       </ScrollArea>
     )
