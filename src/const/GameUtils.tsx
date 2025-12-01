@@ -255,6 +255,39 @@ export function addOrRemoveCombatUnit(game: GameModel, unit: CombatUnitType, add
   }
 }
 
+export function addOrRemoveBonusSpice(game: GameModel, locationId: number, add: boolean) {
+  switch (locationId) {
+    case 9:
+      if (add) {
+        game.bonusSpice.deepDesert++;
+        return true;
+      } else if (game.bonusSpice.deepDesert > 0) {
+        game.bonusSpice.deepDesert--;
+        return true;
+      }
+      return false;
+    case 10:
+      if (add) {
+        game.bonusSpice.haggaBasin++;
+        return true;
+      } else if (game.bonusSpice.haggaBasin > 0) {
+        game.bonusSpice.haggaBasin--;
+        return true;
+      }
+      return false;
+    case 11:
+      if (add) {
+        game.bonusSpice.imperialBasin++;
+        return true;
+      } else if (game.bonusSpice.imperialBasin > 0) {
+        game.bonusSpice.imperialBasin--;
+        return true;
+      }
+      return false;
+  }
+  return false;
+}
+
 export function addOrRemoveResource(game: GameModel, resourceType: string, add: boolean) {
   const player = assertExists(
     game.players.find(p => p.isThisPlayer),

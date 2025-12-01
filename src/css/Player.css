@@ -90,7 +90,6 @@
   left: 50%;
   transform: translate(-50%, -50%);
   color: #FAFAFA;
-  font-weight: bold;
   font-family: "IBM Plex Sans", sans-serif;
   text-shadow: 0 0 5px rgba(31, 31, 31, 1);
 }

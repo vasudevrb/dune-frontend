@@ -40,6 +40,11 @@ export const gameStartState: GameModel = {
   spyLocations: spyLocations,
   currentConflict: "http://localhost:8080/conflict_cards/level_2/conf_2_5.jpg",
   nextConflictLevel: 1,
+  bonusSpice: {
+    deepDesert: 0,
+    haggaBasin: 0,
+    imperialBasin: 0
+  },
   imperiumRow: [],
   reserveRow: []
 }

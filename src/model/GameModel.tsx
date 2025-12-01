@@ -9,6 +9,11 @@ export interface GameModel {
   spyLocations: SpyLocationModel[];
   imperiumRow: CardModel[];
   reserveRow: CardModel[];
+  bonusSpice: {
+    deepDesert: number;
+    haggaBasin: number;
+    imperialBasin: number;
+  }
   currentConflict: string;
   nextConflictLevel: number;
   currentPlayer: string;

@@ -13,6 +13,7 @@ import {SpyLocation} from "./SpyLocation.tsx";
 import {useGameStore} from "../store/GameStore.tsx";
 import {Swordmaster} from "./Swordmaster.tsx";
 import {ControlFlagLocation} from "./ControlFlagLocation.tsx";
+import {BonusSpice} from "./BonusSpice.tsx";
 
 export function GameBoard() {
 
@@ -177,6 +178,10 @@ export function GameBoard() {
             h={"60px"}
             style={{top: "36.7%", left: "78.8%", transform: "translate(-50%, -50%)"}}
           />
+
+          <BonusSpice locationId={9} top={"60.2%"} left={"40.1%"}/>
+          <BonusSpice locationId={10} top={"53%"} left={"58.6%"}/>
+          <BonusSpice locationId={11} top={"44.7%"} left={"86.4%"}/>
 
           <img
             src={board}
