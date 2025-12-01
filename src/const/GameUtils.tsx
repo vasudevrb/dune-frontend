@@ -236,10 +236,12 @@ export function addOrRemoveCombatUnit(game: GameModel, unit: CombatUnitType, add
       return false;
     case CombatUnitType.Sandworm:
       if (add) {
-        player.combat.wormsInCombat++
+        player.combat.wormsInCombat++;
+        player.combat.strength+=3;
         return true
       } else if (player.combat.wormsInCombat > 0) {
         player.combat.wormsInCombat--;
+        player.combat.strength-=3;
         return true
       }
       return false;
