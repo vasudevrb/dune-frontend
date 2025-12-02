@@ -45,6 +45,10 @@ export const gameStartState: GameModel = {
     haggaBasin: 0,
     imperialBasin: 0
   },
+  contracts: [
+    "http://localhost:8080/contracts/contract_15.png",
+    "http://localhost:8080/contracts/contract_17.png"
+  ],
   imperiumRow: [],
   reserveRow: []
 }
@@ -102,6 +106,7 @@ export const playerStartState: PlayerModel = {
     SpacingGuild: 0,
     Emperor: 0
   },
+  contracts: [],
   swordmasterUnlocked: false,
   makerHookUnlocked: false,
   combat: {
@@ -274,6 +279,11 @@ export const PLAYER_4: PlayerModel = {
       {url: "http://localhost:8080/imperium_cards/imperium_27.jpg"},
     ]
   },
+  contracts: [
+    { url: "http://localhost:8080/contracts/contract_17.png", completed: false},
+    { url: "http://localhost:8080/contracts/contract_18.png", completed: true},
+    { url: "http://localhost:8080/contracts/contract_19.png", completed: true}
+  ],
   combat: {
     troopsInCombat: 1,
     troopsInGarrison: 15,

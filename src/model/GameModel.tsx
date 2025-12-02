@@ -13,7 +13,8 @@ export interface GameModel {
     deepDesert: number;
     haggaBasin: number;
     imperialBasin: number;
-  }
+  };
+  currentContracts: string[];
   currentConflict: string;
   nextConflictLevel: number;
   currentPlayer: string;

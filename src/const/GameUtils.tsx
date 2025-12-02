@@ -1,6 +1,6 @@
 import type {GameModel} from "../model/GameModel.tsx";
 import type {UniqueIdentifier} from "@dnd-kit/core";
-import {CombatUnitType, FactionType, type ObjectiveType, type PlayerModel} from "../model/PlayerModel.tsx";
+import {CombatUnitType, type ContractModel, FactionType, type ObjectiveType, type PlayerModel} from "../model/PlayerModel.tsx";
 import {showNotification} from "./Util.tsx";
 
 export const TroopMovementLocation = {
@@ -396,4 +396,30 @@ export function canMoveComponent(game: GameModel, playerName: string) {
     "This player not found"
   )
   return thisPlayer.name === playerName;
+}
+
+export function acquireContract(game: GameModel, url: string) {
+  const thisPlayer = assertExists(
+    game.players.find(p => p.isThisPlayer),
+    "This player not found"
+  )
+
+  thisPlayer.contracts.push({
+    url: url,
+    completed: false,
+  });
+}
+
+export function setContractCompleted(game: GameModel, contract: ContractModel, completed: boolean) {
+  const thisPlayer = assertExists(
+    game.players.find(p => p.isThisPlayer),
+    "This player not found"
+  )
+
+  const c = assertExists(
+    thisPlayer.contracts.find(c => c.url === contract.url),
+    `This contract ${contract.url} not found`
+  )
+
+  c.completed = completed;
 }

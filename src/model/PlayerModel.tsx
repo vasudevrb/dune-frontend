@@ -14,6 +14,7 @@ export interface PlayerModel {
   controlFlags: ControlFlagModel[];
   swordmasterUnlocked: boolean;
   makerHookUnlocked: boolean;
+  contracts: ContractModel[];
   combat: CombatModel;
   private?: {
     inHandCards: CardModel[];
@@ -82,6 +83,11 @@ export interface NumCardsModel {
   inDiscardPile: number;
   inDrawPile: number;
   intrigues: number;
+}
+
+export interface ContractModel {
+  url: string;
+  completed: boolean;
 }
 
 export interface AgentModel {

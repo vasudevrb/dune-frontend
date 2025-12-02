@@ -32,11 +32,12 @@ import control_flag_gold from '../assets/control_flags/control_flag_gold.png';
 import control_flag_green from '../assets/control_flags/control_flag_green.png';
 import vp_icon from '../assets/resources/victory_point.png';
 import draw_intrigue_card from '../assets/cards/draw_intrigue_card.png';
+import contract_completed from '../assets/contract_completed.png';
 import steal_intrigue_card from '../assets/cards/steal_intrigue_card.png';
 import draw_card from '../assets/cards/draw_card.png';
 import {
   type AgentModel,
-  CombatUnitType,
+  CombatUnitType, type ContractModel,
   type ControlFlagModel, FactionType, ObjectiveType,
   type PlayerModel,
   type SpyModel
@@ -52,7 +53,7 @@ import {FeydSignet} from "./FeydSignet.tsx";
 import {useWebSocket} from "./WebSocketContext.tsx";
 import {
   ADD_OR_REMOVE_COMBAT_UNIT,
-  ADD_OR_REMOVE_RESOURCE, ADD_OR_REMOVE_VP,
+  ADD_OR_REMOVE_RESOURCE, ADD_OR_REMOVE_VP, COMPLETE_CONTRACT,
   DRAW_CARD,
   END_TURN,
   GAIN_INTRIGUE_CARD, GAIN_OR_LOSE_ALLIANCE, GAIN_OR_LOSE_OBJECTIVE,
@@ -64,7 +65,7 @@ import {
   addOrRemoveResource,
   addOrRemoveVP,
   gainOrLoseAlliance,
-  gainOrLoseObjective
+  gainOrLoseObjective, setContractCompleted
 } from "../const/GameUtils.tsx";
 import {produce} from "immer";
 import {useDisclosure} from "@mantine/hooks";
@@ -767,6 +768,44 @@ export function Player(props: {
     )
   }
 
+  const getContracts = () => {
+    const contractClickAction = (contract: ContractModel) => {
+      const alreadyCompleted = contract.completed;
+      setGameState(produce(gameState, draft => {
+        setContractCompleted(draft, contract, !alreadyCompleted);
+      }))
+      sendMessage({
+        action: COMPLETE_CONTRACT,
+        body: {
+          url: contract.url,
+          completed: !alreadyCompleted,
+        }
+      })
+    }
+    return (
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <ScrollArea
+          w={"100%"}
+          className={"fadeScroll"}
+          scrollbars={"x"}
+          offsetScrollbars={false}
+          type={"never"}>
+          <div style={{display: 'flex', gap: 16, alignItems: "center"}}>
+            {props.playerModel.contracts.map(c => {
+              return (
+                <Image
+                  w={140}
+                  onClick={() => contractClickAction(c)}
+                  src={c.completed ? contract_completed : c.url}/>
+              )
+            })}
+          </div>
+        </ScrollArea>
+      </>
+    )
+  }
+
   const getThisPlayer = () => {
     return (
       <Stack
@@ -794,6 +833,7 @@ export function Player(props: {
         {getResourceModifierElements()}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getCombatModifierElements()}
+        {props.playerModel.contracts.length > 0 && getContracts()}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getActions()}
       </Stack>

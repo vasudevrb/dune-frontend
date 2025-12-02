@@ -14,6 +14,7 @@ import {useGameStore} from "../store/GameStore.tsx";
 import {Swordmaster} from "./Swordmaster.tsx";
 import {ControlFlagLocation} from "./ControlFlagLocation.tsx";
 import {BonusSpice} from "./BonusSpice.tsx";
+import {Contract} from "./Contract.tsx";
 
 export function GameBoard() {
 
@@ -182,6 +183,9 @@ export function GameBoard() {
           <BonusSpice locationId={9} top={"60.2%"} left={"40.1%"}/>
           <BonusSpice locationId={10} top={"53%"} left={"58.6%"}/>
           <BonusSpice locationId={11} top={"44.7%"} left={"86.4%"}/>
+
+          {gameState.currentContracts.length > 0 && <Contract url={gameState.currentContracts[0]} top={"25%"} left={"34.5%"}/>}
+          {gameState.currentContracts.length > 1 && <Contract url={gameState.currentContracts[1]} top={"25%"} left={"45.5%"}/>}
 
           <img
             src={board}
