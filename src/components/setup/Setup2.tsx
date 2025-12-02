@@ -46,28 +46,13 @@ export function Setup2(props: {
     }
   })
 
-  const getStepper = () => {
-    return (
-      <Stack
-        w={"20%"}
-        h={"100%"}
-        align={"start"}>
-        <Space h={"30%"}/>
-        <Text className={"text-setup-step-name"}>1. CREATE / JOIN</Text>
-        <Text className={"text-setup-step-name"}>2. SELECT CHARACTER</Text>
-        <Text className={"text-setup-step-name"}>3. START GAME</Text>
-        <Space h={"30%"}/>
-      </Stack>
-    )
-  }
-
   return (
     <Group
+      justify={"center"}
+      className={"setup-container"}
       w={"100%"}
       h={"100%"}
       gap={0}>
-      {getStepper()}
-      <Divider h={"100%"} orientation={"vertical"} color={"#fafafa32"}/>
       {(step === 0) && <CreateOrJoinGame stepper={(toStep) => setStep(toStep)}/>}
       {step === 1 && <SelectCharacter stepper={() => setStep(prev => prev + 1)}/>}
       {step === 2 && <Lobby players={players} gameStartHandler={props.gameStartHandler}/>}

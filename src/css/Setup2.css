@@ -1,3 +1,7 @@
+.setup-container {
+  background: url("../assets/bg.png") no-repeat;
+  background-size: cover;
+}
 .text-setup-step-name {
   color: #d1d1d1;
   padding: 25px;
@@ -27,7 +31,6 @@
   top: 50%;
   left: 50%;
   color: #d1d1d1;
-  font-family: "IBM Plex Sans", sans-serif;
   font-size: 18px;
   font-weight: 700;
   transform: translate(-50%, -50%);
