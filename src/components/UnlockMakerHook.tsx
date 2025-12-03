@@ -1,5 +1,5 @@
 import '../css/Swordmaster.css';
-import {Button, Text, Popover, Box, Stack, Group} from "@mantine/core";
+import {Button, Popover, Box, Group} from "@mantine/core";
 import type {Property} from "csstype";
 import {useWebSocket} from "./WebSocketContext.tsx";
 import {UNLOCK_MAKER_HOOK} from "../const/Actions.tsx";
@@ -42,18 +42,14 @@ export function UnlockMakerHook(
           <Box w={50} h={80} onClick={toggle}/>
         </Popover.Target>
         <Popover.Dropdown className={"swordmaster-popover"}>
-          <Stack>
-            <Text c="#cacaca" size="xs">Would you like to unlock your Maker Hook?</Text>
-            <Group>
-              <Button
-                onClick={unlockMakerHook}
-                className={`setup-action-button-next`}
-                color={"#A08170"}
-                size="xs"
-                radius="0"
-                variant={"filled"}>Yes</Button>
-            </Group>
-          </Stack>
+          <Group justify={"center"}>
+            <Button
+              onClick={unlockMakerHook}
+              className={`setup-action-button-next`}
+              size="xs"
+              radius="0"
+              variant={"filled"}>Unlock Maker Hook</Button>
+          </Group>
         </Popover.Dropdown>
       </Popover>
     </Box>
