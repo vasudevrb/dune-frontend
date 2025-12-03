@@ -45,7 +45,7 @@ export const gameStartState: GameModel = {
     haggaBasin: 0,
     imperialBasin: 0
   },
-  contracts: [
+  currentContracts: [
     "http://localhost:8080/contracts/contract_15.png",
     "http://localhost:8080/contracts/contract_17.png"
   ],
