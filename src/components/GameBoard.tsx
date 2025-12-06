@@ -1,10 +1,9 @@
 import '../css/GameBoard.css'
-import {Box, Image, ScrollArea, Space, Stack} from "@mantine/core";
+import {Box, ScrollArea, Space, Stack} from "@mantine/core";
 import board from '../assets/board.jpg';
 import {AgentLocation} from "./AgentLocation.tsx";
 import {CombatArea} from "./CombatArea.tsx";
 import type {Property} from "csstype";
-import sardaukar_commander from "../assets/combat/sardaukar_commander.png"
 import type {AgentLocationModel} from "../model/AgentLocationModel.tsx";
 import {assertExists} from "../const/GameUtils.tsx";
 import {Faction} from "./Faction.tsx";
@@ -187,22 +186,6 @@ export function GameBoard() {
 
           {gameState.currentContracts.length > 0 && <Contract url={gameState.currentContracts[0]} top={"25%"} left={"34.5%"}/>}
           {gameState.currentContracts.length > 1 && <Contract url={gameState.currentContracts[1]} top={"25%"} left={"45.5%"}/>}
-
-          <Image
-            pos={"absolute"}
-            w={60}
-            fit={"contain"}
-            src={sardaukar_commander}
-            top={"3%"}
-            left={"19.5%"}/>
-
-          <Image
-            pos={"absolute"}
-            w={60}
-            fit={"contain"}
-            src={sardaukar_commander}
-            top={"13%"}
-            left={"19.5%"}/>
 
           <img
             src={board}
