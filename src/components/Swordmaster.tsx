@@ -1,5 +1,5 @@
 import '../css/Swordmaster.css';
-import {Button, Text, Popover, Box, Stack, Group} from "@mantine/core";
+import {Button, Popover, Box, Group} from "@mantine/core";
 import type {Property} from "csstype";
 import {useWebSocket} from "./WebSocketContext.tsx";
 import {UNLOCK_SWORDMASTER} from "../const/Actions.tsx";
@@ -40,18 +40,15 @@ export function Swordmaster(
           <Box w={50} h={80} bg={"#cacaca11"} onClick={toggle} />
         </Popover.Target>
         <Popover.Dropdown className={"swordmaster-popover"}>
-          <Stack>
-            <Text c="#cacaca" size="xs">Would you like to unlock your Swordmaster?</Text>
-            <Group>
-              <Button
-                onClick={unlockSwordmaster}
-                className={`setup-action-button-next`}
-                color={"#A08170"}
-                size="xs"
-                radius="0"
-                variant={"filled"}>Yes</Button>
-            </Group>
-          </Stack>
+          <Group justify={"center"}>
+            <Button
+              onClick={unlockSwordmaster}
+              className={`setup-action-button-next`}
+              color={"#A08170"}
+              size="xs"
+              radius="0"
+              variant={"filled"}>Unlock Swordmaster</Button>
+          </Group>
         </Popover.Dropdown>
       </Popover>
     </Box>

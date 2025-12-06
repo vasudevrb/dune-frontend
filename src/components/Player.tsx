@@ -487,12 +487,12 @@ export function Player(props: {
       return (
         <ActionIcon
           onClick={onClick}
-          w={45}
-          h={54}
+          w={"auto"}
+          h={50}
           className={"player-resource-modifier-button"}
           variant={"none"}
           radius={"0"}>
-          <Image fit="contain" w={50} height={54} src={icon}/>
+          <Image fit="contain" h={50} src={icon}/>
         </ActionIcon>
       )
     }
