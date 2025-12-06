@@ -49,8 +49,17 @@ export const gameStartState: GameModel = {
     "http://localhost:8080/contracts/contract_15.png",
     "http://localhost:8080/contracts/contract_17.png"
   ],
-  imperiumRow: [],
-  reserveRow: []
+  imperiumRow: [
+    {url: "http://localhost:8080/imperium_cards/imperium_45.jpg"},
+    {url: "http://localhost:8080/imperium_cards/imperium_46.jpg"},
+    {url: "http://localhost:8080/imperium_cards/imperium_51.jpg"},
+    {url: "http://localhost:8080/imperium_cards/imperium_48.jpg"},
+    {url: "http://localhost:8080/imperium_cards/imperium_49.jpg"},
+  ],
+  reserveRow: [
+    {url: "http://localhost:8080/reserve_cards/the_spice_must_flow/spice_must_flow_1.jpg"},
+    {url: "http://localhost:8080/reserve_cards/prepare_the_way/prepare_the_way_7.jpg"},
+  ]
 }
 
 export const characterStartState: CharacterModel = {
