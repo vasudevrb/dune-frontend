@@ -11,6 +11,8 @@ export interface GameState {
   setPlayerName: (playerName: string) => void;
   imperiumRowOpened: boolean;
   setImperiumRowOpened: (opened: boolean) => void;
+  initialTurnOrder: number;
+  setInitialTurnOrder: (newTurnOrder: number) => void;
 }
 
 export const useGameStore = create<GameState>((set) => ({
@@ -22,4 +24,6 @@ export const useGameStore = create<GameState>((set) => ({
   setPlayerName: (name: string) => set({ playerName: name }),
   imperiumRowOpened: false,
   setImperiumRowOpened: (opened: boolean) => set({ imperiumRowOpened: opened }),
+  initialTurnOrder: 0,
+  setInitialTurnOrder: (newTurnOrder: number) => set({initialTurnOrder: newTurnOrder}),
 }));

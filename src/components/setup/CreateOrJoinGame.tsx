@@ -26,6 +26,7 @@ export function CreateOrJoinGame(props: {
         })
       })
         .then(res => res.json())
+      globalProps.setInitialTurnOrder(response.turnOrder)
       return response.gameId
     } catch (err) {
       console.error(err);
@@ -119,6 +120,7 @@ export function CreateOrJoinGame(props: {
       }
     } else {
       const response = await joinGame();
+      globalProps.setInitialTurnOrder(response.turnOrder)
       switch(response.joinGameState) {
         case "JOINED":
           props.stepper(1)
