@@ -19,4 +19,5 @@ export interface GameModel {
   nextConflictLevel: number;
   currentPlayer: string;
   firstPlayer: string;
+  shieldWallBroken: boolean;
 }

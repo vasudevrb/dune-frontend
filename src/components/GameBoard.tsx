@@ -15,6 +15,7 @@ import {Swordmaster} from "./Swordmaster.tsx";
 import {ControlFlagLocation} from "./ControlFlagLocation.tsx";
 import {BonusSpice} from "./BonusSpice.tsx";
 import {Contract} from "./Contract.tsx";
+import {ShieldWall} from "./ShieldWall.tsx";
 
 export function GameBoard() {
 
@@ -183,6 +184,8 @@ export function GameBoard() {
           <BonusSpice locationId={9} top={"60.2%"} left={"40.1%"}/>
           <BonusSpice locationId={10} top={"53%"} left={"58.6%"}/>
           <BonusSpice locationId={11} top={"44.7%"} left={"86.4%"}/>
+
+          {!gameState.shieldWallBroken && <ShieldWall top={"45.7%"} left={"67.6%"}/>}
 
           {gameState.currentContracts.length > 0 && <Contract url={gameState.currentContracts[0]} top={"25%"} left={"34.5%"}/>}
           {gameState.currentContracts.length > 1 && <Contract url={gameState.currentContracts[1]} top={"25%"} left={"45.5%"}/>}
