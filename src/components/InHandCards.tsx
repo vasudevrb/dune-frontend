@@ -61,11 +61,14 @@ export function InHandCards(props: {
   }
 
   const getCardSection = (type: CardType, cards: CardModel[]) => {
+    if (cards.length === 0) return null;
+
     const sectionLabel = getSectionLabel(type);
     const cardElements = cards.map((card, index) => {
       return (
         <Card
           key={index}
+          h={type === CardType.INTRIGUE ? "230px" : "270px"}
           src={`${card.url}`}
           buttons={getButtons(type, card)}
         />)

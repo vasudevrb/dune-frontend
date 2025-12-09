@@ -272,10 +272,7 @@ export const PLAYER_4: PlayerModel = {
   private: {
     inHandCards: [
       {url: "http://localhost:8080/imperium_cards_starter/starter_6.jpg"},
-      {url: "http://localhost:8080/imperium_cards_starter/starter_2.jpg"},
-      {url: "http://localhost:8080/imperium_cards_starter/starter_3.jpg"},
-      {url: "http://localhost:8080/imperium_cards_starter/starter_1.jpg"},
-      {url: "http://localhost:8080/imperium_cards_starter/starter_1.jpg"}
+      {url: "http://localhost:8080/imperium_cards_starter/starter_2.jpg"}
     ],
     inPlayCards: [
       {url: "http://localhost:8080/imperium_cards_starter/starter_5.jpg"},
@@ -285,8 +282,8 @@ export const PLAYER_4: PlayerModel = {
       {url: "http://localhost:8080/imperium_cards/imperium_27.jpg"},
     ],
     intrigueCards: [
-      {url: "http://localhost:8080/imperium_cards/imperium_26.jpg"},
-      {url: "http://localhost:8080/imperium_cards/imperium_27.jpg"},
+      {url: "http://localhost:8080/intrigue_cards/intrigue_24.jpg"},
+      {url: "http://localhost:8080/intrigue_cards/intrigue_28.jpg"},
     ]
   },
   contracts: [

@@ -1,6 +1,7 @@
 import {ActionIcon, Button, Group, Image, Stack} from "@mantine/core";
 import type {MantineSpacing} from "@mantine/core";
 import * as React from "react";
+import type {Property} from "csstype";
 
 export const CardButtonType = {
   Text: "Text",
@@ -18,6 +19,7 @@ interface CardButton {
 export function Card(props: {
   className?: string,
   src: string | undefined,
+  h?: Property.Height,
   ml?: MantineSpacing,
   style?: React.CSSProperties,
   buttons?: CardButton[]
@@ -63,11 +65,12 @@ export function Card(props: {
   }
 
   return (
-    <Stack gap={0}>
+    <Stack gap={0} justify={"flex-end"}>
       <Image className={props.className}
              style={props.style}
              bg={"transparent"}
              w={"auto"}
+             h={props.h ? props.h : "270"}
              mah={"270"}
              maw={"190"}
              ml={props.ml}
