@@ -144,10 +144,10 @@ export function CombatArea() {
     ]
 
     const combatUnitsPositions = [
-      {top: "78%", right: "36%"},
-      {right: "36%", bottom: "23.4%"},
-      {left: "66%", bottom: "23.4%"},
-      {top: "78%", left: "66%"},
+      {top: "78.5%", right: "36.5%"},
+      {right: "36.5%", bottom: "23.9%"},
+      {left: "66.5%", bottom: "23.9%"},
+      {top: "78.5%", left: "66.5%"},
     ]
 
     const combatMarkerPositions = [

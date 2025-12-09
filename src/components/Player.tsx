@@ -1,6 +1,6 @@
 import '../css/Player.css'
 import {CSS} from '@dnd-kit/utilities';
-import {ActionIcon, Avatar, Box, Button, Divider, Flex, Group, Image, Popover, ScrollArea, Stack, Text, Tooltip} from "@mantine/core";
+import {ActionIcon, Avatar, Box, Button, Divider, Flex, Group, Image, Popover, ScrollArea, Space, Stack, Text, Tooltip} from "@mantine/core";
 import water_icon from '../assets/resources/water.png';
 import spice_icon from '../assets/resources/spice.png';
 import solari_icon from '../assets/resources/solari.png';
@@ -666,8 +666,9 @@ export function Player(props: {
       }
     }
 
-    return (
+    return props.playerModel.factionAlliances.length > 0 ? (
       <>
+        <Divider orientation="vertical" m={"8"} color={"#cacaca44"}/>
         {props.playerModel.factionAlliances.map(type =>
           <Image
             onClick={() => allianceModifierAction(false, type)}
@@ -676,7 +677,7 @@ export function Player(props: {
             src={getFactionAllianceToken(type)}/>
         )}
       </>
-    )
+    ) : null
   }
 
   const getObjectives = () => {
@@ -719,11 +720,11 @@ export function Player(props: {
             <Image w={50} src={vp_icon}/>
             <Text size="1.4em" className={"player-resource-modifier-text"}>{props.playerModel.victoryPoints}</Text>
           </Box>
-          <Divider orientation="vertical" m={"8"} color={"#cacaca44"}/>
           {getAlliances()}
           <Divider orientation="vertical" m={"8"} color={"#cacaca44"}/>
           {getObjectives()}
           {getAllianceObjectiveModifier()}
+          <Space w={16} h={16}></Space>
         </div>
       </ScrollArea>
     )
