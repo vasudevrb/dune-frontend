@@ -1,13 +1,12 @@
 import '../css/Player.css'
 import {CSS} from '@dnd-kit/utilities';
-import {ActionIcon, Avatar, Box, Button, Divider, Flex, Group, Image, Popover, ScrollArea, Space, Stack, Text, Tooltip} from "@mantine/core";
+import {ActionIcon, Box, Button, Divider, Flex, Group, Image, Popover, ScrollArea, Space, Stack, Text} from "@mantine/core";
 import water_icon from '../assets/resources/water.png';
 import spice_icon from '../assets/resources/spice.png';
 import solari_icon from '../assets/resources/solari.png';
 import troop_icon from '../assets/combat/troop.png';
 import strength_icon from '../assets/combat/strength.png';
 import worm_icon from '../assets/combat/worm.png';
-import first_player_icon from '../assets/agents/first_player_token.png';
 import signet_ring from '../assets/cards/signet_ring.png';
 import agent_icon_disabled from '../assets/agents/agent_disabled.svg';
 import agent_icon_red from '../assets/agents/agent_red.svg';
@@ -69,6 +68,7 @@ import {
 } from "../const/GameUtils.tsx";
 import {produce} from "immer";
 import {useDisclosure} from "@mantine/hooks";
+import {CharacterImage} from "./CharacterImage.tsx";
 
 function Agent(props: { player: PlayerModel, agentModel: AgentModel, index: number }) {
   const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
@@ -573,23 +573,7 @@ export function Player(props: {
 
   const getAvatar = () => {
     return (
-      <Box pos={"relative"} w={65} h={65}>
-        {props.firstPlayer === props.playerModel.name &&
-          <Tooltip label="First player">
-            <Image
-              pos={"absolute"}
-              m={4}
-              w={25}
-              style={{zIndex: 10}}
-              src={first_player_icon}
-              hidden={props.firstPlayer != props.playerModel.name}/>
-          </Tooltip>
-        }
-        <Avatar
-          radius="xs"
-          size="65"
-          src={props.playerModel.character.avatarUrl}/>
-      </Box>
+      <CharacterImage playerModel={props.playerModel} firstPlayer={props.firstPlayer}/>
     )
   }
 
