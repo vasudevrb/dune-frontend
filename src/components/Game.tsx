@@ -13,7 +13,7 @@ import {
   showNotification
 } from "../const/Util.tsx";
 import {
-  CARD_USED,
+  CARD_USED, DISCARD_CARD,
   PLACE_AGENT, PLACE_CONTROL_FLAG,
   PLACE_SPY,
   RECALL_AGENT, RECALL_CONTROL_FLAG,
@@ -23,7 +23,7 @@ import {
   UPDATE_LOCATION,
   UPDATE_PLAYER, UPDATE_RESOURCES, UPDATE_SPY_LOCATION, USE_CARD
 } from "../const/Actions.tsx";
-import {Box, Group, MantineProvider, type MantineThemeOverride, Stack, Text} from "@mantine/core";
+import {Box, Image, Group, MantineProvider, type MantineThemeOverride, Stack, Text} from "@mantine/core";
 import {Card} from "./Card.tsx";
 import {ImperiumRow} from "./ImperiumRow.tsx";
 import {GameBoard} from "./GameBoard.tsx";
@@ -68,7 +68,8 @@ function Content() {
           switch (body.type) {
             case USE_CARD: type = "played"; break;
             case TRASH_CARD: type = "trashed"; break;
-            default: type = "discarded"; break;
+            case DISCARD_CARD: type = "discarded"; break;
+            default: type = ""; break;
           }
           const message = body.playerName + " " + type
           setAgentCardPreview({...body, message: message, show: true});
@@ -120,7 +121,7 @@ function Content() {
           zIndex: 5,
         }}>
         <Text className={"card-used-preview-text"}>{agentCardPreview.message}</Text>
-        <Card src={agentCardPreview.url}/>
+        <Image mah="200" src={agentCardPreview.url}/>
       </Stack>
     )
   }

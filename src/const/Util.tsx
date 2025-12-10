@@ -60,7 +60,8 @@ export const gameStartState: GameModel = {
     {url: "http://localhost:8080/reserve_cards/the_spice_must_flow/spice_must_flow_1.jpg"},
     {url: "http://localhost:8080/reserve_cards/prepare_the_way/prepare_the_way_7.jpg"},
   ],
-  shieldWallBroken: false
+  shieldWallBroken: false,
+  containsRivals: true
 }
 
 export const characterStartState: CharacterModel = {

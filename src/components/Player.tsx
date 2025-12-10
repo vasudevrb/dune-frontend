@@ -33,6 +33,8 @@ import vp_icon from '../assets/resources/victory_point.png';
 import draw_intrigue_card from '../assets/cards/draw_intrigue_card.png';
 import contract_completed from '../assets/contract_completed.png';
 import steal_intrigue_card from '../assets/cards/steal_intrigue_card.png';
+import draw_hagal_card from '../assets/cards/draw_hagal.png';
+import imperium_card from '../assets/cards/imperium_card.jpg';
 import draw_card from '../assets/cards/draw_card.png';
 import {
   type AgentModel,
@@ -55,7 +57,7 @@ import {
   ADD_OR_REMOVE_RESOURCE, ADD_OR_REMOVE_VP, COMPLETE_CONTRACT,
   DRAW_CARD,
   END_TURN,
-  GAIN_INTRIGUE_CARD, GAIN_OR_LOSE_ALLIANCE, GAIN_OR_LOSE_OBJECTIVE,
+  GAIN_INTRIGUE_CARD, GAIN_OR_LOSE_ALLIANCE, GAIN_OR_LOSE_OBJECTIVE, GET_HAGAL_CARD,
   REVEAL,
   STEAL_INTRIGUE_CARD
 } from "../const/Actions.tsx";
@@ -517,15 +519,17 @@ export function Player(props: {
           {getIconButton(draw_card, () => {sendMessage({action: DRAW_CARD})})}
           {getIconButton(draw_intrigue_card, () => {sendMessage({action: GAIN_INTRIGUE_CARD})})}
           {getIconButton(steal_intrigue_card, () => {sendMessage({action: STEAL_INTRIGUE_CARD})})}
+          {getIconButton(imperium_card, () => setImperiumRowOpened(true))}
         </Group>
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         <Group w={"100%"} gap={"xs"}>
-          {getTextButton("Imperium Row", () => setImperiumRowOpened(true))}
+          {getIconButton(draw_hagal_card, () => {sendMessage({action: GET_HAGAL_CARD})})}
         </Group>
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         <Group w={"100%"} gap={"xs"} justify={"flex-end"}>
           {getTextButton("REVEAL", () => revealAction(), "outline")}
-          {isThisPlayerCurrentPlayer && getTextButton("END TURN", () => endTurnAction())}
+          {(isThisPlayerCurrentPlayer || gameState.containsRivals)
+            && getTextButton("END TURN", () => endTurnAction())}
         </Group>
 
       </>
