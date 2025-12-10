@@ -74,6 +74,7 @@ export const playerStartState: PlayerModel = {
   name: "",
   character: characterStartState,
   color: "",
+  isRival: false,
   isThisPlayer: false,
   victoryPoints: 0,
   objectives: [

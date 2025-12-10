@@ -1,4 +1,4 @@
-import {ActionIcon, Box, Button, Group, Image, Overlay, Stack, Text} from "@mantine/core";
+import {ActionIcon, Box, Button, Group, Image, Overlay, ScrollArea, Stack, Text} from "@mantine/core";
 import {useGameStore} from "../../store/GameStore.tsx";
 import {type MouseEventHandler, useEffect, useState} from "react";
 
@@ -14,7 +14,7 @@ export interface DisplayableCharacter {
 }
 
 export function SelectCharacter(props: {
-  stepper: () => void
+  stepper: (toStep: number) => void
 }) {
   const baseUrl = BASE_URL;
   const globalProps = useGameStore();
@@ -61,7 +61,7 @@ export function SelectCharacter(props: {
         radius={0}>
         <Box pos="relative" w="100%" h="100%">
           <Image maw={160} fit={"cover"} src={image} alt="Create game icon"/>
-          <Overlay zIndex={1} color={selected ? "#94664d": "#313131"} backgroundOpacity={0.8}/>
+          <Overlay zIndex={1} color={selected ? "#94664d" : "#313131"} backgroundOpacity={0.8}/>
           <Text className={"setup-action-button-text"}>{text}</Text>
         </Box>
       </ActionIcon>
@@ -71,7 +71,7 @@ export function SelectCharacter(props: {
   const flipCharacterCard = () => {
     if (selectedCharacter) {
       const currentImageId = getCurrentlyShownImageId(selectedCharacter);
-      const updated = {...selectedCharacter, shownImageId: currentImageId == 1 ? 0: 1}
+      const updated = {...selectedCharacter, shownImageId: currentImageId == 1 ? 0 : 1}
       setSelectedCharacter(updated)
     }
   }
@@ -100,7 +100,7 @@ export function SelectCharacter(props: {
           action: ADD_TO_GAME,
           body: {gameId: globalProps.gameId, playerName: globalProps.playerName}
         })
-        props.stepper();
+        props.stepper(globalProps.includesRivals ? 2 : 3);
       })
     } catch (err) {
       console.log(`Error when picking character: ${err}`)
@@ -114,21 +114,27 @@ export function SelectCharacter(props: {
       h={"60%"}
       gap={0}>
 
-      <Stack p={"50px"}>
-        {
-          shownCharacters.map((ch) =>
-            getActionIcon(
-              ch.avatarUrl,
-              "",
-              ch.characterName === selectedCharacter?.characterName,
-              () => setSelectedCharacter(ch))
-          )
-        }
-      </Stack>
+      <ScrollArea
+        className={"fadeScroll-character-picker"}
+        h={"100%"}
+        offsetScrollbars={false}
+        type={"never"}
+        scrollbars="y">
+        <Stack p={"50px"}>
+          {
+            shownCharacters.map((ch) =>
+              getActionIcon(
+                ch.avatarUrl,
+                "",
+                ch.characterName === selectedCharacter?.characterName,
+                () => setSelectedCharacter(ch))
+            )
+          }
+        </Stack>
+      </ScrollArea>
 
       <Stack
         align={"center"}>
-
         <Text
           w={"100%"}
           c="#d1d1d1"
