@@ -16,6 +16,7 @@ import {ControlFlagLocation} from "./ControlFlagLocation.tsx";
 import {BonusSpice} from "./BonusSpice.tsx";
 import {Contract} from "./Contract.tsx";
 import {ShieldWall} from "./ShieldWall.tsx";
+import {HighCouncilToken} from "./HighCouncilToken.tsx";
 
 export function GameBoard() {
 
@@ -184,6 +185,11 @@ export function GameBoard() {
           <BonusSpice locationId={9} top={"60.2%"} left={"40.1%"}/>
           <BonusSpice locationId={10} top={"53%"} left={"58.6%"}/>
           <BonusSpice locationId={11} top={"44.7%"} left={"86.4%"}/>
+
+          <HighCouncilToken id={0} left={"42.2%"} top={"5.3%"}/>
+          <HighCouncilToken id={1} left={"46%"} top={"5.3%"}/>
+          <HighCouncilToken id={2} left={"49.8%"} top={"5.3%"}/>
+          <HighCouncilToken id={3} left={"53.6%"} top={"5.3%"}/>
 
           {!gameState.shieldWallBroken && <ShieldWall top={"45.7%"} left={"67.6%"}/>}
 
