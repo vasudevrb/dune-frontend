@@ -23,7 +23,8 @@ function Agent(props: {
     id: `${props.agentId}`,
     data: {
       location: "boardspace",
-      type: "agent"
+      type: "agent",
+      playerName: props.playerName,
     }
   });
   const draggedStyle = transform ? {

@@ -396,6 +396,7 @@ export function Game() {
             action: PLACE_AGENT, body: {
               agentId: active.id,
               locationId: overData.id,
+              playerName: activeData.playerName
             }
           });
           break;
@@ -403,6 +404,7 @@ export function Game() {
           sendMessage({
             action: RECALL_AGENT, body: {
               agentId: active.id,
+              playerName: activeData.playerName
             }
           });
           break;
@@ -410,7 +412,8 @@ export function Game() {
           sendMessage({
             action: PLACE_SPY, body: {
               spyId: active.id,
-              spyLocationId: overData.id
+              spyLocationId: overData.id,
+              playerName: activeData.playerName
             }
           })
           break;
@@ -418,6 +421,7 @@ export function Game() {
           sendMessage({
             action: RECALL_SPY, body: {
               spyId: active.id,
+              playerName: activeData.playerName
             }
           })
           break;
@@ -425,7 +429,8 @@ export function Game() {
           sendMessage({
             action: SET_FACTION_INFLUENCE, body: {
               factionType: overData.factionType,
-              influenceLevel: overData.influenceLevel
+              influenceLevel: overData.influenceLevel,
+              playerName: activeData.playerName
             }
           })
           break;
@@ -434,6 +439,7 @@ export function Game() {
             action: PLACE_CONTROL_FLAG, body: {
               controlFlagId: active.id,
               locationId: overData.id,
+              playerName: activeData.playerName
             }
           });
           break;
@@ -441,6 +447,7 @@ export function Game() {
           sendMessage({
             action: RECALL_CONTROL_FLAG, body: {
               controlFlagId: active.id,
+              playerName: activeData.playerName
             }
           });
           break;

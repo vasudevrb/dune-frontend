@@ -9,7 +9,7 @@ import {useWebSocket} from "./WebSocketContext.tsx";
 import {DISCARD_CARD, TRASH_CARD, USE_CARD} from "../const/Actions.tsx";
 
 // Careful changing these values, they are used to send messages over websocket.
-const CardType = {
+export const CardType = {
   HAND: "HAND",
   PLAY: "PLAY",
   DISCARD: "DISCARD",

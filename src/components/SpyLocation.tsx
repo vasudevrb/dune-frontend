@@ -21,7 +21,8 @@ function Spy(props: {
     id: `${props.spyId}`,
     data: {
       type: "spy",
-      location: "boardspace"
+      location: "boardspace",
+      playerName: props.playerName,
     }
   });
   const draggedStyle = transform ? {

@@ -22,7 +22,8 @@ function ControlFlag(props: {
     id: `${props.controlFlagId}`,
     data: {
       location: "boardspace",
-      type: "control_flag"
+      type: "control_flag",
+      playerName: props.playerName,
     }
   });
   const draggedStyle = transform ? {

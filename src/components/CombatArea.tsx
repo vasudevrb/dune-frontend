@@ -127,6 +127,18 @@ export function CombatArea() {
     }
   }
 
+  //TODO: Add bounds to troop movement
+  const moveRivalTroop = (rivalName: string, destination: TroopMovementLocation) => {
+    sendMessage({
+      action: MOVE_COMBAT_UNIT,
+      body: {
+        unitType: "troop",
+        destination: destination,
+        playerName: rivalName
+      }
+    });
+  }
+
   const getCombatComponents = () => {
     const elements: JSX.Element[] = [];
     const makerHookPositions = [
@@ -176,6 +188,12 @@ export function CombatArea() {
 
     const combatMarkerDeviations = [
       "-20px", "-10px", "10px", "20px"
+    ]
+
+    const rivalMoveTroopButtonLocations = [
+      {bottom: "12%", right: "43%"},
+      {bottom: "31%", right: "43%"},
+      {bottom: "31%", right: "20%"}
     ]
 
     gameState.players.forEach((p, index) => {
@@ -244,6 +262,38 @@ export function CombatArea() {
           {index === 0 || index === 1 ? troopIcons: wormIcons}
         </Group>
       )
+
+      if (p.isRival) {
+        elements.push(
+          <Group
+            gap={8}
+            pos={"absolute"}
+            bottom={rivalMoveTroopButtonLocations[index].bottom}
+            right={rivalMoveTroopButtonLocations[index].right}>
+            <ActionIcon
+              onClick={() => moveRivalTroop(p.name, TroopMovementLocation.Combat)}
+              className={"player-resource-modifier-button"}
+              variant={"outline"}
+              radius={"0"}>
+              <Image w={30} src={plus_icon}/>
+            </ActionIcon>
+            <ActionIcon
+              onClick={() => moveRivalTroop(p.name, TroopMovementLocation.Garrison)}
+              className={"player-resource-modifier-button"}
+              variant={"outline"}
+              radius={"0"}>
+              <Image w={30} src={minus_icon}/>
+            </ActionIcon>
+            <ActionIcon
+              onClick={() => moveRivalTroop(p.name, TroopMovementLocation.Supply)}
+              className={"player-resource-modifier-button"}
+              variant={"outline"}
+              radius={"0"}>
+              <Image w={30} src={cross_icon}/>
+            </ActionIcon>
+          </Group>
+        )
+      }
     })
 
     elements.push(

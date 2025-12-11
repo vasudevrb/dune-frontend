@@ -38,8 +38,11 @@ import imperium_card from '../assets/cards/imperium_card.jpg';
 import draw_card from '../assets/cards/draw_card.png';
 import {
   type AgentModel,
-  CombatUnitType, type ContractModel,
-  type ControlFlagModel, FactionType, ObjectiveType,
+  CombatUnitType,
+  type ContractModel,
+  type ControlFlagModel,
+  FactionType,
+  ObjectiveType,
   type PlayerModel,
   type SpyModel
 } from "../model/PlayerModel.tsx";
@@ -54,19 +57,25 @@ import {FeydSignet} from "./FeydSignet.tsx";
 import {useWebSocket} from "./WebSocketContext.tsx";
 import {
   ADD_OR_REMOVE_COMBAT_UNIT,
-  ADD_OR_REMOVE_RESOURCE, ADD_OR_REMOVE_VP, COMPLETE_CONTRACT,
+  ADD_OR_REMOVE_RESOURCE,
+  ADD_OR_REMOVE_VP,
+  COMPLETE_CONTRACT,
   DRAW_CARD,
   END_TURN,
-  GAIN_INTRIGUE_CARD, GAIN_OR_LOSE_ALLIANCE, GAIN_OR_LOSE_OBJECTIVE, GET_HAGAL_CARD,
+  GAIN_INTRIGUE_CARD,
+  GAIN_OR_LOSE_ALLIANCE,
+  GAIN_OR_LOSE_OBJECTIVE,
+  GET_HAGAL_CARD,
   REVEAL,
-  STEAL_INTRIGUE_CARD
+  STEAL_INTRIGUE_CARD, TRASH_INTRIGUE_CARD
 } from "../const/Actions.tsx";
 import {
   addOrRemoveCombatUnit,
   addOrRemoveResource,
   addOrRemoveVP,
   gainOrLoseAlliance,
-  gainOrLoseObjective, setContractCompleted
+  gainOrLoseObjective,
+  setContractCompleted
 } from "../const/GameUtils.tsx";
 import {produce} from "immer";
 import {useDisclosure} from "@mantine/hooks";
@@ -77,7 +86,8 @@ function Agent(props: { player: PlayerModel, agentModel: AgentModel, index: numb
     id: props.agentModel.id,
     data: {
       type: "agent",
-      location: "player"
+      location: "player",
+      playerName: props.player.name,
     }
   });
 
@@ -111,7 +121,7 @@ function Agent(props: { player: PlayerModel, agentModel: AgentModel, index: numb
 
   const agentIcon = getAgentIcon(getAgentColor(props.index))
 
-  const draggableProps = (props.player.isThisPlayer && agentIcon != agent_icon_disabled)
+  const draggableProps = ((props.player.isThisPlayer || props.player.isRival) && agentIcon != agent_icon_disabled)
     ? {
       ref: setNodeRef,
       style: draggedStyle,
@@ -138,7 +148,8 @@ function Spy(props: { player: PlayerModel, spyModel: SpyModel, index: number }) 
     id: props.spyModel.id,
     data: {
       type: "spy",
-      location: "player"
+      location: "player",
+      playerName: props.player.name,
     }
   });
 
@@ -156,7 +167,7 @@ function Spy(props: { player: PlayerModel, spyModel: SpyModel, index: number }) 
 
   const spyIcon = getSpyIcon(props.player.color)
 
-  const draggableProps = (props.player.isThisPlayer)
+  const draggableProps = (props.player.isThisPlayer || props.player.isRival)
     ? {
       ref: setNodeRef,
       style: draggedStyle,
@@ -183,7 +194,8 @@ function ControlFlag(props: { player: PlayerModel, controlFlagModel: ControlFlag
     id: props.controlFlagModel.id,
     data: {
       type: "control_flag",
-      location: "player"
+      location: "player",
+      playerName: props.player.name,
     }
   });
 
@@ -201,7 +213,7 @@ function ControlFlag(props: { player: PlayerModel, controlFlagModel: ControlFlag
 
   const controlFlagIcon = getControlFlagIcon(props.player.color)
 
-  const draggableProps = (props.player.isThisPlayer)
+  const draggableProps = (props.player.isThisPlayer || props.player.isRival)
     ? {
       ref: setNodeRef,
       style: draggedStyle,
@@ -309,6 +321,113 @@ export function Player(props: {
     )
   }
 
+  const getResourcesDisplayRivals = () => {
+    const resourceModifierAction = (add: boolean, resourceType: string) => {
+      sendMessage({
+        action: ADD_OR_REMOVE_RESOURCE,
+        body: {
+          resourceType: resourceType,
+          add: add,
+          playerName: props.playerModel.name
+        }
+      })
+    }
+    const intrigueModifierAction = (add: boolean) => {
+      const action = add ? GAIN_INTRIGUE_CARD : TRASH_INTRIGUE_CARD;
+      sendMessage({
+        action: action,
+        body: {
+          playerName: props.playerModel.name
+        }
+      })
+    }
+    const getResource = (quantity: number, resourceType: string) => {
+      const icon = getResourceIconByType(resourceType);
+      return (
+        <Group gap={5}>
+          {getButton(minus_icon, () => resourceModifierAction(false, resourceType))}
+          <Box pos={"relative"} w={30} h={30}>
+            <Image w={30} src={icon}/>
+            <Text fw="500" size="1rem" className={"player-resource-modifier-text"}>{quantity}</Text>
+          </Box>
+          {getButton(plus_icon, () => resourceModifierAction(true, resourceType))}
+        </Group>
+      )
+    }
+
+    return (
+      <Stack>
+        {getResource(props.playerModel.resources.water, "water")}
+        {getResource(props.playerModel.resources.spice, "spice")}
+        {getResource(props.playerModel.resources.solari, "solari")}
+        <Group gap={5}>
+          {getButton(minus_icon, () => intrigueModifierAction(false))}
+          <Box pos={"relative"} w={30} h={30}>
+            <Image fit={"contain"} h={30} src={draw_intrigue_card}/>
+            <Text fw="500" size="1rem" className={"player-resource-modifier-text"}>{props.playerModel.numCards.intrigues}</Text>
+          </Box>
+          {getButton(plus_icon, () => intrigueModifierAction(true))}
+        </Group>
+      </Stack>
+    )
+  }
+
+  const getCombatDisplayRivals = () => {
+    const combatModifierAction = (add: boolean, type: CombatUnitType) => {
+      sendMessage({
+        action: ADD_OR_REMOVE_COMBAT_UNIT,
+        body: {
+          unitType: type,
+          add: add,
+          playerName: props.playerModel.name
+        }
+      })
+    }
+    const VPModifierAction = (add: boolean) => {
+      sendMessage({
+        action: ADD_OR_REMOVE_VP,
+        body: {
+          add: add,
+          playerName: props.playerModel.name
+        }
+      })
+    }
+    const getCombatModifierIconByType = (modifierType: CombatUnitType) => {
+      switch (modifierType) {
+        case CombatUnitType.Troop:
+          return troop_icon;
+        case CombatUnitType.Sandworm:
+          return worm_icon;
+        default:
+          return strength_icon;
+      }
+    }
+    const getCombatModifier = (modifierType: CombatUnitType) => {
+      return (
+        <Group gap={5}>
+          {getButton(minus_icon, () => combatModifierAction(false, modifierType))}
+          <Image w={30} src={getCombatModifierIconByType(modifierType)}/>
+          {getButton(plus_icon, () => combatModifierAction(true, modifierType))}
+        </Group>
+      )
+    }
+    return (
+      <Stack>
+        <Group gap={5}>
+          {getButton(minus_icon, () => VPModifierAction(false))}
+          <Box pos={"relative"} w={30} h={30}>
+            <Image w={30} src={vp_icon}/>
+            <Text fw="500" size="1rem" className={"player-resource-modifier-text"}>{props.playerModel.victoryPoints}</Text>
+          </Box>
+          {getButton(plus_icon, () => VPModifierAction(true))}
+        </Group>
+        {getCombatModifier(CombatUnitType.Troop)}
+        {getCombatModifier(CombatUnitType.Sandworm)}
+        {getCombatModifier(CombatUnitType.Strength)}
+      </Stack>
+    )
+  }
+
   const getResourcesDisplay = () => {
     const resources = (
       <>
@@ -339,7 +458,7 @@ export function Player(props: {
         className={"player-resource-modifier-button"}
         variant={"outline"}
         radius={"0"}>
-        <img width={30} src={icon} alt="Resource modifier button"/>
+        <img width={20} src={icon} alt="Resource modifier button"/>
       </ActionIcon>
     )
   }
@@ -612,7 +731,7 @@ export function Player(props: {
   }
 
   const getAllianceObjectiveModifier = () => {
-    if (!props.playerModel.isThisPlayer) return;
+    if (!props.playerModel.isThisPlayer && !props.playerModel.isRival) return;
 
     return (
       <Popover opened={opened} onChange={toggle} width={200} position="bottom" clickOutsideEvents={['mouseup', 'touchend']}>
@@ -723,7 +842,7 @@ export function Player(props: {
     : null;
 
   const getOppositionPlayer = () => {
-    return (
+    return props.playerModel.isRival ? getRivalPlayer() : (
       <Stack
         className={`player-container ${currentPlayerStyleClass}`}
         w={"100%"}
@@ -742,6 +861,36 @@ export function Player(props: {
           {getAgents()}
         </Group>
         {getResourcesDisplay()}
+      </Stack>
+    )
+  }
+
+  const getRivalPlayer = () => {
+    return (
+      <Stack
+        className={`player-container ${currentPlayerStyleClass}`}
+        w={"100%"}
+        gap={0}>
+        <Text ta="left" className={"player-container-text"}>
+          {props.playerModel.character.name}
+        </Text>
+        <Group
+          w={"100%"}
+          wrap={"nowrap"}
+          justify={"center"}
+          align="center"
+          gap={0}>
+          {getAvatar()}
+          {getVPAndAlliances()}
+          {getAgents()}
+        </Group>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        {getSpiesAndFlags()}
+        <Group gap={8} align={"top"} pt={16}>
+          {getResourcesDisplayRivals()}
+          <Divider orientation={"vertical"} m={"md"} color={"#cacaca44"}/>
+          {getCombatDisplayRivals()}
+        </Group>
       </Stack>
     )
   }

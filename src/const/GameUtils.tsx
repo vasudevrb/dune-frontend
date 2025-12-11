@@ -395,7 +395,12 @@ export function canMoveComponent(game: GameModel, playerName: string) {
     game.players.find(p => p.isThisPlayer),
     "This player not found"
   )
-  return thisPlayer.name === playerName;
+
+  const rivalPlayerNames = assertExists(
+    game.players.filter(p => p.isRival).map(p => p.name),
+    "This player not found"
+  )
+  return thisPlayer.name === playerName || rivalPlayerNames.includes(playerName);
 }
 
 export function acquireContract(game: GameModel, url: string) {
