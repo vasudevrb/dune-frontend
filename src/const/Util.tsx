@@ -144,7 +144,7 @@ export const PLAYER_1: PlayerModel = {
   name: "P1",
   character: PRINCESS_IRULAN,
   isThisPlayer: false,
-  color: "RED",
+  color: "GREEN",
   agents: [
     {id: `agent-${PRINCESS_IRULAN.name}#1`},
     {id: `agent-${PRINCESS_IRULAN.name}#2`},
@@ -259,7 +259,7 @@ export const PLAYER_4: PlayerModel = {
   name: "P4",
   isThisPlayer: true,
   character: FEYD_RAUTHA,
-  color: "GREEN",
+  color: "RED",
   agents: [
     {id: `agent-${FEYD_RAUTHA.name}#1`},
     {id: `agent-${FEYD_RAUTHA.name}#2`},
@@ -319,6 +319,7 @@ export function createId(items: (string | number)[]): string {
 export function showNotification(message: string) {
   notifications.show({
     message: message,
+    position: 'top-right',
     withCloseButton: false,
     autoClose: 3000,
     radius: 0,
@@ -326,12 +327,13 @@ export function showNotification(message: string) {
     className: "notification-bg",
     styles: {
       root: {
-        height: 90,
-        transition: 'ease-in-out'
+        height: 80,
+        right: '300px',
+        border: "2px solid #cacaca"
       },
       description: {
         fontWeight: 500,
-        fontSize: 18,
+        fontSize: 16,
         fontFamily:  "IBM Plex Sans",
         color: '#cacaca',
       },

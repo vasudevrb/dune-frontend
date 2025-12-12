@@ -1,6 +1,6 @@
 import '../css/Player.css'
 import {CSS} from '@dnd-kit/utilities';
-import {ActionIcon, Box, Button, Divider, Flex, Group, Image, Popover, ScrollArea, Space, Stack, Text} from "@mantine/core";
+import {ActionIcon, Box, Button, Center, Divider, Flex, Group, Image, Popover, ScrollArea, Space, Stack, Text} from "@mantine/core";
 import water_icon from '../assets/resources/water.png';
 import spice_icon from '../assets/resources/spice.png';
 import solari_icon from '../assets/resources/solari.png';
@@ -272,10 +272,10 @@ export function Player(props: {
     const getResource = (quantity: number, resourceType: string) => {
       const icon = getResourceIconByType(resourceType);
       return (
-        <Box pos={"relative"} w={40} h={40}>
+        <Center pos={"relative"} w={40} h={40}>
           <Image w={40} src={icon}/>
           <Text size="1.2rem" className={"player-resource-modifier-text"}>{quantity}</Text>
-        </Box>
+        </Center>
       )
     }
 
@@ -343,10 +343,10 @@ export function Player(props: {
   }
   const getLabelElement = (icon: string, text?: number) => {
     return (
-      <Box pos={"relative"} w={50} h={50}>
+      <Center pos={"relative"} w={50} h={50}>
         <img width={50} src={icon} alt="Resource icon"/>
         <Text size="1.4em" className={"player-resource-modifier-text"}>{text}</Text>
-      </Box>
+      </Center>
     )
   }
   const resourceModifierDivider = () => {

@@ -72,8 +72,8 @@ export function HighCouncilToken(
       style={{transform: `translate(-50%, -50%`}}>
       <Popover opened={opened} onChange={toggle} width={200} position="bottom" clickOutsideEvents={['mouseup', 'touchend']}>
         <Popover.Target>
-          <Box w={45} h={45}>
-            <Image h={45} src={getIcon()} onClick={toggle}/>
+          <Box w={45} h={45} onClick={toggle}>
+            {getIcon() && <Image h={45} src={getIcon()} />}
           </Box>
         </Popover.Target>
         <Popover.Dropdown className={"swordmaster-popover"}>
