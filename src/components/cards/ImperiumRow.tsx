@@ -77,7 +77,7 @@ export function ImperiumRow(props: {
       position="bottom"
       opened={globalProps.imperiumRowOpened}
       onClose={() => globalProps.setImperiumRowOpened(false)}
-      overlayProps={{backgroundOpacity: 0.5, blur: 4}}
+      overlayProps={{backgroundOpacity: 0.7}}
       styles={{
         content: {
           height: 'auto'
