@@ -1,4 +1,4 @@
-import {ActionIcon, Box, Group, Stack, Text} from "@mantine/core";
+import {ActionIcon, Center, Group, Stack, Text} from "@mantine/core";
 import spice_icon from '../assets/resources/spice.png';
 import minus_icon from "../assets/minus.svg";
 import plus_icon from "../assets/plus.svg";
@@ -63,12 +63,12 @@ export function BonusSpice(
     </ActionIcon>
   )
   const text = (
-    <Box pos={"relative"} w={50} h={50}>
+    <Center pos={"relative"} w={50} h={50}>
       <img width={50} src={spice_icon} alt="Resource icon"/>
       <Text size="1.4em" className={"player-resource-modifier-text"}>
         {getSpiceValue()}
       </Text>
-    </Box>
+    </Center>
   )
 
 
