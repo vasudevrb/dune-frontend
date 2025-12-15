@@ -1,12 +1,6 @@
 import '../css/Player.css'
 import {CSS} from '@dnd-kit/utilities';
 import {ActionIcon, Box, Button, Center, Divider, Flex, Group, Image, Popover, ScrollArea, Space, Stack, Text} from "@mantine/core";
-import water_icon from '../assets/resources/water.png';
-import spice_icon from '../assets/resources/spice.png';
-import solari_icon from '../assets/resources/solari.png';
-import troop_icon from '../assets/combat/troop.png';
-import strength_icon from '../assets/combat/strength.png';
-import worm_icon from '../assets/combat/worm.png';
 import signet_ring from '../assets/cards/signet_ring.png';
 import agent_icon_disabled from '../assets/agents/agent_disabled.svg';
 import agent_icon_red from '../assets/agents/agent_red.svg';
@@ -43,7 +37,6 @@ import {
 } from "../model/PlayerModel.tsx";
 import {type JSX} from "react";
 import {range} from "../const/Util.tsx";
-import minus_icon from "../assets/minus.svg";
 import plus_icon from "../assets/plus.svg";
 import {useDraggable, useDroppable} from "@dnd-kit/core";
 import {createPortal} from "react-dom";
@@ -51,8 +44,7 @@ import {useGameStore} from "../store/GameStore.tsx";
 import {FeydSignet} from "./FeydSignet.tsx";
 import {useWebSocket} from "./WebSocketContext.tsx";
 import {
-  ADD_OR_REMOVE_COMBAT_UNIT,
-  ADD_OR_REMOVE_RESOURCE, ADD_OR_REMOVE_VP, COMPLETE_CONTRACT,
+  COMPLETE_CONTRACT,
   DRAW_CARD,
   END_TURN,
   GAIN_INTRIGUE_CARD, GAIN_OR_LOSE_ALLIANCE, GAIN_OR_LOSE_OBJECTIVE,
@@ -60,15 +52,15 @@ import {
   STEAL_INTRIGUE_CARD
 } from "../const/Actions.tsx";
 import {
-  addOrRemoveCombatUnit,
-  addOrRemoveResource,
-  addOrRemoveVP,
   gainOrLoseAlliance,
-  gainOrLoseObjective, setContractCompleted
+  gainOrLoseObjective, getResourceIconByType, setContractCompleted
 } from "../const/GameUtils.tsx";
 import {produce} from "immer";
 import {useDisclosure} from "@mantine/hooks";
 import {CharacterImage} from "./CharacterImage.tsx";
+import {ResourceModifier} from "./ResourceModifier.tsx";
+import {VictoryPointModifier} from "./VictoryPointModifier.tsx";
+import {CombatModifier} from "./CombatModifier.tsx";
 
 function Agent(props: { player: PlayerModel, agentModel: AgentModel, index: number }) {
   const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
@@ -257,16 +249,6 @@ export function Player(props: {
     );
   }
 
-  const getResourceIconByType = (resourceType: string) => {
-    switch (resourceType) {
-      case "water":
-        return water_icon;
-      case "spice":
-        return spice_icon;
-      default:
-        return solari_icon
-    }
-  }
 
   const getResourcesDisplayElements = () => {
     const getResource = (quantity: number, resourceType: string) => {
@@ -330,143 +312,28 @@ export function Player(props: {
     )
   }
 
-  const getButton = (icon: string, onClick?: () => void) => {
-    return (
-      <ActionIcon
-        onClick={onClick}
-        className={"player-resource-modifier-button"}
-        variant={"outline"}
-        radius={"0"}>
-        <img width={30} src={icon} alt="Resource modifier button"/>
-      </ActionIcon>
-    )
-  }
-  const getLabelElement = (icon: string, text?: number) => {
-    return (
-      <Center pos={"relative"} w={50} h={50}>
-        <img width={50} src={icon} alt="Resource icon"/>
-        <Text size="1.4em" className={"player-resource-modifier-text"}>{text}</Text>
-      </Center>
-    )
-  }
-  const resourceModifierDivider = () => {
-    return <Divider orientation="vertical" color={"#31313123"}/>
-  }
   const getResourceModifierElements = () => {
-    const resourceModifierAction = (add: boolean, resourceType: string) => {
-      let success = false;
-      setGameState(produce(gameState, draft => {
-        success = addOrRemoveResource(draft, resourceType, add)
-      }))
-      if (success) {
-        sendMessage({
-          action: ADD_OR_REMOVE_RESOURCE,
-          body: {
-            resourceType: resourceType,
-            add: add
-          }
-        })
-      }
-    }
-    const getResourceLabel = (quantity: number, resourceType: string) => {
-      const icon = getResourceIconByType(resourceType)
-      return getLabelElement(icon, quantity)
-    }
-    const getResourceModifier = (quantity: number, resourceType: string) => {
-      return (
-        <Stack align="center" gap={"xs"}>
-          {getButton(plus_icon, () =>  resourceModifierAction(true, resourceType))}
-          {getResourceLabel(quantity, resourceType)}
-          {getButton(minus_icon, () => resourceModifierAction(false, resourceType))}
-        </Stack>
-      )
-    }
-    const getVictoryPointModifier = () => {
-      const VPModifierAction = (add: boolean) => {
-        let success = false;
-        setGameState(produce(gameState, draft => {
-          success = addOrRemoveVP(draft, add)
-        }))
-        if (success) {
-          sendMessage({
-            action: ADD_OR_REMOVE_VP,
-            body: {
-              add: add
-            }
-          })
-        }
-      }
-      const text = props.playerModel.victoryPoints
-      const icon = vp_icon
-
-      return (
-        <Stack align="center" gap={"xs"}>
-          {getButton(plus_icon, () => VPModifierAction(true))}
-          {getLabelElement(icon, text)}
-          {getButton(minus_icon, () => VPModifierAction(false))}
-        </Stack>
-      )
-    }
     return (
       <Group w={"100%"} justify="center" gap={"xs"}>
-        {getResourceModifier(props.playerModel.resources.water, "water")}
-        {resourceModifierDivider()}
-        {getResourceModifier(props.playerModel.resources.spice, "spice")}
-        {resourceModifierDivider()}
-        {getResourceModifier(props.playerModel.resources.solari, "solari")}
-        {resourceModifierDivider()}
-        {getVictoryPointModifier()}
+        <ResourceModifier player={props.playerModel} resourceType={"water"}/>
+        <Divider orientation="vertical" color={"#31313123"}/>
+        <ResourceModifier player={props.playerModel} resourceType={"spice"}/>
+        <Divider orientation="vertical" color={"#31313123"}/>
+        <ResourceModifier player={props.playerModel} resourceType={"solari"}/>
+        <Divider orientation="vertical" color={"#31313123"}/>
+        <VictoryPointModifier player={props.playerModel}/>
       </Group>
     )
   }
 
   const getCombatModifierElements = () => {
-    const combatModifierAction = (add: boolean, type: CombatUnitType) => {
-      let success = false;
-      setGameState(produce(gameState, draft => {
-        success = addOrRemoveCombatUnit(draft, type, add)
-      }))
-      if (success) {
-        sendMessage({
-          action: ADD_OR_REMOVE_COMBAT_UNIT,
-          body: {
-            unitType: type,
-            add: add
-          }
-        })
-      }
-    }
-    const getCombatModifierIconByType = (modifierType: CombatUnitType) => {
-      switch (modifierType) {
-        case CombatUnitType.Troop:
-          return troop_icon;
-        case CombatUnitType.Sandworm:
-          return worm_icon;
-        default:
-          return strength_icon;
-      }
-    }
-    const getCombatLabel = (modifierType: CombatUnitType) => {
-      const icon = getCombatModifierIconByType(modifierType)
-      return getLabelElement(icon)
-    }
-    const getCombatModifier = (modifierType: CombatUnitType) => {
-      return (
-        <Stack align="center" gap={"xs"}>
-          {getButton(plus_icon, () => combatModifierAction(true, modifierType))}
-          {getCombatLabel(modifierType)}
-          {getButton(minus_icon, () => combatModifierAction(false, modifierType))}
-        </Stack>
-      )
-    }
-
     return (
       <Group w={"100%"} justify="center" gap={"xs"}>
-        {getCombatModifier(CombatUnitType.Troop)}
-        {resourceModifierDivider()}
-        {getCombatModifier(CombatUnitType.Sandworm)}
-        {resourceModifierDivider()}
-        {getCombatModifier(CombatUnitType.Strength)}
+        <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Troop}/>
+        <Divider orientation="vertical" color={"#31313123"}/>
+        <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Sandworm}/>
+        <Divider orientation="vertical" color={"#31313123"}/>
+        <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Strength}/>
       </Group>
     )
   }

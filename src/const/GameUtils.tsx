@@ -2,6 +2,12 @@ import type {GameModel} from "../model/GameModel.tsx";
 import type {UniqueIdentifier} from "@dnd-kit/core";
 import {CombatUnitType, type ContractModel, FactionType, type ObjectiveType, type PlayerModel} from "../model/PlayerModel.tsx";
 import {showNotification} from "./Util.tsx";
+import water_icon from "../assets/resources/water.png";
+import spice_icon from "../assets/resources/spice.png";
+import solari_icon from "../assets/resources/solari.png";
+import troop_icon from "../assets/combat/troop.png";
+import worm_icon from "../assets/combat/worm.png";
+import strength_icon from "../assets/combat/strength.png";
 
 export const TroopMovementLocation = {
   Combat: "Combat", Garrison: "Garrison", Supply: "Supply",
@@ -9,9 +15,9 @@ export const TroopMovementLocation = {
 export type TroopMovementLocation = keyof typeof TroopMovementLocation;
 
 export function getAgent(game: GameModel, agentId: string) {
- return game.players
-   .flatMap(player => player.agents)
-   .find(agent => agent.id === agentId)
+  return game.players
+    .flatMap(player => player.agents)
+    .find(agent => agent.id === agentId)
 }
 
 export function assertExists<T>(value: T | undefined, message: string): T {
@@ -32,7 +38,7 @@ export function placeAgent(game: GameModel, agentId: UniqueIdentifier, locationI
 
   const location = assertExists(
     game.locations.find(location => location.id === locationId),
-   `Location with id ${locationId} not found.`
+    `Location with id ${locationId} not found.`
   )
 
   player.agents = player.agents.filter(agent => agent.id != agentId)
@@ -148,7 +154,7 @@ export function recallSpy(game: GameModel, spyId: UniqueIdentifier) {
   spyLocation.spies = spyLocation.spies.filter(spy => spy.spyId != spyId)
 }
 
-export function setFactionInfluence(game:GameModel, playerName: string, factionType: FactionType, influence: number) {
+export function setFactionInfluence(game: GameModel, playerName: string, factionType: FactionType, influence: number) {
   const player = assertExists(
     game.players.find(p => p.name === playerName),
     `Player with name: ${playerName} not found.`
@@ -201,7 +207,7 @@ function moveTroopToCombat(player: PlayerModel) {
   }
 
   player.combat.troopsInCombat++;
-  player.combat.strength+=2;
+  player.combat.strength += 2;
   player.combat.troopsInGarrison--;
   return true;
 }
@@ -213,7 +219,7 @@ function moveTroopToGarrison(player: PlayerModel) {
   }
 
   player.combat.troopsInCombat--;
-  player.combat.strength-=2;
+  player.combat.strength -= 2;
   player.combat.troopsInGarrison++;
   return true;
 }
@@ -237,11 +243,11 @@ export function addOrRemoveCombatUnit(game: GameModel, unit: CombatUnitType, add
     case CombatUnitType.Sandworm:
       if (add) {
         player.combat.wormsInCombat++;
-        player.combat.strength+=3;
+        player.combat.strength += 3;
         return true
       } else if (player.combat.wormsInCombat > 0) {
         player.combat.wormsInCombat--;
-        player.combat.strength-=3;
+        player.combat.strength -= 3;
         return true
       }
       return false;
@@ -336,8 +342,7 @@ export function addOrRemoveVP(game: GameModel, add: boolean) {
   if (add) {
     player.victoryPoints++;
     return true;
-  }
-  else if (player.victoryPoints > 0) {
+  } else if (player.victoryPoints > 0) {
     player.victoryPoints--;
     return true;
   }
@@ -352,7 +357,7 @@ function moveTroopToSupply(player: PlayerModel) {
   }
 
   player.combat.troopsInCombat--;
-  player.combat.strength-=2;
+  player.combat.strength -= 2;
   return true;
 }
 
@@ -422,4 +427,37 @@ export function setContractCompleted(game: GameModel, contract: ContractModel, c
   )
 
   c.completed = completed;
+}
+
+export function getResourceIconByType(resourceType: string) {
+  switch (resourceType) {
+    case "water":
+      return water_icon;
+    case "spice":
+      return spice_icon;
+    default:
+      return solari_icon
+  }
+}
+
+export function getResourceQuantityByType(player: PlayerModel, resourceType: string) {
+  switch (resourceType) {
+    case "water":
+      return player.resources.water;
+    case "spice":
+      return player.resources.spice;
+    default:
+      return player.resources.solari
+  }
+}
+
+export function getCombatUnitIconByType(modifierType: CombatUnitType) {
+  switch (modifierType) {
+    case CombatUnitType.Troop:
+      return troop_icon;
+    case CombatUnitType.Sandworm:
+      return worm_icon;
+    default:
+      return strength_icon;
+  }
 }
