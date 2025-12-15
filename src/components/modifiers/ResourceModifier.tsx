@@ -1,13 +1,13 @@
-import type {PlayerModel} from "../model/PlayerModel.tsx";
+import type {PlayerModel} from "../../model/PlayerModel.tsx";
 import {produce} from "immer";
-import {addOrRemoveResource, getResourceIconByType, getResourceQuantityByType} from "../const/GameUtils.tsx";
-import {ADD_OR_REMOVE_RESOURCE} from "../const/Actions.tsx";
+import {addOrRemoveResource, getResourceIconByType, getResourceQuantityByType} from "../../const/GameUtils.tsx";
+import {ADD_OR_REMOVE_RESOURCE} from "../../const/Actions.tsx";
 import {ActionIcon, Stack} from "@mantine/core";
-import minus_icon from "../assets/minus.svg";
-import plus_icon from "../assets/plus.svg";
-import {useGameStore} from "../store/GameStore.tsx";
-import {useWebSocket} from "./WebSocketContext.tsx";
-import {QuantityIcon} from "./QuantityIcon.tsx";
+import minus_icon from "../../assets/minus.svg";
+import plus_icon from "../../assets/plus.svg";
+import {useGameStore} from "../../store/GameStore.tsx";
+import {useWebSocket} from "../WebSocketContext.tsx";
+import {QuantityIcon} from "../player/QuantityIcon.tsx";
 
 export function ResourceModifier(props: {
   player: PlayerModel;

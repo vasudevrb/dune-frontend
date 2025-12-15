@@ -1,16 +1,16 @@
-import type {AgentLocationModel} from "../model/AgentLocationModel.tsx";
+import type {AgentLocationModel} from "../../model/AgentLocationModel.tsx";
 import {Center, type MantineStyleProp, type StyleProp} from "@mantine/core";
 import type {Property} from "csstype";
-import control_flag_red from "../assets/control_flags/control_flag_red.png";
-import control_flag_blue from "../assets/control_flags/control_flag_blue.png";
-import control_flag_green from "../assets/control_flags/control_flag_green.png";
-import control_flag_gold from "../assets/control_flags/control_flag_gold.png";
+import control_flag_red from "../../assets/control_flags/control_flag_red.png";
+import control_flag_blue from "../../assets/control_flags/control_flag_blue.png";
+import control_flag_green from "../../assets/control_flags/control_flag_green.png";
+import control_flag_gold from "../../assets/control_flags/control_flag_gold.png";
 import {useDraggable, useDroppable} from "@dnd-kit/core";
-import {createId} from "../const/Util.tsx";
+import {createId} from "../../const/Util.tsx";
 import {CSS} from "@dnd-kit/utilities";
 import {createPortal} from "react-dom";
-import {canMoveComponent} from "../const/GameUtils.tsx";
-import {useGameStore} from "../store/GameStore.tsx";
+import {canMoveComponent} from "../../const/GameUtils.tsx";
+import {useGameStore} from "../../store/GameStore.tsx";
 
 function ControlFlag(props: {
   controlFlagId: string;

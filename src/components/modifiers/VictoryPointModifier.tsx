@@ -1,14 +1,14 @@
-import type {PlayerModel} from "../model/PlayerModel.tsx";
+import type {PlayerModel} from "../../model/PlayerModel.tsx";
 import {produce} from "immer";
-import {addOrRemoveVP} from "../const/GameUtils.tsx";
-import {ADD_OR_REMOVE_VP} from "../const/Actions.tsx";
+import {addOrRemoveVP} from "../../const/GameUtils.tsx";
+import {ADD_OR_REMOVE_VP} from "../../const/Actions.tsx";
 import {ActionIcon, Stack} from "@mantine/core";
-import minus_icon from "../assets/minus.svg";
-import plus_icon from "../assets/plus.svg";
-import {useGameStore} from "../store/GameStore.tsx";
-import {useWebSocket} from "./WebSocketContext.tsx";
-import {QuantityIcon} from "./QuantityIcon.tsx";
-import vp_icon from '../assets/resources/victory_point.png';
+import minus_icon from "../../assets/minus.svg";
+import plus_icon from "../../assets/plus.svg";
+import {useGameStore} from "../../store/GameStore.tsx";
+import {useWebSocket} from "../WebSocketContext.tsx";
+import {QuantityIcon} from "../player/QuantityIcon.tsx";
+import vp_icon from '../../assets/resources/victory_point.png';
 
 export function VictoryPointModifier(props: {
   player: PlayerModel;

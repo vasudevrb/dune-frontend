@@ -1,13 +1,13 @@
-import {CombatUnitType, type PlayerModel} from "../model/PlayerModel.tsx";
+import {CombatUnitType, type PlayerModel} from "../../model/PlayerModel.tsx";
 import {ActionIcon, Stack} from "@mantine/core";
 import {produce} from "immer";
-import {addOrRemoveCombatUnit, getCombatUnitIconByType} from "../const/GameUtils.tsx";
-import {ADD_OR_REMOVE_COMBAT_UNIT} from "../const/Actions.tsx";
-import {useWebSocket} from "./WebSocketContext.tsx";
-import {useGameStore} from "../store/GameStore.tsx";
-import minus_icon from "../assets/minus.svg";
-import plus_icon from "../assets/plus.svg";
-import {QuantityIcon} from "./QuantityIcon.tsx";
+import {addOrRemoveCombatUnit, getCombatUnitIconByType} from "../../const/GameUtils.tsx";
+import {ADD_OR_REMOVE_COMBAT_UNIT} from "../../const/Actions.tsx";
+import {useWebSocket} from "../WebSocketContext.tsx";
+import {useGameStore} from "../../store/GameStore.tsx";
+import minus_icon from "../../assets/minus.svg";
+import plus_icon from "../../assets/plus.svg";
+import {QuantityIcon} from "../player/QuantityIcon.tsx";
 
 export function CombatModifier(props: {
   player: PlayerModel;

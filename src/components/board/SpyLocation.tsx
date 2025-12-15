@@ -2,14 +2,14 @@ import type {Property} from "csstype";
 import {Center, Group, type MantineStyleProp, type StyleProp} from "@mantine/core";
 import {useDraggable, useDroppable} from "@dnd-kit/core";
 import {CSS} from "@dnd-kit/utilities";
-import spy_icon_red from "../assets/spies/spy_red.png";
-import spy_icon_blue from "../assets/spies/spy_blue.png";
-import spy_icon_gold from "../assets/spies/spy_gold.png";
-import spy_icon_green from "../assets/spies/spy_green.png";
+import spy_icon_red from "../../assets/spies/spy_red.png";
+import spy_icon_blue from "../../assets/spies/spy_blue.png";
+import spy_icon_gold from "../../assets/spies/spy_gold.png";
+import spy_icon_green from "../../assets/spies/spy_green.png";
 import {createPortal} from "react-dom";
-import type {SpyLocationModel} from "../model/SpyLocationModel.tsx";
-import {canMoveComponent} from "../const/GameUtils.tsx";
-import {useGameStore} from "../store/GameStore.tsx";
+import type {SpyLocationModel} from "../../model/SpyLocationModel.tsx";
+import {canMoveComponent} from "../../const/GameUtils.tsx";
+import {useGameStore} from "../../store/GameStore.tsx";
 
 function Spy(props: {
   spyId: string;

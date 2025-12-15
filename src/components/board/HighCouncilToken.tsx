@@ -1,14 +1,14 @@
-import '../css/Swordmaster.css';
+import '../../css/Swordmaster.css';
 import {Button, Popover, Image, Box, Group} from "@mantine/core";
 import type {Property} from "csstype";
-import {useWebSocket} from "./WebSocketContext.tsx";
-import {GET_HIGH_COUNCIL} from "../const/Actions.tsx";
-import token_red from "../assets/council_tokens/high_council_token_red.png";
-import token_blue from "../assets/council_tokens/high_council_token_blue.png"
-import token_green from "../assets/council_tokens/high_council_token_green.png"
-import token_gold from "../assets/council_tokens/high_council_token_gold.png"
-import {useGameStore} from "../store/GameStore.tsx";
-import {assertExists} from "../const/GameUtils.tsx";
+import {useWebSocket} from "../WebSocketContext.tsx";
+import {GET_HIGH_COUNCIL} from "../../const/Actions.tsx";
+import token_red from "../../assets/council_tokens/high_council_token_red.png";
+import token_blue from "../../assets/council_tokens/high_council_token_blue.png"
+import token_green from "../../assets/council_tokens/high_council_token_green.png"
+import token_gold from "../../assets/council_tokens/high_council_token_gold.png"
+import {useGameStore} from "../../store/GameStore.tsx";
+import {assertExists} from "../../const/GameUtils.tsx";
 import {produce} from "immer";
 import {useDisclosure} from "@mantine/hooks";
 

@@ -1,12 +1,12 @@
 import {ActionIcon, Center, Group, Stack, Text} from "@mantine/core";
-import spice_icon from '../assets/resources/spice.png';
-import minus_icon from "../assets/minus.svg";
-import plus_icon from "../assets/plus.svg";
+import spice_icon from '../../assets/resources/spice.png';
+import minus_icon from "../../assets/minus.svg";
+import plus_icon from "../../assets/plus.svg";
 import type {Property} from "csstype";
-import {useWebSocket} from "./WebSocketContext.tsx";
-import {SET_BONUS_SPICE} from "../const/Actions.tsx";
-import {useGameStore} from "../store/GameStore.tsx";
-import {addOrRemoveBonusSpice} from "../const/GameUtils.tsx";
+import {useWebSocket} from "../WebSocketContext.tsx";
+import {SET_BONUS_SPICE} from "../../const/Actions.tsx";
+import {useGameStore} from "../../store/GameStore.tsx";
+import {addOrRemoveBonusSpice} from "../../const/GameUtils.tsx";
 import {produce} from "immer";
 
 export function BonusSpice(

@@ -1,16 +1,16 @@
-import '../css/GameBoard.css'
+import '../../css/GameBoard.css'
 import {Box, ScrollArea, Space, Stack} from "@mantine/core";
-import board from '../assets/board.jpg';
+import board from '../../assets/board.jpg';
 import {AgentLocation} from "./AgentLocation.tsx";
 import {CombatArea} from "./CombatArea.tsx";
 import type {Property} from "csstype";
-import type {AgentLocationModel} from "../model/AgentLocationModel.tsx";
-import {assertExists} from "../const/GameUtils.tsx";
+import type {AgentLocationModel} from "../../model/AgentLocationModel.tsx";
+import {assertExists} from "../../const/GameUtils.tsx";
 import {Faction} from "./Faction.tsx";
-import {FactionType} from "../model/PlayerModel.tsx";
-import type {SpyLocationModel} from "../model/SpyLocationModel.tsx";
+import {FactionType} from "../../model/PlayerModel.tsx";
+import type {SpyLocationModel} from "../../model/SpyLocationModel.tsx";
 import {SpyLocation} from "./SpyLocation.tsx";
-import {useGameStore} from "../store/GameStore.tsx";
+import {useGameStore} from "../../store/GameStore.tsx";
 import {Swordmaster} from "./Swordmaster.tsx";
 import {ControlFlagLocation} from "./ControlFlagLocation.tsx";
 import {BonusSpice} from "./BonusSpice.tsx";

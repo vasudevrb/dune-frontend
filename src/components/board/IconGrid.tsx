@@ -1,6 +1,6 @@
 import {useMemo} from "react";
 import {Box, Image} from "@mantine/core";
-import {range} from "../const/Util.tsx";
+import {range} from "../../const/Util.tsx";
 import type {Property} from "csstype";
 
 export default function IconGrid(

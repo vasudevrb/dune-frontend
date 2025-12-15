@@ -1,9 +1,9 @@
 import {Button, Popover, Box, Group, Image} from "@mantine/core";
 import type {Property} from "csstype";
-import {useWebSocket} from "./WebSocketContext.tsx";
-import {ACQUIRE_CONTRACT} from "../const/Actions.tsx";
-import {useGameStore} from "../store/GameStore.tsx";
-import {acquireContract} from "../const/GameUtils.tsx";
+import {useWebSocket} from "../WebSocketContext.tsx";
+import {ACQUIRE_CONTRACT} from "../../const/Actions.tsx";
+import {useGameStore} from "../../store/GameStore.tsx";
+import {acquireContract} from "../../const/GameUtils.tsx";
 import {produce} from "immer";
 import {useDisclosure} from "@mantine/hooks";
 

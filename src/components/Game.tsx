@@ -24,11 +24,11 @@ import {
   UPDATE_PLAYER, UPDATE_RESOURCES, UPDATE_SPY_LOCATION, USE_CARD
 } from "../const/Actions.tsx";
 import {Box, Group, MantineProvider, type MantineThemeOverride, Stack, Text} from "@mantine/core";
-import {Card} from "./Card.tsx";
-import {ImperiumRow} from "./ImperiumRow.tsx";
-import {GameBoard} from "./GameBoard.tsx";
-import {InHandCards} from "./InHandCards.tsx";
-import {Players} from "./Players.tsx";
+import {Card} from "./cards/Card.tsx";
+import {ImperiumRow} from "./cards/ImperiumRow.tsx";
+import {GameBoard} from "./board/GameBoard.tsx";
+import {InHandCards} from "./cards/InHandCards.tsx";
+import {Players} from "./player/Players.tsx";
 import {useGameStore} from "../store/GameStore.tsx";
 import type {CombatModel, PlayerModel, ResourcesModel} from "../model/PlayerModel.tsx";
 import {produce} from "immer";

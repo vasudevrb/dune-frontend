@@ -1,48 +1,48 @@
-import '../css/Player.css'
+import '../../css/Player.css'
 import {CSS} from '@dnd-kit/utilities';
 import {ActionIcon, Box, Button, Center, Divider, Flex, Group, Image, Popover, ScrollArea, Space, Stack, Text} from "@mantine/core";
-import signet_ring from '../assets/cards/signet_ring.png';
-import agent_icon_disabled from '../assets/agents/agent_disabled.svg';
-import agent_icon_red from '../assets/agents/agent_red.svg';
-import agent_icon_blue from '../assets/agents/agent_blue.svg';
-import agent_icon_green from '../assets/agents/agent_green.svg';
-import agent_icon_gold from '../assets/agents/agent_gold.svg';
-import alliance_bene_gesserit from '../assets/alliances/alliance_bg.png';
-import alliance_fremen from '../assets/alliances/alliance_fremen.png';
-import alliance_emperor from '../assets/alliances/alliance_emperor.png';
-import alliance_spacing_guild from '../assets/alliances/alliance_spacing_guild.png';
-import objective_desert_mouse from '../assets/objectives/desert_mouse.png';
-import objective_ornithopter from '../assets/objectives/ornothopter.png';
-import objective_cryskife from '../assets/objectives/crysknife.png';
-import objective_any from '../assets/objectives/any.png';
-import spy_icon_red from '../assets/spies/spy_red.png';
-import spy_icon_green from '../assets/spies/spy_green.png';
-import spy_icon_blue from '../assets/spies/spy_blue.png';
-import spy_icon_gold from '../assets/spies/spy_gold.png';
-import control_flag_red from '../assets/control_flags/control_flag_red.png';
-import control_flag_blue from '../assets/control_flags/control_flag_blue.png';
-import control_flag_gold from '../assets/control_flags/control_flag_gold.png';
-import control_flag_green from '../assets/control_flags/control_flag_green.png';
-import vp_icon from '../assets/resources/victory_point.png';
-import draw_intrigue_card from '../assets/cards/draw_intrigue_card.png';
-import contract_completed from '../assets/contract_completed.png';
-import steal_intrigue_card from '../assets/cards/steal_intrigue_card.png';
-import draw_card from '../assets/cards/draw_card.png';
+import signet_ring from '../../assets/cards/signet_ring.png';
+import agent_icon_disabled from '../../assets/agents/agent_disabled.svg';
+import agent_icon_red from '../../assets/agents/agent_red.svg';
+import agent_icon_blue from '../../assets/agents/agent_blue.svg';
+import agent_icon_green from '../../assets/agents/agent_green.svg';
+import agent_icon_gold from '../../assets/agents/agent_gold.svg';
+import alliance_bene_gesserit from '../../assets/alliances/alliance_bg.png';
+import alliance_fremen from '../../assets/alliances/alliance_fremen.png';
+import alliance_emperor from '../../assets/alliances/alliance_emperor.png';
+import alliance_spacing_guild from '../../assets/alliances/alliance_spacing_guild.png';
+import objective_desert_mouse from '../../assets/objectives/desert_mouse.png';
+import objective_ornithopter from '../../assets/objectives/ornothopter.png';
+import objective_cryskife from '../../assets/objectives/crysknife.png';
+import objective_any from '../../assets/objectives/any.png';
+import spy_icon_red from '../../assets/spies/spy_red.png';
+import spy_icon_green from '../../assets/spies/spy_green.png';
+import spy_icon_blue from '../../assets/spies/spy_blue.png';
+import spy_icon_gold from '../../assets/spies/spy_gold.png';
+import control_flag_red from '../../assets/control_flags/control_flag_red.png';
+import control_flag_blue from '../../assets/control_flags/control_flag_blue.png';
+import control_flag_gold from '../../assets/control_flags/control_flag_gold.png';
+import control_flag_green from '../../assets/control_flags/control_flag_green.png';
+import vp_icon from '../../assets/resources/victory_point.png';
+import draw_intrigue_card from '../../assets/cards/draw_intrigue_card.png';
+import contract_completed from '../../assets/contract_completed.png';
+import steal_intrigue_card from '../../assets/cards/steal_intrigue_card.png';
+import draw_card from '../../assets/cards/draw_card.png';
 import {
   type AgentModel,
   CombatUnitType, type ContractModel,
   type ControlFlagModel, FactionType, ObjectiveType,
   type PlayerModel,
   type SpyModel
-} from "../model/PlayerModel.tsx";
+} from "../../model/PlayerModel.tsx";
 import {type JSX} from "react";
-import {range} from "../const/Util.tsx";
-import plus_icon from "../assets/plus.svg";
+import {range} from "../../const/Util.tsx";
+import plus_icon from "../../assets/plus.svg";
 import {useDraggable, useDroppable} from "@dnd-kit/core";
 import {createPortal} from "react-dom";
-import {useGameStore} from "../store/GameStore.tsx";
+import {useGameStore} from "../../store/GameStore.tsx";
 import {FeydSignet} from "./FeydSignet.tsx";
-import {useWebSocket} from "./WebSocketContext.tsx";
+import {useWebSocket} from "../WebSocketContext.tsx";
 import {
   COMPLETE_CONTRACT,
   DRAW_CARD,
@@ -50,17 +50,17 @@ import {
   GAIN_INTRIGUE_CARD, GAIN_OR_LOSE_ALLIANCE, GAIN_OR_LOSE_OBJECTIVE,
   REVEAL,
   STEAL_INTRIGUE_CARD
-} from "../const/Actions.tsx";
+} from "../../const/Actions.tsx";
 import {
   gainOrLoseAlliance,
   gainOrLoseObjective, getResourceIconByType, setContractCompleted
-} from "../const/GameUtils.tsx";
+} from "../../const/GameUtils.tsx";
 import {produce} from "immer";
 import {useDisclosure} from "@mantine/hooks";
 import {CharacterImage} from "./CharacterImage.tsx";
-import {ResourceModifier} from "./ResourceModifier.tsx";
-import {VictoryPointModifier} from "./VictoryPointModifier.tsx";
-import {CombatModifier} from "./CombatModifier.tsx";
+import {ResourceModifier} from "../modifiers/ResourceModifier.tsx";
+import {VictoryPointModifier} from "../modifiers/VictoryPointModifier.tsx";
+import {CombatModifier} from "../modifiers/CombatModifier.tsx";
 
 function Agent(props: { player: PlayerModel, agentModel: AgentModel, index: number }) {
   const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({

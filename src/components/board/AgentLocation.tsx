@@ -1,17 +1,17 @@
-import type {AgentLocationModel} from "../model/AgentLocationModel.tsx";
+import type {AgentLocationModel} from "../../model/AgentLocationModel.tsx";
 import {Center, Group, type MantineStyleProp, type StyleProp} from "@mantine/core";
-import agent_icon_blue from '../assets/agents/agent_blue.svg';
+import agent_icon_blue from '../../assets/agents/agent_blue.svg';
 import type {Property} from "csstype";
-import agent_icon_red from "../assets/agents/agent_red.svg";
-import agent_icon_gold from "../assets/agents/agent_gold.svg";
-import agent_icon_green from "../assets/agents/agent_green.svg";
-import agent_icon_disabled from "../assets/agents/agent_disabled.svg";
+import agent_icon_red from "../../assets/agents/agent_red.svg";
+import agent_icon_gold from "../../assets/agents/agent_gold.svg";
+import agent_icon_green from "../../assets/agents/agent_green.svg";
+import agent_icon_disabled from "../../assets/agents/agent_disabled.svg";
 import {useDraggable, useDroppable} from "@dnd-kit/core";
-import {createId} from "../const/Util.tsx";
+import {createId} from "../../const/Util.tsx";
 import {CSS} from "@dnd-kit/utilities";
 import {createPortal} from "react-dom";
-import {canMoveComponent} from "../const/GameUtils.tsx";
-import {useGameStore} from "../store/GameStore.tsx";
+import {canMoveComponent} from "../../const/GameUtils.tsx";
+import {useGameStore} from "../../store/GameStore.tsx";
 
 function Agent(props: {
   agentId: string;
