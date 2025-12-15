@@ -30,13 +30,14 @@ export function GameBoard() {
     return (
       <AgentLocation
         key={`agent-droppable-${location.id}`}
-        w={"9.5%"}
-        h={"7%"}
+        w={"8%"}
+        h={"6%"}
         location={location}
         style={{
           position: "absolute",
           top: `${top}`,
           left: `${left}`,
+          transform: `translate(-50%, -50%)`
         }}/>
     )
   }
@@ -63,28 +64,28 @@ export function GameBoard() {
 
   const getAgentDroppables = () => {
     const droppableOffsets = [
-      {id: 1, top: "6.5%", left: "12.5%"},
-      {id: 2, top: "16.5%", left: "12.5%"},
-      {id: 3, top: "31%", left: "12.5%"},
-      {id: 4, top: "41%", left: "12.5%"},
-      {id: 5, top: "55.5%", left: "12.5%"},
-      {id: 6, top: "65.5%", left: "12.5%"},
-      {id: 7, top: "80%", left: "12.5%"},
-      {id: 8, top: "90.2%", left: "12.5%"},
-      {id: 9, top: "56.8%", left: "31%"},
-      {id: 10, top: "49.3%", left: "49.4%"},
-      {id: 11, top: "44.5%", left: "73.5%"},
-      {id: 12, top: "45.5%", left: "29%"},
-      {id: 13, top: "33%", left: "38.5%"},
-      {id: 14, top: "31%", left: "60%"},
-      {id: 15, top: "28.5%", left: "76%"},
-      {id: 16, top: "2.7%", left: "30%"},
-      {id: 17, top: "2.7%", left: "64.5%"},
-      {id: 18, top: "12.7%", left: "30%"},
-      {id: 19, top: "12.7%", left: "50%"},
-      {id: 20, top: "12.7%", left: "64.5%"},
-      {id: 21, top: "4%", left: "84%"},
-      {id: 22, top: "12.5%", left: "84%"},
+      {id: 1, top: "9.9%", left: "17.3%"},
+      {id: 2, top: "20%", left: "17.3%"},
+      {id: 3, top: "34.4%", left: "17.3%"},
+      {id: 4, top: "44.5%", left: "17.3%"},
+      {id: 5, top: "59%", left: "17.3%"},
+      {id: 6, top: "69%", left: "17.3%"},
+      {id: 7, top: "83.5%", left: "17.3%"},
+      {id: 8, top: "93.8%", left: "17.3%"},
+      {id: 9, top: "60.2%", left: "35.7%"},
+      {id: 10, top: "53%", left: "54.1%"},
+      {id: 11, top: "48%", left: "78.3%"},
+      {id: 12, top: "49%", left: "33.6%"},
+      {id: 13, top: "36.7%", left: "43.4%"},
+      {id: 14, top: "34.5%", left: "64.9%"},
+      {id: 15, top: "31.6%", left: "80.8%"},
+      {id: 16, top: "6%", left: "34.6%"},
+      {id: 17, top: "6%", left: "69.5%"},
+      {id: 18, top: "16.2%", left: "34.7%"},
+      {id: 19, top: "16%", left: "55%"},
+      {id: 20, top: "16%", left: "69.4%"},
+      {id: 21, top: "7.3%", left: "88.8%"},
+      {id: 22, top: "16%", left: "88.8%"},
     ];
     const locations = gameState.locations;
 

@@ -83,6 +83,7 @@ export function AgentLocation(props: {
 
   return (
     <Center
+      className={"pulse-bg agent-location-container"}
       ref={setNodeRef}
       pos={"absolute"}
       w={props.w}
