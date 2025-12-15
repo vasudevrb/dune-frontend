@@ -41,7 +41,7 @@ export function UnlockMakerHook(
         <Popover.Target>
           <Box w={50} h={80} onClick={toggle}/>
         </Popover.Target>
-        <Popover.Dropdown className={"swordmaster-popover"}>
+        <Popover.Dropdown className={"popover-dialog"}>
           <Group justify={"center"}>
             <Button
               onClick={unlockMakerHook}

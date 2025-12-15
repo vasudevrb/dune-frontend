@@ -47,7 +47,7 @@ export function Contract(
             w={"155px"}
             src={props.url}/>
         </Popover.Target>
-        <Popover.Dropdown className={"swordmaster-popover"}>
+        <Popover.Dropdown className={"popover-dialog"}>
           <Group justify={"center"}>
             <Button
               onClick={() => acquireContractAction()}

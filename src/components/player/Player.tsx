@@ -101,7 +101,7 @@ function Agent(props: { player: PlayerModel, agentModel: AgentModel, index: numb
 
   const agentIcon = getAgentIcon(getAgentColor(props.index))
 
-  const draggableProps = (props.player.isThisPlayer && agentIcon != agent_icon_disabled)
+  const draggableProps = (false)
     ? {
       ref: setNodeRef,
       style: draggedStyle,
@@ -482,7 +482,7 @@ export function Player(props: {
         <Popover.Target>
           <Image w={25} h={25} src={plus_icon} onClick={toggle}/>
         </Popover.Target>
-        <Popover.Dropdown onClick={close} className={"swordmaster-popover"}>
+        <Popover.Dropdown onClick={close} className={"popover-dialog"}>
           <Stack>
             <Text c="#cacaca" size="xs">Select Alliance or Objective</Text>
             <Group>

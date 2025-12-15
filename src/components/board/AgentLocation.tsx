@@ -1,36 +1,28 @@
 import type {AgentLocationModel} from "../../model/AgentLocationModel.tsx";
-import {Center, Group, type MantineStyleProp, type StyleProp} from "@mantine/core";
+import '../../css/Swordmaster.css';
+import {Button, Center, Group, Image, type MantineStyleProp, Popover, type StyleProp} from "@mantine/core";
 import agent_icon_blue from '../../assets/agents/agent_blue.svg';
 import type {Property} from "csstype";
 import agent_icon_red from "../../assets/agents/agent_red.svg";
 import agent_icon_gold from "../../assets/agents/agent_gold.svg";
 import agent_icon_green from "../../assets/agents/agent_green.svg";
 import agent_icon_disabled from "../../assets/agents/agent_disabled.svg";
-import {useDraggable, useDroppable} from "@dnd-kit/core";
-import {createId} from "../../const/Util.tsx";
-import {CSS} from "@dnd-kit/utilities";
-import {createPortal} from "react-dom";
-import {canMoveComponent} from "../../const/GameUtils.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
+import {useDisclosure} from "@mantine/hooks";
+import {assertExists, canMoveComponent, hasAvailableAgent, placeAgent, recallAgent} from "../../const/GameUtils.tsx";
+import {produce} from "immer";
+import {PLACE_AGENT, RECALL_AGENT} from "../../const/Actions.tsx";
+import {useWebSocket} from "../WebSocketContext.tsx";
+import {showNotification} from "../../const/Util.tsx";
 
 function Agent(props: {
   agentId: string;
   color: string;
   playerName: string
 }) {
-  const {gameState} = useGameStore();
-  const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
-    id: `${props.agentId}`,
-    data: {
-      location: "boardspace",
-      type: "agent"
-    }
-  });
-  const draggedStyle = transform ? {
-    transform: CSS.Translate.toString(transform),
-    zIndex: 10,
-    transition: !isDragging ? 'transform 300ms ease' : undefined,
-  } : undefined;
+  const {gameState, setGameState} = useGameStore();
+  const {sendMessage} = useWebSocket();
+  const [opened, {close, toggle}] = useDisclosure(false);
 
   const getAgentIcon = (color: string) => {
     if (color === "RED") return agent_icon_red;
@@ -40,26 +32,45 @@ function Agent(props: {
     else if (color === "GRAY") return agent_icon_disabled;
   }
 
-  const node = ( canMoveComponent(gameState, props.playerName) ?
-    <img
-      ref={setNodeRef}
-      style={draggedStyle}
-      {...listeners}
-      {...attributes}
-      width={25}
-      src={getAgentIcon(props.color)}
-      alt="Agent icon"
-      className={"locations-agent-icon"}/>
-      :
-      <img
-        draggable={false}
-        width={25}
-        src={getAgentIcon(props.color)}
-        alt="Agent icon"
-        className={"locations-agent-icon"}/>
-  )
+  const recallAgentAction = () => {
+    setGameState(produce(gameState, draft => {
+      recallAgent(draft, props.agentId)
+    }));
+    sendMessage({
+      action: RECALL_AGENT, body: {
+        agentId: props.agentId,
+        playerName: props.playerName,
+      }
+    });
+    close();
+  }
 
-  return isDragging ? createPortal(node, document.body): node
+  return (
+    <Popover
+      opened={opened}
+      onChange={toggle}
+      position="bottom"
+      clickOutsideEvents={['mouseup', 'touchend']}>
+      <Popover.Target>
+        <Image
+          onClick={canMoveComponent(gameState, props.playerName) ? toggle : undefined}
+          draggable={false}
+          w={25}
+          src={getAgentIcon(props.color)}
+          className={"locations-agent-icon"}/>
+      </Popover.Target>
+      <Popover.Dropdown className={"popover-dialog"}>
+        <Group justify={"center"}>
+          <Button
+            onClick={recallAgentAction}
+            className={`setup-action-button-next`}
+            size="xs"
+            radius="0"
+            variant={"filled"}>Recall agent</Button>
+        </Group>
+      </Popover.Dropdown>
+    </Popover>
+  )
 }
 
 
@@ -72,19 +83,47 @@ export function AgentLocation(props: {
   mah?: StyleProp<Property.MaxHeight>
   bg?: string;
 }) {
-  const {setNodeRef} = useDroppable({
-    id: `agent-droppable-${createId([props.location.name, props.location.id])}`,
-    data: {
-      location: "boardspace",
-      type: "agent",
-      id: props.location.id
+
+  const {gameState, setGameState} = useGameStore();
+  const {sendMessage} = useWebSocket();
+
+  const sendAgent = () => {
+    const player = assertExists(
+      gameState.players.find(p => p.isThisPlayer),
+      "Current player not found"
+    )
+
+    if (!hasAvailableAgent(player)) {
+      showNotification("No available agents");
+      return;
     }
-  });
+
+    const agentId = player.agents[0].id
+    setGameState(produce(gameState, draft => {
+      placeAgent(draft, agentId, props.location.id)
+    }));
+
+    sendMessage({
+      action: PLACE_AGENT, body: {
+        agentId: agentId,
+        locationId: props.location.id,
+      }
+    });
+  }
+
+  const canSendAgent = () => {
+    const player = assertExists(
+      gameState.players.find(p => p.isThisPlayer),
+      "Current player not found"
+    )
+
+    return !props.location.agents.map(a => a.playerName).includes(player.name)
+  }
 
   return (
     <Center
+      onClick={canSendAgent() ? sendAgent : undefined}
       className={"pulse-bg agent-location-container"}
-      ref={setNodeRef}
       pos={"absolute"}
       w={props.w}
       h={props.h}

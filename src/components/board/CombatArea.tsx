@@ -74,7 +74,7 @@ export function CombatArea() {
             }}
             alt="Combat icon"/>
         </Popover.Target>
-        <Popover.Dropdown className={"swordmaster-popover"}>
+        <Popover.Dropdown className={"popover-dialog"}>
           <Stack>
             <Text c="#cacaca" size="xs">Get next conflict?</Text>
             <Group>

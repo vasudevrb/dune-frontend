@@ -57,7 +57,7 @@ export function Players(props: { game: GameModel }) {
               radius="0"
               variant={"filled"}>CLEAR ROUND</Button>
           </Popover.Target>
-          <Popover.Dropdown className={"swordmaster-popover"}>
+          <Popover.Dropdown className={"popover-dialog"}>
             <Stack>
               <Text c="#cacaca" size="xs">Would you like to move to the next round?</Text>
               <Group>

@@ -25,6 +25,10 @@ export function assertExists<T>(value: T | undefined, message: string): T {
   return value;
 }
 
+export function hasAvailableAgent(player: PlayerModel) {
+  return player.swordmasterUnlocked ? player.agents.length > 0 : player.agents.length > 1;
+}
+
 export function placeAgent(game: GameModel, agentId: UniqueIdentifier, locationId: number) {
   const player = assertExists(
     game.players.find(p => p.agents.some(agent => agent.id === agentId)),
