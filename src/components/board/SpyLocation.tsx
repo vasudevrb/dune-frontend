@@ -66,10 +66,15 @@ export function SpyLocation(props: {
   const {sendMessage} = useWebSocket();
 
   const sendSpy = () => {
-    const player = assertExists(
-      gameState.players.find(p => p.isThisPlayer),
-      "Current player not found"
-    )
+    const player = gameState.containsRivals
+      ? assertExists(
+        gameState.players.find(p => p.name === gameState.currentPlayer),
+        "Current player not found"
+      )
+      : assertExists(
+        gameState.players.find(p => p.isThisPlayer),
+        "Current player not found"
+      )
 
     if (player.spies.length < 1) {
       showNotification("No available spies");
@@ -91,10 +96,15 @@ export function SpyLocation(props: {
   }
 
   const canSendSpy = () => {
-    const player = assertExists(
-      gameState.players.find(p => p.isThisPlayer),
-      "Current player not found"
-    )
+    const player = gameState.containsRivals
+      ? assertExists(
+        gameState.players.find(p => p.name === gameState.currentPlayer),
+        "Current player not found"
+      )
+      : assertExists(
+        gameState.players.find(p => p.isThisPlayer),
+        "Current player not found"
+      )
 
     return !props.spyLocation.spies.map(s => s.playerName).includes(player.name)
   }
