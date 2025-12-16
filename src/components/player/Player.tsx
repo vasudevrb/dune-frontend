@@ -27,6 +27,9 @@ import draw_intrigue_card from '../../assets/cards/draw_intrigue_card.png';
 import contract_completed from '../../assets/contract_completed.png';
 import steal_intrigue_card from '../../assets/cards/steal_intrigue_card.png';
 import draw_card from '../../assets/cards/draw_card.png';
+import imperium_card from '../../assets/cards/imperium_card.jpg';
+import draw_hagal_card from "../../assets/cards/draw_hagal.png";
+import minus_icon from "../../assets/minus.svg";
 import {
   type AgentModel,
   CombatUnitType, type ContractModel,
@@ -41,6 +44,8 @@ import {useGameStore} from "../../store/GameStore.tsx";
 import {FeydSignet} from "./FeydSignet.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
 import {
+  ADD_OR_REMOVE_COMBAT_UNIT,
+  ADD_OR_REMOVE_RESOURCE, ADD_OR_REMOVE_VP,
   COMPLETE_CONTRACT,
   DRAW_CARD,
   END_TURN,
@@ -53,7 +58,7 @@ import {
 } from "../../const/Actions.tsx";
 import {
   gainOrLoseAlliance,
-  gainOrLoseObjective, getResourceIconByType, setContractCompleted
+  gainOrLoseObjective, getCombatUnitIconByType, getResourceIconByType, setContractCompleted
 } from "../../const/GameUtils.tsx";
 import {produce} from "immer";
 import {useDisclosure} from "@mantine/hooks";
@@ -208,6 +213,18 @@ export function Player(props: {
     )
   }
 
+  const getButton = (icon: string, onClick?: () => void) => {
+    return (
+      <ActionIcon
+        onClick={onClick}
+        className={"player-resource-modifier-button"}
+        variant={"outline"}
+        radius={"0"}>
+        <img width={30} src={icon} alt="Resource modifier button"/>
+      </ActionIcon>
+    )
+  }
+
   const getResourcesDisplayRivals = () => {
     const resourceModifierAction = (add: boolean, resourceType: string) => {
       sendMessage({
@@ -233,10 +250,10 @@ export function Player(props: {
       return (
         <Group gap={5}>
           {getButton(minus_icon, () => resourceModifierAction(false, resourceType))}
-          <Box pos={"relative"} w={30} h={30}>
+          <Center pos={"relative"} w={30} h={30}>
             <Image w={30} src={icon}/>
             <Text fw="500" size="1rem" className={"player-resource-modifier-text"}>{quantity}</Text>
-          </Box>
+          </Center>
           {getButton(plus_icon, () => resourceModifierAction(true, resourceType))}
         </Group>
       )
@@ -279,21 +296,11 @@ export function Player(props: {
         }
       })
     }
-    const getCombatModifierIconByType = (modifierType: CombatUnitType) => {
-      switch (modifierType) {
-        case CombatUnitType.Troop:
-          return troop_icon;
-        case CombatUnitType.Sandworm:
-          return worm_icon;
-        default:
-          return strength_icon;
-      }
-    }
     const getCombatModifier = (modifierType: CombatUnitType) => {
       return (
         <Group gap={5}>
           {getButton(minus_icon, () => combatModifierAction(false, modifierType))}
-          <Image w={30} src={getCombatModifierIconByType(modifierType)}/>
+          <Image w={30} src={getCombatUnitIconByType(modifierType)}/>
           {getButton(plus_icon, () => combatModifierAction(true, modifierType))}
         </Group>
       )
@@ -658,7 +665,7 @@ export function Player(props: {
         </Group>
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getSpiesAndFlags()}
-        <Group gap={8} align={"top"} pt={16}>
+        <Group w={"100%"} justify="center" align={"stretch"} gap={0} pt={20}>
           {getResourcesDisplayRivals()}
           <Divider orientation={"vertical"} m={"md"} color={"#cacaca44"}/>
           {getCombatDisplayRivals()}
