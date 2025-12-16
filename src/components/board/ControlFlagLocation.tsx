@@ -7,15 +7,18 @@ import control_flag_green from "../../assets/control_flags/control_flag_green.pn
 import control_flag_gold from "../../assets/control_flags/control_flag_gold.png";
 import {useGameStore} from "../../store/GameStore.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
-import {assertExists, placeControlFlag} from "../../const/GameUtils.tsx";
+import {assertExists, canMoveComponent, placeControlFlag, recallControlFlag} from "../../const/GameUtils.tsx";
 import {produce} from "immer";
-import {PLACE_CONTROL_FLAG,} from "../../const/Actions.tsx";
+import {PLACE_CONTROL_FLAG, RECALL_CONTROL_FLAG} from "../../const/Actions.tsx";
 
 function ControlFlag(props: {
   controlFlagId: string;
   color: string;
   playerName: string
 }) {
+
+  const {gameState, setGameState} = useGameStore();
+  const {sendMessage} = useWebSocket();
 
   const getControlFlagIcon = (color: string) => {
     if (color === "RED") return control_flag_red;
@@ -24,8 +27,21 @@ function ControlFlag(props: {
     else if (color === "GREEN") return control_flag_green;
   }
 
+  const recallControlFlagAction = () => {
+    setGameState(produce(gameState, draft => {
+      recallControlFlag(draft, props.controlFlagId);
+    }))
+    sendMessage({
+      action: RECALL_CONTROL_FLAG, body: {
+        controlFlagId: props.controlFlagId,
+        playerName: props.playerName,
+      }
+    });
+  }
+
   return (
     <Image
+      onClick={canMoveComponent(gameState, props.playerName) ? recallControlFlagAction : undefined}
       draggable={false}
       w={50}
       src={getControlFlagIcon(props.color)}
@@ -73,8 +89,7 @@ export function ControlFlagLocation(props: {
       gameState.players.find(p => p.isThisPlayer),
       "Current player not found"
     )
-
-    return player.controlFlags.length > 0
+    return player.controlFlags.length > 0 && props.location.controlFlag?.playerName !== player.name;
   }
 
   return (
