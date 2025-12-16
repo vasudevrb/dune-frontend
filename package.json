@@ -24,6 +24,7 @@
     "react-dom": "^19.1.1",
     "react-use-websocket": "^3.0.0",
     "sockjs-client": "^1.6.1",
+    "use-debounce": "^10.0.6",
     "zustand": "^5.0.8"
   },
   "devDependencies": {

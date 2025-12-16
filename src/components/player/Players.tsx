@@ -1,11 +1,11 @@
-import '../css/Players.css'
+import '../../css/Players.css'
 import {Button, Group, Popover, ScrollArea, Stack, Text} from "@mantine/core";
 import {Player} from "./Player.tsx";
-import type {PlayerModel} from "../model/PlayerModel.tsx";
-import type {GameModel} from "../model/GameModel.tsx";
+import type {PlayerModel} from "../../model/PlayerModel.tsx";
+import type {GameModel} from "../../model/GameModel.tsx";
 import {useDisclosure} from "@mantine/hooks";
-import {useWebSocket} from "./WebSocketContext.tsx";
-import {CLEAR_ROUND} from "../const/Actions.tsx";
+import {useWebSocket} from "../WebSocketContext.tsx";
+import {CLEAR_ROUND} from "../../const/Actions.tsx";
 
 export function Players(props: { game: GameModel }) {
   const [opened, {close, toggle}] = useDisclosure(false);
@@ -57,7 +57,7 @@ export function Players(props: { game: GameModel }) {
               radius="0"
               variant={"filled"}>CLEAR ROUND</Button>
           </Popover.Target>
-          <Popover.Dropdown className={"swordmaster-popover"}>
+          <Popover.Dropdown className={"popover-dialog"}>
             <Stack>
               <Text c="#cacaca" size="xs">Would you like to move to the next round?</Text>
               <Group>

@@ -1,8 +1,8 @@
-import "../css/FeydSignet.css";
+import "../../css/FeydSignet.css";
 import { Image, Box } from "@mantine/core";
-import feyd_track from '../assets/feyd_track.png';
-import feyd_token from '../assets/feyd_token.svg';
-import type {CharacterModel} from "../model/PlayerModel.tsx";
+import feyd_track from '../../assets/feyd_track.png';
+import feyd_token from '../../assets/feyd_token.svg';
+import type {CharacterModel} from "../../model/PlayerModel.tsx";
 import {useDraggable, useDroppable} from "@dnd-kit/core";
 import {CSS} from "@dnd-kit/utilities";
 import type {Property} from "csstype";

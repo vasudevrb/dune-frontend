@@ -1,6 +1,6 @@
-import type {PlayerModel} from "../model/PlayerModel.tsx";
+import type {PlayerModel} from "../../model/PlayerModel.tsx";
 import {Avatar, Box, Button, Image, Modal, Stack, Tooltip} from "@mantine/core";
-import first_player_icon from "../assets/agents/first_player_token.png";
+import first_player_icon from "../../assets/agents/first_player_token.png";
 import {useDisclosure} from "@mantine/hooks";
 import {useState} from "react";
 

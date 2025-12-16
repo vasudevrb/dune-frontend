@@ -1,10 +1,10 @@
-import '../css/Faction.css'
-import {FactionType, type PlayerModel} from "../model/PlayerModel.tsx";
+import '../../css/Faction.css'
+import {FactionType, type PlayerModel} from "../../model/PlayerModel.tsx";
 import {Group, Space, Stack} from "@mantine/core";
-import faction_marker_red from '../assets/faction_marker/faction_marker_red.svg';
-import faction_marker_blue from '../assets/faction_marker/faction_marker_blue.svg';
-import faction_marker_green from '../assets/faction_marker/faction_marker_green.svg';
-import faction_marker_gold from '../assets/faction_marker/faction_marker_gold.svg';
+import faction_marker_red from '../../assets/faction_marker/faction_marker_red.svg';
+import faction_marker_blue from '../../assets/faction_marker/faction_marker_blue.svg';
+import faction_marker_green from '../../assets/faction_marker/faction_marker_green.svg';
+import faction_marker_gold from '../../assets/faction_marker/faction_marker_gold.svg';
 import {useDraggable, useDroppable} from "@dnd-kit/core";
 import {CSS} from "@dnd-kit/utilities";
 import {createPortal} from "react-dom";

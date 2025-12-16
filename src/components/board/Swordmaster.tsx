@@ -1,10 +1,10 @@
-import '../css/Swordmaster.css';
+import '../../css/Swordmaster.css';
 import {Button, Popover, Box, Group} from "@mantine/core";
 import type {Property} from "csstype";
-import {useWebSocket} from "./WebSocketContext.tsx";
-import {UNLOCK_SWORDMASTER} from "../const/Actions.tsx";
-import {useGameStore} from "../store/GameStore.tsx";
-import {assertExists} from "../const/GameUtils.tsx";
+import {useWebSocket} from "../WebSocketContext.tsx";
+import {UNLOCK_SWORDMASTER} from "../../const/Actions.tsx";
+import {useGameStore} from "../../store/GameStore.tsx";
+import {assertExists} from "../../const/GameUtils.tsx";
 import {produce} from "immer";
 import {useDisclosure} from "@mantine/hooks";
 
@@ -37,9 +37,9 @@ export function Swordmaster(
     >
       <Popover opened={opened} onChange={toggle} width={200} position="bottom" clickOutsideEvents={['mouseup', 'touchend']}>
         <Popover.Target>
-          <Box w={50} h={80} bg={"#cacaca11"} onClick={toggle} />
+          <Box w={50} h={80} onClick={toggle} />
         </Popover.Target>
-        <Popover.Dropdown className={"swordmaster-popover"}>
+        <Popover.Dropdown className={"popover-dialog"}>
           <Group justify={"center"}>
             <Button
               onClick={unlockSwordmaster}

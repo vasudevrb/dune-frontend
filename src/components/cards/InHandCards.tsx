@@ -1,12 +1,12 @@
-import '../css/InHandCards.css'
+import '../../css/InHandCards.css'
 import {Card, CardButtonType} from "./Card.tsx";
 import {Divider, ScrollArea, Space, Text} from "@mantine/core";
-import type {CardModel, PlayerModel} from "../model/PlayerModel.tsx";
-import use_card_icon from '../assets/cards/use_card.png';
-import discard_card_icon from '../assets/cards/discard_card.png';
-import trash_card_icon from '../assets/cards/trash_card.png';
-import {useWebSocket} from "./WebSocketContext.tsx";
-import {DISCARD_CARD, TRASH_CARD, USE_CARD} from "../const/Actions.tsx";
+import type {CardModel, PlayerModel} from "../../model/PlayerModel.tsx";
+import use_card_icon from '../../assets/cards/use_card.png';
+import discard_card_icon from '../../assets/cards/discard_card.png';
+import trash_card_icon from '../../assets/cards/trash_card.png';
+import {useWebSocket} from "../WebSocketContext.tsx";
+import {DISCARD_CARD, TRASH_CARD, USE_CARD} from "../../const/Actions.tsx";
 
 // Careful changing these values, they are used to send messages over websocket.
 export const CardType = {

@@ -1,32 +1,32 @@
-import '../css/CombatArea.css'
+import '../../css/CombatArea.css'
 import {Image, Group, ActionIcon, Popover, Stack, Text, Button} from "@mantine/core";
-import troop_icon_red from "../assets/combat/troop_red.png";
-import troop_icon_blue from "../assets/combat/troop_blue.png";
-import troop_icon_green from "../assets/combat/troop_green.png";
-import troop_icon_gold from "../assets/combat/troop_gold.png";
-import worm_icon from "../assets/combat/worm.png";
-import conflict_bg_1 from "../assets/conflicts/conflict_l1.jpg";
-import conflict_bg_2 from "../assets/conflicts/conflict_l2.jpg";
-import conflict_bg_3 from "../assets/conflicts/conflict_l3.jpg";
-import maker_hook_icon from "../assets/combat/maker_hook.png";
-import combat_marker_red_1 from "../assets/combat/combat_marker_red_1.png";
-import combat_marker_red_2 from "../assets/combat/combat_marker_red_2.png";
-import combat_marker_blue_1 from "../assets/combat/combat_marker_blue_1.png";
-import combat_marker_blue_2 from "../assets/combat/combat_marker_blue_2.png";
-import combat_marker_green_1 from "../assets/combat/combat_marker_green_1.png";
-import combat_marker_green_2 from "../assets/combat/combat_marker_green_2.png";
-import combat_marker_gold_1 from "../assets/combat/combat_marker_gold_1.png";
-import combat_marker_gold_2 from "../assets/combat/combat_marker_gold_2.png";
-import minus_icon from "../assets/minus.svg";
-import plus_icon from "../assets/plus.svg";
-import cross_icon from "../assets/cross.svg";
+import troop_icon_red from "../../assets/combat/troop_red.png";
+import troop_icon_blue from "../../assets/combat/troop_blue.png";
+import troop_icon_green from "../../assets/combat/troop_green.png";
+import troop_icon_gold from "../../assets/combat/troop_gold.png";
+import worm_icon from "../../assets/combat/worm.png";
+import conflict_bg_1 from "../../assets/conflicts/conflict_l1.jpg";
+import conflict_bg_2 from "../../assets/conflicts/conflict_l2.jpg";
+import conflict_bg_3 from "../../assets/conflicts/conflict_l3.jpg";
+import maker_hook_icon from "../../assets/combat/maker_hook.png";
+import combat_marker_red_1 from "../../assets/combat/combat_marker_red_1.png";
+import combat_marker_red_2 from "../../assets/combat/combat_marker_red_2.png";
+import combat_marker_blue_1 from "../../assets/combat/combat_marker_blue_1.png";
+import combat_marker_blue_2 from "../../assets/combat/combat_marker_blue_2.png";
+import combat_marker_green_1 from "../../assets/combat/combat_marker_green_1.png";
+import combat_marker_green_2 from "../../assets/combat/combat_marker_green_2.png";
+import combat_marker_gold_1 from "../../assets/combat/combat_marker_gold_1.png";
+import combat_marker_gold_2 from "../../assets/combat/combat_marker_gold_2.png";
+import minus_icon from "../../assets/minus.svg";
+import plus_icon from "../../assets/plus.svg";
+import cross_icon from "../../assets/cross.svg";
 import type {JSX} from "react";
 import IconGrid from "./IconGrid.tsx";
-import {useGameStore} from "../store/GameStore.tsx";
+import {useGameStore} from "../../store/GameStore.tsx";
 import {produce} from "immer";
-import {moveUnit, TroopMovementLocation} from "../const/GameUtils.tsx";
-import {useWebSocket} from "./WebSocketContext.tsx";
-import {GET_NEXT_CONFLICT, MOVE_COMBAT_UNIT} from "../const/Actions.tsx";
+import {moveUnit, TroopMovementLocation} from "../../const/GameUtils.tsx";
+import {useWebSocket} from "../WebSocketContext.tsx";
+import {GET_NEXT_CONFLICT, MOVE_COMBAT_UNIT} from "../../const/Actions.tsx";
 import {UnlockMakerHook} from "./UnlockMakerHook.tsx";
 
 export function CombatArea() {
@@ -74,7 +74,7 @@ export function CombatArea() {
             }}
             alt="Combat icon"/>
         </Popover.Target>
-        <Popover.Dropdown className={"swordmaster-popover"}>
+        <Popover.Dropdown className={"popover-dialog"}>
           <Stack>
             <Text c="#cacaca" size="xs">Get next conflict?</Text>
             <Group>

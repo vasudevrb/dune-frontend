@@ -1,21 +1,22 @@
-import '../css/GameBoard.css'
+import '../../css/GameBoard.css'
 import {Box, ScrollArea, Space, Stack} from "@mantine/core";
-import board from '../assets/board.jpg';
+import board from '../../assets/board.jpg';
 import {AgentLocation} from "./AgentLocation.tsx";
 import {CombatArea} from "./CombatArea.tsx";
 import type {Property} from "csstype";
-import type {AgentLocationModel} from "../model/AgentLocationModel.tsx";
-import {assertExists} from "../const/GameUtils.tsx";
+import type {AgentLocationModel} from "../../model/AgentLocationModel.tsx";
+import {assertExists} from "../../const/GameUtils.tsx";
 import {Faction} from "./Faction.tsx";
-import {FactionType} from "../model/PlayerModel.tsx";
-import type {SpyLocationModel} from "../model/SpyLocationModel.tsx";
+import {FactionType} from "../../model/PlayerModel.tsx";
+import type {SpyLocationModel} from "../../model/SpyLocationModel.tsx";
 import {SpyLocation} from "./SpyLocation.tsx";
-import {useGameStore} from "../store/GameStore.tsx";
+import {useGameStore} from "../../store/GameStore.tsx";
 import {Swordmaster} from "./Swordmaster.tsx";
 import {ControlFlagLocation} from "./ControlFlagLocation.tsx";
 import {BonusSpice} from "./BonusSpice.tsx";
 import {Contract} from "./Contract.tsx";
 import {ShieldWall} from "./ShieldWall.tsx";
+import {HighCouncilToken} from "./HighCouncilToken.tsx";
 
 export function GameBoard() {
 
@@ -29,13 +30,14 @@ export function GameBoard() {
     return (
       <AgentLocation
         key={`agent-droppable-${location.id}`}
-        w={"9.5%"}
-        h={"7%"}
+        w={"8%"}
+        h={"6%"}
         location={location}
         style={{
           position: "absolute",
           top: `${top}`,
           left: `${left}`,
+          transform: `translate(-50%, -50%)`
         }}/>
     )
   }
@@ -62,28 +64,28 @@ export function GameBoard() {
 
   const getAgentDroppables = () => {
     const droppableOffsets = [
-      {id: 1, top: "6.5%", left: "12.5%"},
-      {id: 2, top: "16.5%", left: "12.5%"},
-      {id: 3, top: "31%", left: "12.5%"},
-      {id: 4, top: "41%", left: "12.5%"},
-      {id: 5, top: "55.5%", left: "12.5%"},
-      {id: 6, top: "65.5%", left: "12.5%"},
-      {id: 7, top: "80%", left: "12.5%"},
-      {id: 8, top: "90.2%", left: "12.5%"},
-      {id: 9, top: "56.8%", left: "31%"},
-      {id: 10, top: "49.3%", left: "49.4%"},
-      {id: 11, top: "44.5%", left: "73.5%"},
-      {id: 12, top: "45.5%", left: "29%"},
-      {id: 13, top: "33%", left: "38.5%"},
-      {id: 14, top: "31%", left: "60%"},
-      {id: 15, top: "28.5%", left: "76%"},
-      {id: 16, top: "2.7%", left: "30%"},
-      {id: 17, top: "2.7%", left: "64.5%"},
-      {id: 18, top: "12.7%", left: "30%"},
-      {id: 19, top: "12.7%", left: "50%"},
-      {id: 20, top: "12.7%", left: "64.5%"},
-      {id: 21, top: "4%", left: "84%"},
-      {id: 22, top: "12.5%", left: "84%"},
+      {id: 1, top: "9.9%", left: "17.3%"},
+      {id: 2, top: "20%", left: "17.3%"},
+      {id: 3, top: "34.4%", left: "17.3%"},
+      {id: 4, top: "44.5%", left: "17.3%"},
+      {id: 5, top: "59%", left: "17.3%"},
+      {id: 6, top: "69%", left: "17.3%"},
+      {id: 7, top: "83.5%", left: "17.3%"},
+      {id: 8, top: "93.8%", left: "17.3%"},
+      {id: 9, top: "60.2%", left: "35.7%"},
+      {id: 10, top: "53%", left: "54.1%"},
+      {id: 11, top: "48%", left: "78.3%"},
+      {id: 12, top: "49%", left: "33.6%"},
+      {id: 13, top: "36.7%", left: "43.4%"},
+      {id: 14, top: "34.5%", left: "64.9%"},
+      {id: 15, top: "31.6%", left: "80.8%"},
+      {id: 16, top: "6%", left: "34.6%"},
+      {id: 17, top: "6%", left: "69.5%"},
+      {id: 18, top: "16.2%", left: "34.7%"},
+      {id: 19, top: "16%", left: "55%"},
+      {id: 20, top: "16%", left: "69.4%"},
+      {id: 21, top: "7.3%", left: "88.8%"},
+      {id: 22, top: "16%", left: "88.8%"},
     ];
     const locations = gameState.locations;
 
@@ -162,21 +164,21 @@ export function GameBoard() {
 
           <ControlFlagLocation
             location={gameState.locations.find(l => l.id === 11)!!}
-            w={"55px"}
+            w={"50px"}
             h={"60px"}
             style={{top: "53%", left: "76.2%", transform: "translate(-50%, -50%)"}}
           />
 
           <ControlFlagLocation
             location={gameState.locations.find(l => l.id === 14)!!}
-            w={"55px"}
+            w={"50px"}
             h={"60px"}
             style={{top: "39.6%", left: "62.8%", transform: "translate(-50%, -50%)"}}
           />
 
           <ControlFlagLocation
             location={gameState.locations.find(l => l.id === 15)!!}
-            w={"55px"}
+            w={"50px"}
             h={"60px"}
             style={{top: "36.7%", left: "78.8%", transform: "translate(-50%, -50%)"}}
           />
@@ -184,6 +186,11 @@ export function GameBoard() {
           <BonusSpice locationId={9} top={"60.2%"} left={"40.1%"}/>
           <BonusSpice locationId={10} top={"53%"} left={"58.6%"}/>
           <BonusSpice locationId={11} top={"44.7%"} left={"86.4%"}/>
+
+          <HighCouncilToken id={0} left={"42.2%"} top={"5.3%"}/>
+          <HighCouncilToken id={1} left={"46%"} top={"5.3%"}/>
+          <HighCouncilToken id={2} left={"49.8%"} top={"5.3%"}/>
+          <HighCouncilToken id={3} left={"53.6%"} top={"5.3%"}/>
 
           {!gameState.shieldWallBroken && <ShieldWall top={"45.7%"} left={"67.6%"}/>}
 

@@ -1,12 +1,12 @@
-import '../css/ImperiumRow.css'
+import '../../css/ImperiumRow.css'
 import {ScrollArea, Divider, Drawer, Text, Space} from "@mantine/core";
 import {Card, CardButtonType} from "./Card.tsx";
-import {useGameStore} from "../store/GameStore.tsx";
-import type {CardModel} from "../model/PlayerModel.tsx";
-import {ACQUIRE_IMPERIUM_CARD, ACQUIRE_RESERVE_CARD} from "../const/Actions.tsx";
-import use_card_icon from "../assets/cards/use_card.png";
-import {useWebSocket} from "./WebSocketContext.tsx";
-import type {GameModel} from "../model/GameModel.tsx";
+import {useGameStore} from "../../store/GameStore.tsx";
+import type {CardModel} from "../../model/PlayerModel.tsx";
+import {ACQUIRE_IMPERIUM_CARD, ACQUIRE_RESERVE_CARD} from "../../const/Actions.tsx";
+import use_card_icon from "../../assets/cards/use_card.png";
+import {useWebSocket} from "../WebSocketContext.tsx";
+import type {GameModel} from "../../model/GameModel.tsx";
 
 // Careful changing these values, they are used to send messages over websocket.
 const ImperiumCardType = {
@@ -77,7 +77,7 @@ export function ImperiumRow(props: {
       position="bottom"
       opened={globalProps.imperiumRowOpened}
       onClose={() => globalProps.setImperiumRowOpened(false)}
-      overlayProps={{backgroundOpacity: 0.5, blur: 4}}
+      overlayProps={{backgroundOpacity: 0.7}}
       styles={{
         content: {
           height: 'auto'

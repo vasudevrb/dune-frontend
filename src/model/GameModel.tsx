@@ -14,6 +14,7 @@ export interface GameModel {
     haggaBasin: number;
     imperialBasin: number;
   };
+  highCouncil: string[];
   currentContracts: string[];
   currentConflict: string;
   nextConflictLevel: number;

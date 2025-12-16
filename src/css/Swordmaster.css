@@ -1,7 +1,6 @@
-.swordmaster-popover {
+.popover-dialog {
   border: none;
-  background: rgba(80, 80, 80, 0.6);
+  background: rgba(51, 51, 51, 1) no-repeat;
+  filter: drop-shadow(0 0 1em #94664d);
   border-radius: 0;
-  /*backdrop-filter: blur(10px);*/
-  /*-webkit-backdrop-filter: blur(10px);*/
 }
