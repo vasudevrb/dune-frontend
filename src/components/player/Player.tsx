@@ -1,5 +1,4 @@
 import '../../css/Player.css'
-import {CSS} from '@dnd-kit/utilities';
 import {ActionIcon, Box, Button, Center, Divider, Flex, Group, Image, Popover, ScrollArea, Space, Stack, Text} from "@mantine/core";
 import signet_ring from '../../assets/cards/signet_ring.png';
 import agent_icon_disabled from '../../assets/agents/agent_disabled.svg';
@@ -38,8 +37,6 @@ import {
 import {type JSX} from "react";
 import {range} from "../../const/Util.tsx";
 import plus_icon from "../../assets/plus.svg";
-import {useDraggable, useDroppable} from "@dnd-kit/core";
-import {createPortal} from "react-dom";
 import {useGameStore} from "../../store/GameStore.tsx";
 import {FeydSignet} from "./FeydSignet.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
@@ -63,19 +60,6 @@ import {VictoryPointModifier} from "../modifiers/VictoryPointModifier.tsx";
 import {CombatModifier} from "../modifiers/CombatModifier.tsx";
 
 function Agent(props: { player: PlayerModel, agentModel: AgentModel, index: number }) {
-  const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
-    id: props.agentModel.id,
-    data: {
-      type: "agent",
-      location: "player"
-    }
-  });
-
-  const draggedStyle = transform ? {
-    transform: CSS.Translate.toString(transform),
-    zIndex: 10,
-    transition: !isDragging ? 'transform 300ms ease' : undefined,
-  } : undefined;
 
   const getAgentIcon = (color: string) => {
     if (color === "RED") return agent_icon_red;
@@ -101,41 +85,17 @@ function Agent(props: { player: PlayerModel, agentModel: AgentModel, index: numb
 
   const agentIcon = getAgentIcon(getAgentColor(props.index))
 
-  const draggableProps = (false)
-    ? {
-      ref: setNodeRef,
-      style: draggedStyle,
-      ...listeners,
-      ...attributes,
-    }
-    : {
-      draggable: false
-    };
-
-  const node = (
-    <img
-      {...draggableProps}
-      width={25}
+  return (
+    <Image
+      draggable={false}
+      w={25}
       src={agentIcon}
       alt="Agent icon"
       className={"players-agent-icon"}/>
   )
-  return isDragging ? createPortal(node, document.body) : node
 }
 
 function Spy(props: { player: PlayerModel, spyModel: SpyModel, index: number }) {
-  const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
-    id: props.spyModel.id,
-    data: {
-      type: "spy",
-      location: "player"
-    }
-  });
-
-  const draggedStyle = transform ? {
-    transform: CSS.Translate.toString(transform),
-    zIndex: 10,
-  } : undefined;
 
   const getSpyIcon = (color: string) => {
     if (color === "RED") return spy_icon_red;
@@ -146,41 +106,17 @@ function Spy(props: { player: PlayerModel, spyModel: SpyModel, index: number }) 
 
   const spyIcon = getSpyIcon(props.player.color)
 
-  const draggableProps = (props.player.isThisPlayer)
-    ? {
-      ref: setNodeRef,
-      style: draggedStyle,
-      ...listeners,
-      ...attributes,
-    }
-    : {
-      draggable: false
-    };
-
-  const node = (
-    <img
-      {...draggableProps}
-      width={30}
+  return (
+    <Image
+      draggable={false}
+      w={30}
       src={spyIcon}
       alt="Spy icon"
       className={"players-spy-icon"}/>
   )
-  return isDragging ? createPortal(node, document.body) : node
 }
 
 function ControlFlag(props: { player: PlayerModel, controlFlagModel: ControlFlagModel, index: number }) {
-  const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
-    id: props.controlFlagModel.id,
-    data: {
-      type: "control_flag",
-      location: "player"
-    }
-  });
-
-  const draggedStyle = transform ? {
-    transform: CSS.Translate.toString(transform),
-    zIndex: 10,
-  } : undefined;
 
   const getControlFlagIcon = (color: string) => {
     if (color === "RED") return control_flag_red;
@@ -191,26 +127,14 @@ function ControlFlag(props: { player: PlayerModel, controlFlagModel: ControlFlag
 
   const controlFlagIcon = getControlFlagIcon(props.player.color)
 
-  const draggableProps = (props.player.isThisPlayer)
-    ? {
-      ref: setNodeRef,
-      style: draggedStyle,
-      ...listeners,
-      ...attributes,
-    }
-    : {
-      draggable: false
-    };
-
-  const node = (
-    <img
-      {...draggableProps}
-      width={30}
+  return (
+    <Image
+      draggable={false}
+      w={30}
       src={controlFlagIcon}
       alt="Control flag icon"
       className={"players-control-flag-icon"}/>
   )
-  return isDragging ? createPortal(node, document.body) : node
 }
 
 
@@ -224,14 +148,6 @@ export function Player(props: {
   const [opened, {close, toggle}] = useDisclosure(false);
   const isThisPlayerCurrentPlayer = props.playerModel.name === props.currentPlayer;
   const {gameState, setGameState, setImperiumRowOpened} = useGameStore();
-
-  const playerDroppable = useDroppable({
-    id: `this-player-container`,
-    data: {
-      location: "player",
-      type: "spy,agent,control_flag"
-    }
-  });
 
   const getAgents = () => {
     const elements: JSX.Element[] = [];
@@ -661,7 +577,6 @@ export function Player(props: {
   const getThisPlayer = () => {
     return (
       <Stack
-        ref={playerDroppable.setNodeRef}
         className={`current-player-container ${currentPlayerStyleClass}`}
         gap={"5"}>
         <Text ta="left" className={"player-container-text"}>

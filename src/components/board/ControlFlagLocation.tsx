@@ -1,35 +1,21 @@
 import type {AgentLocationModel} from "../../model/AgentLocationModel.tsx";
-import {Center, type MantineStyleProp, type StyleProp} from "@mantine/core";
+import {Center, Image, type MantineStyleProp, type StyleProp} from "@mantine/core";
 import type {Property} from "csstype";
 import control_flag_red from "../../assets/control_flags/control_flag_red.png";
 import control_flag_blue from "../../assets/control_flags/control_flag_blue.png";
 import control_flag_green from "../../assets/control_flags/control_flag_green.png";
 import control_flag_gold from "../../assets/control_flags/control_flag_gold.png";
-import {useDraggable, useDroppable} from "@dnd-kit/core";
-import {createId} from "../../const/Util.tsx";
-import {CSS} from "@dnd-kit/utilities";
-import {createPortal} from "react-dom";
-import {canMoveComponent} from "../../const/GameUtils.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
+import {useWebSocket} from "../WebSocketContext.tsx";
+import {assertExists, placeControlFlag} from "../../const/GameUtils.tsx";
+import {produce} from "immer";
+import {PLACE_CONTROL_FLAG,} from "../../const/Actions.tsx";
 
 function ControlFlag(props: {
   controlFlagId: string;
   color: string;
   playerName: string
 }) {
-  const {gameState} = useGameStore();
-  const {attributes, listeners, setNodeRef, transform, isDragging} = useDraggable({
-    id: `${props.controlFlagId}`,
-    data: {
-      location: "boardspace",
-      type: "control_flag"
-    }
-  });
-  const draggedStyle = transform ? {
-    transform: CSS.Translate.toString(transform),
-    zIndex: 10,
-    transition: !isDragging ? 'transform 300ms ease' : undefined,
-  } : undefined;
 
   const getControlFlagIcon = (color: string) => {
     if (color === "RED") return control_flag_red;
@@ -38,26 +24,14 @@ function ControlFlag(props: {
     else if (color === "GREEN") return control_flag_green;
   }
 
-  const node = ( canMoveComponent(gameState, props.playerName) ?
-    <img
-      ref={setNodeRef}
-      style={draggedStyle}
-      {...listeners}
-      {...attributes}
-      width={50}
+  return (
+    <Image
+      draggable={false}
+      w={50}
       src={getControlFlagIcon(props.color)}
       alt="Agent icon"
       className={"locations-agent-icon"}/>
-      :
-      <img
-        draggable={false}
-        width={50}
-        src={getControlFlagIcon(props.color)}
-        alt="Agent icon"
-        className={"locations-agent-icon"}/>
-  )
-
-  return isDragging ? createPortal(node, document.body): node
+  );
 }
 
 
@@ -70,18 +44,43 @@ export function ControlFlagLocation(props: {
   mah?: StyleProp<Property.MaxHeight>
   bg?: string;
 }) {
-  const {setNodeRef} = useDroppable({
-    id: `control-flag-droppable-${createId([props.location.name, props.location.id])}`,
-    data: {
-      location: "boardspace",
-      type: "control_flag",
-      id: props.location.id
-    }
-  });
+
+  const {gameState, setGameState} = useGameStore();
+  const {sendMessage} = useWebSocket();
+
+  const sendControlFlag = () => {
+    const player = assertExists(
+      gameState.players.find(p => p.isThisPlayer),
+      "Current player not found"
+    )
+
+    const controlFlagId = player.controlFlags[0].id
+    setGameState(produce(gameState, draft => {
+      placeControlFlag(draft, controlFlagId, props.location.id)
+    }));
+
+    sendMessage({
+      action: PLACE_CONTROL_FLAG, body: {
+        controlFlagId: controlFlagId,
+        locationId: props.location.id,
+        playerName: player.name,
+      }
+    });
+  }
+
+  const canSendControlFlag = () => {
+    const player = assertExists(
+      gameState.players.find(p => p.isThisPlayer),
+      "Current player not found"
+    )
+
+    return player.controlFlags.length > 0
+  }
 
   return (
     <Center
-      ref={setNodeRef}
+      className={"pulse-bg agent-control-flag-container"}
+      onClick={canSendControlFlag() ? sendControlFlag : undefined}
       pos={"absolute"}
       w={props.w}
       h={props.h}

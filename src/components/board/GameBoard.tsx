@@ -164,21 +164,21 @@ export function GameBoard() {
 
           <ControlFlagLocation
             location={gameState.locations.find(l => l.id === 11)!!}
-            w={"55px"}
+            w={"50px"}
             h={"60px"}
             style={{top: "53%", left: "76.2%", transform: "translate(-50%, -50%)"}}
           />
 
           <ControlFlagLocation
             location={gameState.locations.find(l => l.id === 14)!!}
-            w={"55px"}
+            w={"50px"}
             h={"60px"}
             style={{top: "39.6%", left: "62.8%", transform: "translate(-50%, -50%)"}}
           />
 
           <ControlFlagLocation
             location={gameState.locations.find(l => l.id === 15)!!}
-            w={"55px"}
+            w={"50px"}
             h={"60px"}
             style={{top: "36.7%", left: "78.8%", transform: "translate(-50%, -50%)"}}
           />

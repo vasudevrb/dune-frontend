@@ -37,7 +37,7 @@ export function Swordmaster(
     >
       <Popover opened={opened} onChange={toggle} width={200} position="bottom" clickOutsideEvents={['mouseup', 'touchend']}>
         <Popover.Target>
-          <Box w={50} h={80} bg={"#cacaca11"} onClick={toggle} />
+          <Box w={50} h={80} onClick={toggle} />
         </Popover.Target>
         <Popover.Dropdown className={"popover-dialog"}>
           <Group justify={"center"}>

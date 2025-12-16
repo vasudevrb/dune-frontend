@@ -16,6 +16,21 @@
   );
 }
 
+.agent-spy-container {
+  clip-path: circle(25% at 50% 50%);
+}
+
+.agent-control-flag-container {
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 100%,
+    50% 75%,
+    0% 100%,
+    0 0%
+  );
+}
+
 .pulse-bg:hover {
   animation: pulse 2s ease-in-out infinite;
 }
