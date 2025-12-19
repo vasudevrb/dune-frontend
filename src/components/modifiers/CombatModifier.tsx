@@ -1,5 +1,5 @@
 import {CombatUnitType, type PlayerModel} from "../../model/PlayerModel.tsx";
-import {ActionIcon, Stack} from "@mantine/core";
+import {ActionIcon, Group} from "@mantine/core";
 import {produce} from "immer";
 import {addOrRemoveCombatUnit, getCombatUnitIconByType} from "../../const/GameUtils.tsx";
 import {ADD_OR_REMOVE_COMBAT_UNIT} from "../../const/Actions.tsx";
@@ -26,7 +26,8 @@ export function CombatModifier(props: {
         action: ADD_OR_REMOVE_COMBAT_UNIT,
         body: {
           unitType: type,
-          add: add
+          add: add,
+          playerName: props.player.name
         }
       })
     }
@@ -45,10 +46,13 @@ export function CombatModifier(props: {
   }
 
   return (
-    <Stack align="center" gap={"xs"}>
-      {getButton(plus_icon, () => combatModifierAction(true, props.modifierType))}
-      <QuantityIcon icon={getCombatUnitIconByType(props.modifierType)}/>
+    <Group gap={5}>
       {getButton(minus_icon, () => combatModifierAction(false, props.modifierType))}
-    </Stack>
+      <QuantityIcon
+        size={30}
+        textSize={"1em"}
+        icon={getCombatUnitIconByType(props.modifierType)}/>
+      {getButton(plus_icon, () => combatModifierAction(true, props.modifierType))}
+    </Group>
   )
 }

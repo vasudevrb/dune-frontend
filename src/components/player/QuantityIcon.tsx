@@ -3,7 +3,8 @@ import {Center, Text} from "@mantine/core";
 export function QuantityIcon(props: {
   icon: string,
   text?: number,
-  size?: number
+  size?: number,
+  textSize?: string
 }) {
   return (
     <Center
@@ -15,7 +16,7 @@ export function QuantityIcon(props: {
         src={props.icon}
         alt="Resource icon"/>
       <Text
-        size="1.4em"
+        size={props.textSize ? props.textSize : "1.4em"}
         className={"player-resource-modifier-text"}>
         {props.text}
       </Text>

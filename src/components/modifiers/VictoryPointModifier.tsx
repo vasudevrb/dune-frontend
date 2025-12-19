@@ -2,7 +2,7 @@ import type {PlayerModel} from "../../model/PlayerModel.tsx";
 import {produce} from "immer";
 import {addOrRemoveVP} from "../../const/GameUtils.tsx";
 import {ADD_OR_REMOVE_VP} from "../../const/Actions.tsx";
-import {ActionIcon, Stack} from "@mantine/core";
+import {ActionIcon, Group} from "@mantine/core";
 import minus_icon from "../../assets/minus.svg";
 import plus_icon from "../../assets/plus.svg";
 import {useGameStore} from "../../store/GameStore.tsx";
@@ -26,7 +26,8 @@ export function VictoryPointModifier(props: {
       sendMessage({
         action: ADD_OR_REMOVE_VP,
         body: {
-          add: add
+          add: add,
+          playerName: props.player.name
         }
       })
     }
@@ -45,12 +46,14 @@ export function VictoryPointModifier(props: {
   }
 
   return (
-    <Stack align="center" gap={"xs"}>
-      {getButton(plus_icon, () =>  VPModifierAction(true))}
+    <Group gap={5}>
+      {getButton(minus_icon, () => VPModifierAction(false))}
       <QuantityIcon
+        size={30}
+        textSize={"1em"}
         icon={vp_icon}
         text={props.player.victoryPoints}/>
-      {getButton(minus_icon, () => VPModifierAction(false))}
-    </Stack>
+      {getButton(plus_icon, () =>  VPModifierAction(true))}
+    </Group>
   )
 }
