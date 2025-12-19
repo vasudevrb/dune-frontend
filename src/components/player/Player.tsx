@@ -182,13 +182,13 @@ export function Player(props: {
 
     const unlockSwordMasterAction = () => {
       sendMessage(
-        {action: UNLOCK_SWORDMASTER, body: {playerName: props.playerModel}}
+        {action: UNLOCK_SWORDMASTER, body: {playerName: props.playerModel.name}}
       )
     }
 
     const unlockMakerHookAction = () => {
       sendMessage(
-        {action: UNLOCK_MAKER_HOOK, body: {playerName: props.playerModel}}
+        {action: UNLOCK_MAKER_HOOK, body: {playerName: props.playerModel.name}}
       )
     }
 
