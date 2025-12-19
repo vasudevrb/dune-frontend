@@ -1,41 +1,21 @@
 import '../../css/Player.css'
-import {ActionIcon, Box, Button, Divider, Flex, Group, Image, Popover, ScrollArea, Space, Stack, Text} from "@mantine/core";
+import {ActionIcon, Button, Divider, Flex, Group, Image, ScrollArea, Stack, Text} from "@mantine/core";
 import signet_ring from '../../assets/cards/signet_ring.png';
-import alliance_bene_gesserit from '../../assets/alliances/alliance_bg.png';
-import alliance_fremen from '../../assets/alliances/alliance_fremen.png';
-import alliance_emperor from '../../assets/alliances/alliance_emperor.png';
-import alliance_spacing_guild from '../../assets/alliances/alliance_spacing_guild.png';
-import objective_desert_mouse from '../../assets/objectives/desert_mouse.png';
-import objective_ornithopter from '../../assets/objectives/ornothopter.png';
-import objective_cryskife from '../../assets/objectives/crysknife.png';
-import objective_any from '../../assets/objectives/any.png';
-import vp_icon from '../../assets/resources/victory_point.png';
 import draw_intrigue_card from '../../assets/cards/draw_intrigue_card.png';
-
 import steal_intrigue_card from '../../assets/cards/steal_intrigue_card.png';
 import draw_card from '../../assets/cards/draw_card.png';
-import {
-  CombatUnitType,
-  FactionType, ObjectiveType,
-  type PlayerModel,
-} from "../../model/PlayerModel.tsx";
-import plus_icon from "../../assets/plus.svg";
+import {CombatUnitType, type PlayerModel} from "../../model/PlayerModel.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
 import {FeydSignet} from "./FeydSignet.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
 import {
   DRAW_CARD,
   END_TURN,
-  GAIN_INTRIGUE_CARD, GAIN_OR_LOSE_ALLIANCE, GAIN_OR_LOSE_OBJECTIVE,
+  GAIN_INTRIGUE_CARD,
   REVEAL,
   STEAL_INTRIGUE_CARD
 } from "../../const/Actions.tsx";
-import {
-  gainOrLoseAlliance,
-  gainOrLoseObjective, getResourceIconByType
-} from "../../const/GameUtils.tsx";
-import {produce} from "immer";
-import {useDisclosure} from "@mantine/hooks";
+import {getResourceIconByType} from "../../const/GameUtils.tsx";
 import {CharacterImage} from "./CharacterImage.tsx";
 import {ResourceModifier} from "../modifiers/ResourceModifier.tsx";
 import {VictoryPointModifier} from "../modifiers/VictoryPointModifier.tsx";
@@ -44,6 +24,7 @@ import {Agent, ControlFlag, Spy} from "./PlayableComponents.tsx";
 import {CardStats} from "./CardStats.tsx";
 import {Contracts} from "./Contracts.tsx";
 import {QuantityIcon} from "./QuantityIcon.tsx";
+import {ObjectivesAlliances} from "./ObjectivesAlliances.tsx";
 
 export function Player(props: {
   playerModel: PlayerModel;
@@ -51,11 +32,8 @@ export function Player(props: {
   firstPlayer: string;
 }) {
   const {sendMessage} = useWebSocket();
-
-  const [opened, {close, toggle}] = useDisclosure(false);
   const isThisPlayerCurrentPlayer = props.playerModel.name === props.currentPlayer;
-  const {gameState, setGameState, setImperiumRowOpened} = useGameStore();
-
+  const {setImperiumRowOpened} = useGameStore();
 
   const getResourcesDisplayElements = () => {
     const getResource = (quantity: number, resourceType: string) => {
@@ -74,8 +52,6 @@ export function Player(props: {
     )
   }
 
-
-
   const getResourcesDisplay = () => {
     const resources = (
       <>
@@ -86,9 +62,9 @@ export function Player(props: {
     return (
       <ScrollArea
         w={"100%"}
-        pt={"10"}
         className={"fadeScroll"}
         scrollbars={"x"}
+
         offsetScrollbars={false}
         type={"never"}>
         <div style={{display: 'flex', alignItems: 'center'}}>
@@ -99,29 +75,23 @@ export function Player(props: {
     )
   }
 
-  const getResourceModifierElements = () => {
+  const getModifiers = () => {
     return (
-      <Group w={"100%"} justify="center" gap={"xs"}>
-        <ResourceModifier player={props.playerModel} resourceType={"water"}/>
-        <Divider orientation="vertical" color={"#31313123"}/>
-        <ResourceModifier player={props.playerModel} resourceType={"spice"}/>
-        <Divider orientation="vertical" color={"#31313123"}/>
-        <ResourceModifier player={props.playerModel} resourceType={"solari"}/>
-        <Divider orientation="vertical" color={"#31313123"}/>
-        <VictoryPointModifier player={props.playerModel}/>
+      <Group w={"100%"} justify="center" align={"stretch"} gap={0}>
+        <Stack>
+          <VictoryPointModifier player={props.playerModel}/>
+          <ResourceModifier player={props.playerModel} resourceType={"water"}/>
+          <ResourceModifier player={props.playerModel} resourceType={"spice"}/>
+          <ResourceModifier player={props.playerModel} resourceType={"solari"}/>
+        </Stack>
+        <Divider orientation={"vertical"} m={"md"} color={"#cacaca44"}/>
+        <Stack>
+          <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Troop}/>
+          <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Sandworm}/>
+          <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Strength}/>
+        </Stack>
       </Group>
-    )
-  }
 
-  const getCombatModifierElements = () => {
-    return (
-      <Group w={"100%"} justify="center" gap={"xs"}>
-        <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Troop}/>
-        <Divider orientation="vertical" color={"#31313123"}/>
-        <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Sandworm}/>
-        <Divider orientation="vertical" color={"#31313123"}/>
-        <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Strength}/>
-      </Group>
     )
   }
 
@@ -186,45 +156,49 @@ export function Player(props: {
     )
   }
 
-  const getSpiesAndFlags = () => {
+  const getAgentsSpiesFlags = () => {
     return (
-      <Flex justify="space-between" align="center">
-        <Group className={"players-agent-icon-container"} justify="center">
-          {
-            props.playerModel.agents.map((agent, index) =>
-              <Agent
-                player={props.playerModel}
-                agentModel={agent}
-                index={index}
-                key={agent.id}/>
-            )
-          }
-        </Group>
-        <Divider orientation="vertical" m={"0"} color={"#cacaca44"}/>
-        <Group className={"players-spy-icon-container"} justify="center">
-          {
-            props.playerModel.spies.map((spy, index) =>
-              <Spy
-                key={spy.id}
-                player={props.playerModel}
-                spyModel={spy}
-                index={index}/>
-            )
-          }
-        </Group>
-        <Divider orientation="vertical" m={"0"} color={"#cacaca44"}/>
-        <Group className={"players-control-flag-icon-container"} justify="center">
-          {
-            props.playerModel.controlFlags.map((cf, index) =>
-              <ControlFlag
-                key={cf.id}
-                player={props.playerModel}
-                controlFlagModel={cf}
-                index={index}/>
-            )
-          }
-        </Group>
-      </Flex>
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <Flex justify="space-between" align="center">
+          <Group w={"33%"} className={"players-agent-icon-container"} justify="center">
+            {
+              props.playerModel.agents.map((agent, index) =>
+                <Agent
+                  player={props.playerModel}
+                  agentModel={agent}
+                  index={index}
+                  key={agent.id}/>
+              )
+            }
+          </Group>
+          <Divider orientation="vertical" m={"0"} color={"#cacaca44"}/>
+          <Group w={"33%"} className={"players-spy-icon-container"} justify="center">
+            {
+              props.playerModel.spies.map((spy, index) =>
+                <Spy
+                  key={spy.id}
+                  player={props.playerModel}
+                  spyModel={spy}
+                  index={index}/>
+              )
+            }
+          </Group>
+          <Divider orientation="vertical" m={"0"} color={"#cacaca44"}/>
+          <Group w={"33%"} className={"players-control-flag-icon-container"} justify="center">
+            {
+              props.playerModel.controlFlags.map((cf, index) =>
+                <ControlFlag
+                  key={cf.id}
+                  player={props.playerModel}
+                  controlFlagModel={cf}
+                  index={index}/>
+              )
+            }
+          </Group>
+        </Flex>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+      </>
     )
   }
 
@@ -247,143 +221,6 @@ export function Player(props: {
     )
   }
 
-  const allianceModifierAction = (gained: boolean, type: FactionType) => {
-    if (!props.playerModel.isThisPlayer) return;
-    let success;
-    setGameState(produce(gameState, draft => {
-      success = gainOrLoseAlliance(draft, gained, type)
-    }));
-    if (success) {
-      sendMessage({
-        action: GAIN_OR_LOSE_ALLIANCE,
-        body: {type: type, gained: gained}
-      })
-    }
-    close()
-  }
-
-  const objectiveModifierAction = (gained: boolean, type: ObjectiveType) => {
-    if (!props.playerModel.isThisPlayer) return;
-    let success;
-    setGameState(produce(gameState, draft => {
-      success = gainOrLoseObjective(draft, gained, type)
-    }));
-    if (success) {
-      sendMessage({
-        action: GAIN_OR_LOSE_OBJECTIVE,
-        body: {type: type, gained: gained}
-      })
-    }
-    close()
-  }
-
-  const getAllianceObjectiveModifier = () => {
-    if (!props.playerModel.isThisPlayer) return;
-
-    return (
-      <Popover opened={opened} onChange={toggle} width={200} position="bottom" clickOutsideEvents={['mouseup', 'touchend']}>
-        <Popover.Target>
-          <Image w={25} h={25} src={plus_icon} onClick={toggle}/>
-        </Popover.Target>
-        <Popover.Dropdown onClick={close} className={"popover-dialog"}>
-          <Stack>
-            <Text c="#cacaca" size="xs">Select Alliance or Objective</Text>
-            <Group>
-              <Image w={40} h={40} src={alliance_fremen} onClick={() => allianceModifierAction(true, FactionType.Fremen)}/>
-              <Image w={40} h={40} src={alliance_bene_gesserit} onClick={() => allianceModifierAction(true, FactionType.BeneGesserit)}/>
-              <Image w={40} h={40} src={alliance_spacing_guild} onClick={() => allianceModifierAction(true, FactionType.SpacingGuild)}/>
-              <Image w={40} h={40} src={alliance_emperor} onClick={() => allianceModifierAction(true, FactionType.Emperor)}/>
-            </Group>
-            <Group>
-              <Image w={35} h={35} src={objective_desert_mouse} onClick={() => objectiveModifierAction(true, ObjectiveType.DesertMouse)}/>
-              <Image w={35} h={35} src={objective_ornithopter} onClick={() => objectiveModifierAction(true, ObjectiveType.Ornithopter)}/>
-              <Image w={35} h={35} src={objective_cryskife} onClick={() => objectiveModifierAction(true, ObjectiveType.Crysknife)}/>
-              <Image w={35} h={35} src={objective_any} onClick={() => objectiveModifierAction(true, ObjectiveType.Any)}/>
-            </Group>
-          </Stack>
-        </Popover.Dropdown>
-      </Popover>
-    )
-  }
-
-  const getAlliances = () => {
-    const getFactionAllianceToken = (type: FactionType) => {
-      switch (type) {
-        case FactionType.Fremen:
-          return alliance_fremen;
-        case FactionType.BeneGesserit:
-          return alliance_bene_gesserit;
-        case FactionType.Emperor:
-          return alliance_emperor;
-        case FactionType.SpacingGuild:
-          return alliance_spacing_guild;
-      }
-    }
-
-    return props.playerModel.factionAlliances.length > 0 ? (
-      <>
-        <Divider orientation="vertical" m={"8"} color={"#cacaca44"}/>
-        {props.playerModel.factionAlliances.map(type =>
-          <Image
-            onClick={() => allianceModifierAction(false, type)}
-            m={5}
-            w={35}
-            src={getFactionAllianceToken(type)}/>
-        )}
-      </>
-    ) : null
-  }
-
-  const getObjectives = () => {
-    const getObjectiveToken = (type: ObjectiveType) => {
-      switch (type) {
-        case ObjectiveType.DesertMouse:
-          return objective_desert_mouse;
-        case ObjectiveType.Ornithopter:
-          return objective_ornithopter;
-        case ObjectiveType.Crysknife:
-          return objective_cryskife;
-        case ObjectiveType.Any:
-          return objective_any;
-      }
-    }
-
-    return (
-      <>
-        {props.playerModel.objectives.map(type =>
-          <Image
-            onClick={() => objectiveModifierAction(false, type)}
-            m={5}
-            w={35}
-            src={getObjectiveToken(type)}/>
-        )}
-      </>
-    )
-  }
-
-  const getVPAndAlliances = () => {
-    return (
-      <ScrollArea
-        w={"100%"}
-        className={"fadeScroll"}
-        scrollbars={"x"}
-        offsetScrollbars={false}
-        type={"never"}>
-        <div style={{display: 'flex', alignItems: "center"}}>
-          <Box pos={"relative"} w={50} h={50}>
-            <Image w={50} src={vp_icon}/>
-            <Text size="1.4em" className={"player-resource-modifier-text"}>{props.playerModel.victoryPoints}</Text>
-          </Box>
-          {getAlliances()}
-          <Divider orientation="vertical" m={"8"} color={"#cacaca44"}/>
-          {getObjectives()}
-          {getAllianceObjectiveModifier()}
-          <Space w={16} h={16}></Space>
-        </div>
-      </ScrollArea>
-    )
-  }
-
   const currentPlayerStyleClass = isThisPlayerCurrentPlayer
     ? getCurrentPlayerStyleClass()
     : null;
@@ -395,17 +232,13 @@ export function Player(props: {
         w={"100%"}
         gap={0}>
         <Text ta="left" className={"player-container-text"}>
-          {props.playerModel.character.name}
+          {props.playerModel.character.name} ({props.playerModel.name})
         </Text>
-        <Group
-          w={"100%"}
-          wrap={"nowrap"}
-          justify={"center"}
-          align="center"
-          gap={0}>
+        <Group w={"100%"} wrap={"nowrap"} gap={0}>
           {getAvatar()}
-          {getVPAndAlliances()}
+          <ObjectivesAlliances player={props.playerModel}/>
         </Group>
+        {getAgentsSpiesFlags()}
         {getResourcesDisplay()}
       </Stack>
     )
@@ -417,36 +250,23 @@ export function Player(props: {
       <>
         <Image draggable={false} fit={"contain"} w={"100%"} h={40} src={signet_ring}/>
         <FeydSignet characterModel={props.playerModel.character}/>
-        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
       </>
     )
   }
 
   const getThisPlayer = () => {
     return (
-      <Stack
-        className={`current-player-container ${currentPlayerStyleClass}`}
-        gap={"5"}>
-        <Text ta="left" className={"player-container-text"}>
-          {props.playerModel.character.name}
-        </Text>
-        <Group
-          w={"100%"}
-          wrap={"nowrap"}
-          justify={"center"}
-          align="center"
-          gap={0}>
+      <Stack className={`current-player-container ${currentPlayerStyleClass}`} gap={"5"}>
+        <Text ta="left" className={"player-container-text"}>{props.playerModel.character.name} ({props.playerModel.name})</Text>
+        <Group w={"100%"} wrap={"nowrap"} gap={0}>
           {getAvatar()}
-          {getVPAndAlliances()}
+          <ObjectivesAlliances player={props.playerModel}/>
         </Group>
         {getResourcesDisplay()}
-        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
-        {getSpiesAndFlags()}
+        {getAgentsSpiesFlags()}
+        {getModifiers()}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getFeydSignetComponent()}
-        {getResourceModifierElements()}
-        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
-        {getCombatModifierElements()}
         {props.playerModel.contracts.length > 0 && <Contracts player={props.playerModel}/>}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getActions()}

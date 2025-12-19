@@ -2,7 +2,7 @@ import type {PlayerModel} from "../../model/PlayerModel.tsx";
 import {produce} from "immer";
 import {addOrRemoveResource, getResourceIconByType, getResourceQuantityByType} from "../../const/GameUtils.tsx";
 import {ADD_OR_REMOVE_RESOURCE} from "../../const/Actions.tsx";
-import {ActionIcon, Stack} from "@mantine/core";
+import {ActionIcon, Group} from "@mantine/core";
 import minus_icon from "../../assets/minus.svg";
 import plus_icon from "../../assets/plus.svg";
 import {useGameStore} from "../../store/GameStore.tsx";
@@ -27,7 +27,8 @@ export function ResourceModifier(props: {
         action: ADD_OR_REMOVE_RESOURCE,
         body: {
           resourceType: resourceType,
-          add: add
+          add: add,
+          playerName: props.player.name
         }
       })
     }
@@ -46,12 +47,14 @@ export function ResourceModifier(props: {
   }
 
   return (
-    <Stack align="center" gap={"xs"}>
-      {getButton(plus_icon, () =>  resourceModifierAction(true, props.resourceType))}
+    <Group gap={5}>
+      {getButton(minus_icon, () => resourceModifierAction(false, props.resourceType))}
       <QuantityIcon
+        size={30}
+        textSize={"1em"}
         icon={getResourceIconByType(props.resourceType)}
         text={getResourceQuantityByType(props.player, props.resourceType)}/>
-      {getButton(minus_icon, () => resourceModifierAction(false, props.resourceType))}
-    </Stack>
+      {getButton(plus_icon, () => resourceModifierAction(true, props.resourceType))}
+    </Group>
   )
 }

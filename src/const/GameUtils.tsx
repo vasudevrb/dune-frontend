@@ -1,6 +1,6 @@
 import type {GameModel} from "../model/GameModel.tsx";
 import type {UniqueIdentifier} from "@dnd-kit/core";
-import {CombatUnitType, type ContractModel, FactionType, type ObjectiveType, type PlayerModel} from "../model/PlayerModel.tsx";
+import {CombatUnitType, type ContractModel, FactionType, ObjectiveType, type PlayerModel} from "../model/PlayerModel.tsx";
 import {showNotification} from "./Util.tsx";
 import water_icon from "../assets/resources/water.png";
 import spice_icon from "../assets/resources/spice.png";
@@ -13,16 +13,27 @@ import agent_icon_red from '../assets/agents/agent_red.svg';
 import agent_icon_blue from '../assets/agents/agent_blue.svg';
 import agent_icon_green from '../assets/agents/agent_green.svg';
 import agent_icon_gold from '../assets/agents/agent_gold.svg';
+import objective_desert_mouse from "../assets/objectives/desert_mouse_tr.png";
+import objective_ornithopter from "../assets/objectives/ornithopter_tr.png";
+import objective_cryskife from "../assets/objectives/crysknife_tr.png";
+import objective_any from "../assets/objectives/any.png";
 
 export const TroopMovementLocation = {
   Combat: "Combat", Garrison: "Garrison", Supply: "Supply",
 } as const;
 export type TroopMovementLocation = keyof typeof TroopMovementLocation;
 
-export function getAgent(game: GameModel, agentId: string) {
-  return game.players
-    .flatMap(player => player.agents)
-    .find(agent => agent.id === agentId)
+export const getObjectiveIcon = (type: ObjectiveType) => {
+  switch (type) {
+    case ObjectiveType.DesertMouse:
+      return objective_desert_mouse;
+    case ObjectiveType.Ornithopter:
+      return objective_ornithopter;
+    case ObjectiveType.Crysknife:
+      return objective_cryskife;
+    case ObjectiveType.Any:
+      return objective_any;
+  }
 }
 
 export function assertExists<T>(value: T | undefined, message: string): T {
