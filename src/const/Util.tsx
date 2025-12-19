@@ -186,6 +186,7 @@ export const MUAD_DIB: CharacterModel = {
 export const PLAYER_2: PlayerModel = {
   ...playerStartState,
   name: "P2",
+  isRival: true,
   isThisPlayer: false,
   character: MUAD_DIB,
   color: "BLUE",

@@ -11,25 +11,14 @@ import {useGameStore} from "../../store/GameStore.tsx";
 import {FeydSignet} from "./FeydSignet.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
 import {
-  ADD_OR_REMOVE_COMBAT_UNIT,
-  ADD_OR_REMOVE_RESOURCE, ADD_OR_REMOVE_VP,
-  COMPLETE_CONTRACT,
   DRAW_CARD,
   END_TURN,
   GAIN_INTRIGUE_CARD,
   REVEAL,
-  GAIN_OR_LOSE_ALLIANCE,
-  GAIN_OR_LOSE_OBJECTIVE,
   GET_HAGAL_CARD,
-  STEAL_INTRIGUE_CARD, TRASH_INTRIGUE_CARD
+  STEAL_INTRIGUE_CARD
 } from "../../const/Actions.tsx";
 import {getResourceIconByType} from "../../const/GameUtils.tsx";
-import {
-  gainOrLoseAlliance,
-  gainOrLoseObjective, getCombatUnitIconByType, getResourceIconByType, setContractCompleted
-} from "../../const/GameUtils.tsx";
-import {produce} from "immer";
-import {useDisclosure} from "@mantine/hooks";
 import {CharacterImage} from "./CharacterImage.tsx";
 import {ResourceModifier} from "../modifiers/ResourceModifier.tsx";
 import {VictoryPointModifier} from "../modifiers/VictoryPointModifier.tsx";
@@ -39,12 +28,14 @@ import {CardStats} from "./CardStats.tsx";
 import {Contracts} from "./Contracts.tsx";
 import {QuantityIcon} from "./QuantityIcon.tsx";
 import {ObjectivesAlliances} from "./ObjectivesAlliances.tsx";
+import {IntrigueModifier} from "../modifiers/IntrigueModifier.tsx";
 
 export function Player(props: {
   playerModel: PlayerModel;
   currentPlayer: string;
   firstPlayer: string;
 }) {
+  const {gameState} = useGameStore();
   const {sendMessage} = useWebSocket();
   const isThisPlayerCurrentPlayer = props.playerModel.name === props.currentPlayer;
   const {setImperiumRowOpened} = useGameStore();
@@ -103,6 +94,7 @@ export function Player(props: {
           <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Troop}/>
           <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Sandworm}/>
           <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Strength}/>
+          {props.playerModel.isRival ? <IntrigueModifier player={props.playerModel}/> : null}
         </Stack>
       </Group>
 
@@ -117,23 +109,24 @@ export function Player(props: {
     sendMessage({action: REVEAL})
   }
 
+  const getIconButton = (
+    icon: string,
+    onClick?: () => void,
+  ) => {
+    return (
+      <ActionIcon
+        onClick={onClick}
+        w={"auto"}
+        h={50}
+        className={"player-resource-modifier-button"}
+        variant={"none"}
+        radius={"0"}>
+        <Image fit="contain" h={50} src={icon}/>
+      </ActionIcon>
+    )
+  }
   const getActions = () => {
-    const getIconButton = (
-      icon: string,
-      onClick?: () => void,
-    ) => {
-      return (
-        <ActionIcon
-          onClick={onClick}
-          w={"auto"}
-          h={50}
-          className={"player-resource-modifier-button"}
-          variant={"none"}
-          radius={"0"}>
-          <Image fit="contain" h={50} src={icon}/>
-        </ActionIcon>
-      )
-    }
+
     const getTextButton = (
       label: string,
       onClick?: () => void,
@@ -156,10 +149,6 @@ export function Player(props: {
           {getIconButton(draw_intrigue_card, () => {sendMessage({action: GAIN_INTRIGUE_CARD})})}
           {getIconButton(steal_intrigue_card, () => {sendMessage({action: STEAL_INTRIGUE_CARD})})}
           {getIconButton(imperium_card, () => setImperiumRowOpened(true))}
-        </Group>
-        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
-        <Group w={"100%"} gap={"xs"}>
-          {getIconButton(draw_hagal_card, () => {sendMessage({action: GET_HAGAL_CARD})})}
         </Group>
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         <Group w={"100%"} gap={"xs"} justify={"flex-end"}>
@@ -269,22 +258,23 @@ export function Player(props: {
         <Text ta="left" className={"player-container-text"}>
           {props.playerModel.character.name}
         </Text>
-        <Group
-          w={"100%"}
-          wrap={"nowrap"}
-          justify={"center"}
-          align="center"
-          gap={0}>
+        <Group w={"100%"} wrap={"nowrap"} gap={0}>
           {getAvatar()}
-          {getVPAndAlliances()}
-          {getAgents()}
+          <ObjectivesAlliances player={props.playerModel}/>
         </Group>
+        {getAgentsSpiesFlags()}
+        {getModifiers()}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
-        {getSpiesAndFlags()}
-        <Group w={"100%"} justify="center" align={"stretch"} gap={0} pt={20}>
-          {getResourcesDisplayRivals()}
-          <Divider orientation={"vertical"} m={"md"} color={"#cacaca44"}/>
-          {getCombatDisplayRivals()}
+        <Group ps={16} pb={8}>
+          <ActionIcon
+            onClick={() => sendMessage({action: GET_HAGAL_CARD})}
+            w={"auto"}
+            h={35}
+            className={"player-resource-modifier-button"}
+            variant={"none"}
+            radius={"0"}>
+            <Image fit="contain" h={35} src={draw_hagal_card}/>
+          </ActionIcon>
         </Group>
       </Stack>
     )
