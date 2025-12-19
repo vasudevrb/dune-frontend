@@ -5,6 +5,7 @@ import draw_intrigue_card from '../../assets/cards/draw_intrigue_card.png';
 import steal_intrigue_card from '../../assets/cards/steal_intrigue_card.png';
 import draw_card from '../../assets/cards/draw_card.png';
 import imperium_card from '../../assets/cards/imperium_card.jpg';
+import maker_hook_icon from '../../assets/combat/maker_hook.png';
 import draw_hagal_card from "../../assets/cards/draw_hagal.png";
 import {CombatUnitType, type PlayerModel} from "../../model/PlayerModel.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
@@ -16,9 +17,9 @@ import {
   GAIN_INTRIGUE_CARD,
   REVEAL,
   GET_HAGAL_CARD,
-  STEAL_INTRIGUE_CARD
+  STEAL_INTRIGUE_CARD, UNLOCK_MAKER_HOOK, UNLOCK_SWORDMASTER
 } from "../../const/Actions.tsx";
-import {getResourceIconByType} from "../../const/GameUtils.tsx";
+import {getAgentIcon, getResourceIconByType} from "../../const/GameUtils.tsx";
 import {CharacterImage} from "./CharacterImage.tsx";
 import {ResourceModifier} from "../modifiers/ResourceModifier.tsx";
 import {VictoryPointModifier} from "../modifiers/VictoryPointModifier.tsx";
@@ -109,24 +110,23 @@ export function Player(props: {
     sendMessage({action: REVEAL})
   }
 
-  const getIconButton = (
-    icon: string,
-    onClick?: () => void,
-  ) => {
-    return (
-      <ActionIcon
-        onClick={onClick}
-        w={"auto"}
-        h={50}
-        className={"player-resource-modifier-button"}
-        variant={"none"}
-        radius={"0"}>
-        <Image fit="contain" h={50} src={icon}/>
-      </ActionIcon>
-    )
-  }
   const getActions = () => {
-
+    const getIconButton = (
+      icon: string,
+      onClick?: () => void,
+    ) => {
+      return (
+        <ActionIcon
+          onClick={onClick}
+          w={"auto"}
+          h={50}
+          className={"player-resource-modifier-button"}
+          variant={"none"}
+          radius={"0"}>
+          <Image fit="contain" h={50} src={icon}/>
+        </ActionIcon>
+      )
+    }
     const getTextButton = (
       label: string,
       onClick?: () => void,
@@ -158,6 +158,46 @@ export function Player(props: {
         </Group>
 
       </>
+    )
+  }
+
+  const getRivalActions = () => {
+    const getIconButton = (
+      icon: string,
+      onClick?: () => void,
+    ) => {
+      return (
+        <ActionIcon
+          onClick={onClick}
+          w={"auto"}
+          h={35}
+          className={"player-resource-modifier-button"}
+          variant={"none"}
+          radius={"0"}>
+          <Image fit="contain" h={35} src={icon}/>
+        </ActionIcon>
+
+      )
+    }
+
+    const unlockSwordMasterAction = () => {
+      sendMessage(
+        {action: UNLOCK_SWORDMASTER, body: {playerName: props.playerModel}}
+      )
+    }
+
+    const unlockMakerHookAction = () => {
+      sendMessage(
+        {action: UNLOCK_MAKER_HOOK, body: {playerName: props.playerModel}}
+      )
+    }
+
+    return (
+      <Group ps={16} pb={8}>
+        {getIconButton(draw_hagal_card, () => {sendMessage({action: GET_HAGAL_CARD})})}
+        {getIconButton(getAgentIcon("gray"), () => {unlockSwordMasterAction()})}
+        {getIconButton(maker_hook_icon, () => {unlockMakerHookAction()})}
+      </Group>
     )
   }
 
@@ -265,17 +305,7 @@ export function Player(props: {
         {getAgentsSpiesFlags()}
         {getModifiers()}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
-        <Group ps={16} pb={8}>
-          <ActionIcon
-            onClick={() => sendMessage({action: GET_HAGAL_CARD})}
-            w={"auto"}
-            h={35}
-            className={"player-resource-modifier-button"}
-            variant={"none"}
-            radius={"0"}>
-            <Image fit="contain" h={35} src={draw_hagal_card}/>
-          </ActionIcon>
-        </Group>
+        {getRivalActions()}
       </Stack>
     )
   }
