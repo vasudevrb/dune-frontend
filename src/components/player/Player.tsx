@@ -1,5 +1,5 @@
 import '../../css/Player.css'
-import {ActionIcon, Box, Button, Center, Divider, Flex, Group, Image, Popover, ScrollArea, Space, Stack, Text} from "@mantine/core";
+import {ActionIcon, Box, Button, Divider, Flex, Group, Image, Popover, ScrollArea, Space, Stack, Text} from "@mantine/core";
 import signet_ring from '../../assets/cards/signet_ring.png';
 import alliance_bene_gesserit from '../../assets/alliances/alliance_bg.png';
 import alliance_fremen from '../../assets/alliances/alliance_fremen.png';
@@ -11,21 +11,19 @@ import objective_cryskife from '../../assets/objectives/crysknife.png';
 import objective_any from '../../assets/objectives/any.png';
 import vp_icon from '../../assets/resources/victory_point.png';
 import draw_intrigue_card from '../../assets/cards/draw_intrigue_card.png';
-import contract_completed from '../../assets/contract_completed.png';
+
 import steal_intrigue_card from '../../assets/cards/steal_intrigue_card.png';
 import draw_card from '../../assets/cards/draw_card.png';
 import {
-  CombatUnitType, type ContractModel,
+  CombatUnitType,
   FactionType, ObjectiveType,
   type PlayerModel,
 } from "../../model/PlayerModel.tsx";
-import {type JSX} from "react";
 import plus_icon from "../../assets/plus.svg";
 import {useGameStore} from "../../store/GameStore.tsx";
 import {FeydSignet} from "./FeydSignet.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
 import {
-  COMPLETE_CONTRACT,
   DRAW_CARD,
   END_TURN,
   GAIN_INTRIGUE_CARD, GAIN_OR_LOSE_ALLIANCE, GAIN_OR_LOSE_OBJECTIVE,
@@ -34,7 +32,7 @@ import {
 } from "../../const/Actions.tsx";
 import {
   gainOrLoseAlliance,
-  gainOrLoseObjective, getResourceIconByType, setContractCompleted
+  gainOrLoseObjective, getResourceIconByType
 } from "../../const/GameUtils.tsx";
 import {produce} from "immer";
 import {useDisclosure} from "@mantine/hooks";
@@ -44,6 +42,8 @@ import {VictoryPointModifier} from "../modifiers/VictoryPointModifier.tsx";
 import {CombatModifier} from "../modifiers/CombatModifier.tsx";
 import {Agent, ControlFlag, Spy} from "./PlayableComponents.tsx";
 import {CardStats} from "./CardStats.tsx";
+import {Contracts} from "./Contracts.tsx";
+import {QuantityIcon} from "./QuantityIcon.tsx";
 
 export function Player(props: {
   playerModel: PlayerModel;
@@ -56,31 +56,12 @@ export function Player(props: {
   const isThisPlayerCurrentPlayer = props.playerModel.name === props.currentPlayer;
   const {gameState, setGameState, setImperiumRowOpened} = useGameStore();
 
-  const getAgents = () => {
-    const elements: JSX.Element[] = [];
-    props.playerModel.agents.forEach((agentModel, index) => {
-      elements.push(
-        <Agent
-          player={props.playerModel}
-          agentModel={agentModel}
-          index={index}
-          key={agentModel.id}/>
-      );
-    })
-    return (
-      <Flex direction={"row"} pr={8} gap={0}>{elements}</Flex>
-    );
-  }
-
 
   const getResourcesDisplayElements = () => {
     const getResource = (quantity: number, resourceType: string) => {
       const icon = getResourceIconByType(resourceType);
       return (
-        <Center pos={"relative"} w={40} h={40}>
-          <Image w={40} src={icon}/>
-          <Text size="1.2rem" className={"player-resource-modifier-text"}>{quantity}</Text>
-        </Center>
+        <QuantityIcon icon={icon} text={quantity} size={40} textSize={"1.2em"}/>
       )
     }
 
@@ -207,8 +188,20 @@ export function Player(props: {
 
   const getSpiesAndFlags = () => {
     return (
-      <Group w={"100%"} justify="center" align={"stretch"} gap={0}>
-        <Group w={"48%"} className={"players-spy-icon-container"} justify="center">
+      <Flex justify="space-between" align="center">
+        <Group className={"players-agent-icon-container"} justify="center">
+          {
+            props.playerModel.agents.map((agent, index) =>
+              <Agent
+                player={props.playerModel}
+                agentModel={agent}
+                index={index}
+                key={agent.id}/>
+            )
+          }
+        </Group>
+        <Divider orientation="vertical" m={"0"} color={"#cacaca44"}/>
+        <Group className={"players-spy-icon-container"} justify="center">
           {
             props.playerModel.spies.map((spy, index) =>
               <Spy
@@ -220,14 +213,18 @@ export function Player(props: {
           }
         </Group>
         <Divider orientation="vertical" m={"0"} color={"#cacaca44"}/>
-        <Group w={"48%"} h={"100%"} className={"players-control-flag-icon-container"} justify="center">
+        <Group className={"players-control-flag-icon-container"} justify="center">
           {
             props.playerModel.controlFlags.map((cf, index) =>
-              <ControlFlag player={props.playerModel} controlFlagModel={cf} index={index}/>
+              <ControlFlag
+                key={cf.id}
+                player={props.playerModel}
+                controlFlagModel={cf}
+                index={index}/>
             )
           }
         </Group>
-      </Group>
+      </Flex>
     )
   }
 
@@ -408,7 +405,6 @@ export function Player(props: {
           gap={0}>
           {getAvatar()}
           {getVPAndAlliances()}
-          {getAgents()}
         </Group>
         {getResourcesDisplay()}
       </Stack>
@@ -422,44 +418,6 @@ export function Player(props: {
         <Image draggable={false} fit={"contain"} w={"100%"} h={40} src={signet_ring}/>
         <FeydSignet characterModel={props.playerModel.character}/>
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
-      </>
-    )
-  }
-
-  const getContracts = () => {
-    const contractClickAction = (contract: ContractModel) => {
-      const alreadyCompleted = contract.completed;
-      setGameState(produce(gameState, draft => {
-        setContractCompleted(draft, contract, !alreadyCompleted);
-      }))
-      sendMessage({
-        action: COMPLETE_CONTRACT,
-        body: {
-          url: contract.url,
-          completed: !alreadyCompleted,
-        }
-      })
-    }
-    return (
-      <>
-        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
-        <ScrollArea
-          w={"100%"}
-          className={"fadeScroll"}
-          scrollbars={"x"}
-          offsetScrollbars={false}
-          type={"never"}>
-          <div style={{display: 'flex', gap: 16, alignItems: "center"}}>
-            {props.playerModel.contracts.map(c => {
-              return (
-                <Image
-                  w={140}
-                  onClick={() => contractClickAction(c)}
-                  src={c.completed ? contract_completed : c.url}/>
-              )
-            })}
-          </div>
-        </ScrollArea>
       </>
     )
   }
@@ -480,7 +438,6 @@ export function Player(props: {
           gap={0}>
           {getAvatar()}
           {getVPAndAlliances()}
-          {getAgents()}
         </Group>
         {getResourcesDisplay()}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
@@ -490,7 +447,7 @@ export function Player(props: {
         {getResourceModifierElements()}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getCombatModifierElements()}
-        {props.playerModel.contracts.length > 0 && getContracts()}
+        {props.playerModel.contracts.length > 0 && <Contracts player={props.playerModel}/>}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getActions()}
       </Stack>

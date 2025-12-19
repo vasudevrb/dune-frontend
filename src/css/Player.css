@@ -112,9 +112,15 @@
   );
 }
 
-.players-agent-icon {
-  filter: drop-shadow(3px 3px 6px rgba(50, 50, 50, 0.5))
+.players-agent-icon-container .players-agent-icon:nth-child(1) {
+  filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.5))
   drop-shadow(0px 0 0 #313131)
+}
+
+.players-agent-icon-container .players-agent-icon:nth-child(2),.players-agent-icon:nth-child(3) {
+  margin-left: -35%;
+  filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.5))
+  drop-shadow(0px 0 0 #94664d)
 }
 
 .cards-popover {
@@ -130,7 +136,7 @@
 }
 
 .players-spy-icon-container .players-spy-icon:nth-child(2),.players-spy-icon:nth-child(3) {
-  margin-left: -20%;
+  margin-left: -35%;
   filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.5))
   drop-shadow(0px 0 0 #94664d)
 }
@@ -141,7 +147,7 @@
 }
 
 .players-control-flag-icon-container .players-control-flag-icon:nth-child(2),.players-control-flag-icon:nth-child(3) {
-  margin-left: -20%;
+  margin-left: -35%;
   filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.5))
   drop-shadow(0px 0 0 #94664d)
 }

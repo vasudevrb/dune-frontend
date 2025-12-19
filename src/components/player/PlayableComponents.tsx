@@ -8,22 +8,10 @@ import control_flag_red from '../../assets/control_flags/control_flag_red.png';
 import control_flag_blue from '../../assets/control_flags/control_flag_blue.png';
 import control_flag_gold from '../../assets/control_flags/control_flag_gold.png';
 import control_flag_green from '../../assets/control_flags/control_flag_green.png';
-import agent_icon_disabled from '../../assets/agents/agent_disabled.svg';
-import agent_icon_red from '../../assets/agents/agent_red.svg';
-import agent_icon_blue from '../../assets/agents/agent_blue.svg';
-import agent_icon_green from '../../assets/agents/agent_green.svg';
-import agent_icon_gold from '../../assets/agents/agent_gold.svg';
 import {range} from "../../const/Util.tsx";
+import {getAgentIcon} from "../../const/GameUtils.tsx";
 
 export function Agent(props: { player: PlayerModel, agentModel: AgentModel, index: number }) {
-
-  const getAgentIcon = (color: string) => {
-    if (color === "RED") return agent_icon_red;
-    else if (color === "BLUE") return agent_icon_blue;
-    else if (color === "GOLD") return agent_icon_gold;
-    else if (color === "GREEN") return agent_icon_green;
-    else if (color === "GRAY") return agent_icon_disabled;
-  }
 
   const getAgentColor = (index: number): string => {
     const totalNumUsableAgents = props.player.swordmasterUnlocked ? 3 : 2;
@@ -65,7 +53,7 @@ export function Spy(props: { player: PlayerModel, spyModel: SpyModel, index: num
   return (
     <Image
       draggable={false}
-      w={30}
+      w={25}
       src={spyIcon}
       alt="Spy icon"
       className={"players-spy-icon"}/>

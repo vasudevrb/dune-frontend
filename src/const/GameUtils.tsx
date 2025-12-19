@@ -8,6 +8,11 @@ import solari_icon from "../assets/resources/solari.png";
 import troop_icon from "../assets/combat/troop.png";
 import worm_icon from "../assets/combat/worm.png";
 import strength_icon from "../assets/combat/strength.png";
+import agent_icon_disabled from '../assets/agents/agent_disabled.svg';
+import agent_icon_red from '../assets/agents/agent_red.svg';
+import agent_icon_blue from '../assets/agents/agent_blue.svg';
+import agent_icon_green from '../assets/agents/agent_green.svg';
+import agent_icon_gold from '../assets/agents/agent_gold.svg';
 
 export const TroopMovementLocation = {
   Combat: "Combat", Garrison: "Garrison", Supply: "Supply",
@@ -27,6 +32,14 @@ export function assertExists<T>(value: T | undefined, message: string): T {
 
 export function hasAvailableAgent(player: PlayerModel) {
   return player.swordmasterUnlocked ? player.agents.length > 0 : player.agents.length > 1;
+}
+
+export const getAgentIcon = (color: string) => {
+  if (color === "RED") return agent_icon_red;
+  else if (color === "BLUE") return agent_icon_blue;
+  else if (color === "GOLD") return agent_icon_gold;
+  else if (color === "GREEN") return agent_icon_green;
+  else return agent_icon_disabled;
 }
 
 export function placeAgent(game: GameModel, agentId: UniqueIdentifier, locationId: number) {
