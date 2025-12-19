@@ -27,7 +27,6 @@ export function ObjectivesAlliances(props: {
   const {sendMessage} = useWebSocket();
 
   const allianceModifierAction = (gained: boolean, type: FactionType) => {
-    if (!props.player.isThisPlayer) return;
     let success;
     setGameState(produce(gameState, draft => {
       success = gainOrLoseAlliance(draft, gained, type)
@@ -35,14 +34,13 @@ export function ObjectivesAlliances(props: {
     if (success) {
       sendMessage({
         action: GAIN_OR_LOSE_ALLIANCE,
-        body: {type: type, gained: gained}
+        body: {type: type, gained: gained, playerName: props.player.name}
       })
     }
     close()
   }
 
   const objectiveModifierAction = (gained: boolean, type: ObjectiveType) => {
-    if (!props.player.isThisPlayer) return;
     let success;
     setGameState(produce(gameState, draft => {
       success = gainOrLoseObjective(draft, gained, type)
@@ -50,14 +48,14 @@ export function ObjectivesAlliances(props: {
     if (success) {
       sendMessage({
         action: GAIN_OR_LOSE_OBJECTIVE,
-        body: {type: type, gained: gained}
+        body: {type: type, gained: gained, playerName: props.player.name}
       })
     }
     close()
   }
 
   const getAllianceObjectiveModifier = () => {
-    if (!props.player.isThisPlayer) return;
+    if (!props.player.isThisPlayer && !props.player.isRival) return;
 
     return (
       <Popover opened={opened} onChange={toggle} width={275} position="bottom" clickOutsideEvents={['mouseup', 'touchend']}>

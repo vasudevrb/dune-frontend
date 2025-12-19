@@ -252,9 +252,9 @@ function moveTroopToGarrison(player: PlayerModel) {
   return true;
 }
 
-export function addOrRemoveCombatUnit(game: GameModel, unit: CombatUnitType, add: boolean) {
+export function addOrRemoveCombatUnit(playerName: string, game: GameModel, unit: CombatUnitType, add: boolean) {
   const player = assertExists(
-    game.players.find(p => p.isThisPlayer),
+    game.players.find(p => p.name === playerName),
     `This player not found.`
   )
 
@@ -324,9 +324,9 @@ export function addOrRemoveBonusSpice(game: GameModel, locationId: number, add: 
   return false;
 }
 
-export function addOrRemoveResource(game: GameModel, resourceType: string, add: boolean) {
+export function addOrRemoveResource(playerName: string, game: GameModel, resourceType: string, add: boolean) {
   const player = assertExists(
-    game.players.find(p => p.isThisPlayer),
+    game.players.find(p => p.name === playerName),
     `This player not found.`
   )
 
@@ -362,9 +362,9 @@ export function addOrRemoveResource(game: GameModel, resourceType: string, add: 
   return false;
 }
 
-export function addOrRemoveVP(game: GameModel, add: boolean) {
+export function addOrRemoveVP(playerName: string, game: GameModel, add: boolean) {
   const player = assertExists(
-    game.players.find(p => p.isThisPlayer),
+    game.players.find(p => p.name === playerName),
     `This player not found.`
   )
   if (add) {

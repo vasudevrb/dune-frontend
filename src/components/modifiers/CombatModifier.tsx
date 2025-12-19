@@ -19,7 +19,7 @@ export function CombatModifier(props: {
   const combatModifierAction = (add: boolean, type: CombatUnitType) => {
     let success = false;
     setGameState(produce(gameState, draft => {
-      success = addOrRemoveCombatUnit(draft, type, add)
+      success = addOrRemoveCombatUnit(props.player.name, draft, type, add)
     }))
     if (success) {
       sendMessage({

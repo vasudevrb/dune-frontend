@@ -1,4 +1,4 @@
-import {Divider, Image, ScrollArea} from "@mantine/core";
+import {Image, ScrollArea} from "@mantine/core";
 import type {ContractModel, PlayerModel} from "../../model/PlayerModel.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
@@ -41,18 +41,15 @@ export function Contracts(props: {
   }
 
   return (
-    <>
-      <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
-      <ScrollArea
-        w={"100%"}
-        className={"fadeScroll"}
-        scrollbars={"x"}
-        offsetScrollbars={false}
-        type={"never"}>
-        <div style={{display: 'flex', gap: 16, alignItems: "center"}}>
-          {getContracts()}
-        </div>
-      </ScrollArea>
-    </>
+    <ScrollArea
+      w={"100%"}
+      className={"fadeScroll"}
+      scrollbars={"x"}
+      offsetScrollbars={false}
+      type={"never"}>
+      <div style={{display: 'flex', gap: 16, alignItems: "center"}}>
+        {getContracts()}
+      </div>
+    </ScrollArea>
   )
 }

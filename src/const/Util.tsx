@@ -331,7 +331,7 @@ export function showNotification(message: string) {
     styles: {
       root: {
         height: 80,
-        right: '300px',
+        pointerEvents: 'none',
         border: "2px solid #cacaca"
       },
       description: {
