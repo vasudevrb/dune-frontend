@@ -1,6 +1,6 @@
 import type {PlayerModel} from "../../model/PlayerModel.tsx";
 import {produce} from "immer";
-import {addOrRemoveResource, getResourceIconByType, getResourceQuantityByType} from "../../const/GameUtils.tsx";
+import {addOrRemoveResource, getResourceIconByType, getResourceQuantityByType, getResourceTextColorByType} from "../../const/GameUtils.tsx";
 import {ADD_OR_REMOVE_RESOURCE} from "../../const/Actions.tsx";
 import {ActionIcon, Group} from "@mantine/core";
 import minus_icon from "../../assets/minus.svg";
@@ -53,7 +53,8 @@ export function ResourceModifier(props: {
         size={30}
         textSize={"1em"}
         icon={getResourceIconByType(props.resourceType)}
-        text={getResourceQuantityByType(props.player, props.resourceType)}/>
+        text={getResourceQuantityByType(props.player, props.resourceType)}
+        textColor={getResourceTextColorByType(props.resourceType)}/>
       {getButton(plus_icon, () => resourceModifierAction(true, props.resourceType))}
     </Group>
   )

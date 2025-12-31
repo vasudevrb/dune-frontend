@@ -479,6 +479,15 @@ export function getResourceQuantityByType(player: PlayerModel, resourceType: str
   }
 }
 
+export function getResourceTextColorByType(resourceType: string) {
+  switch (resourceType) {
+    case "solari":
+      return "black";
+    default:
+      return "white";
+  }
+}
+
 export function getCombatUnitIconByType(modifierType: CombatUnitType) {
   switch (modifierType) {
     case CombatUnitType.Troop:

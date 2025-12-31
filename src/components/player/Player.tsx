@@ -15,7 +15,7 @@ import {
   REVEAL,
   STEAL_INTRIGUE_CARD
 } from "../../const/Actions.tsx";
-import {getResourceIconByType} from "../../const/GameUtils.tsx";
+import {getResourceIconByType, getResourceTextColorByType} from "../../const/GameUtils.tsx";
 import {CharacterImage} from "./CharacterImage.tsx";
 import {ResourceModifier} from "../modifiers/ResourceModifier.tsx";
 import {VictoryPointModifier} from "../modifiers/VictoryPointModifier.tsx";
@@ -38,8 +38,9 @@ export function Player(props: {
   const getResourcesDisplayElements = () => {
     const getResource = (quantity: number, resourceType: string) => {
       const icon = getResourceIconByType(resourceType);
+      const textColor = getResourceTextColorByType(resourceType);
       return (
-        <QuantityIcon icon={icon} text={quantity} size={40} textSize={"1.2em"}/>
+        <QuantityIcon icon={icon} text={quantity} size={40} textSize={"1.2em"} textColor={textColor} />
       )
     }
 
@@ -64,7 +65,6 @@ export function Player(props: {
         w={"100%"}
         className={"fadeScroll"}
         scrollbars={"x"}
-
         offsetScrollbars={false}
         type={"never"}>
         <div style={{display: 'flex', alignItems: 'center'}}>
@@ -77,21 +77,23 @@ export function Player(props: {
 
   const getModifiers = () => {
     return (
-      <Group w={"100%"} justify="center" align={"stretch"} gap={0}>
-        <Stack>
-          <VictoryPointModifier player={props.playerModel}/>
-          <ResourceModifier player={props.playerModel} resourceType={"water"}/>
-          <ResourceModifier player={props.playerModel} resourceType={"spice"}/>
-          <ResourceModifier player={props.playerModel} resourceType={"solari"}/>
-        </Stack>
-        <Divider orientation={"vertical"} m={"md"} color={"#cacaca44"}/>
-        <Stack>
-          <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Troop}/>
-          <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Sandworm}/>
-          <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Strength}/>
-        </Stack>
-      </Group>
-
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <Group w={"100%"} justify="center" align={"stretch"} gap={0}>
+          <Stack>
+            <VictoryPointModifier player={props.playerModel}/>
+            <ResourceModifier player={props.playerModel} resourceType={"water"}/>
+            <ResourceModifier player={props.playerModel} resourceType={"spice"}/>
+            <ResourceModifier player={props.playerModel} resourceType={"solari"}/>
+          </Stack>
+          <Divider orientation={"vertical"} m={"md"} color={"#cacaca44"}/>
+          <Stack>
+            <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Troop}/>
+            <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Sandworm}/>
+            <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Strength}/>
+          </Stack>
+        </Group>
+      </>
     )
   }
 
@@ -197,7 +199,6 @@ export function Player(props: {
             }
           </Group>
         </Flex>
-        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
       </>
     )
   }
@@ -248,6 +249,7 @@ export function Player(props: {
     if (props.playerModel.character.name !== "Feyd Rautha") return;
     return (
       <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         <Image draggable={false} fit={"contain"} w={"100%"} h={40} src={signet_ring}/>
         <FeydSignet characterModel={props.playerModel.character}/>
       </>
