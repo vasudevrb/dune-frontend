@@ -29,7 +29,7 @@ export function ObjectivesAlliances(props: {
   const allianceModifierAction = (gained: boolean, type: FactionType) => {
     let success;
     setGameState(produce(gameState, draft => {
-      success = gainOrLoseAlliance(draft, gained, type)
+      success = gainOrLoseAlliance(props.player.name, draft, gained, type)
     }));
     if (success) {
       sendMessage({
@@ -43,7 +43,7 @@ export function ObjectivesAlliances(props: {
   const objectiveModifierAction = (gained: boolean, type: ObjectiveType) => {
     let success;
     setGameState(produce(gameState, draft => {
-      success = gainOrLoseObjective(draft, gained, type)
+      success = gainOrLoseObjective(props.player.name, draft, gained, type)
     }));
     if (success) {
       sendMessage({

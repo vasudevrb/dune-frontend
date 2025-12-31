@@ -389,9 +389,9 @@ function moveTroopToSupply(player: PlayerModel) {
   return true;
 }
 
-export function gainOrLoseAlliance(game: GameModel, gained: boolean, type: FactionType) {
+export function gainOrLoseAlliance(playerName: string, game: GameModel, gained: boolean, type: FactionType) {
   const thisPlayer = assertExists(
-    game.players.find(p => p.isThisPlayer),
+    game.players.find(p => p.name === playerName),
     "This player not found"
   )
   const alreadyHasAlliance = thisPlayer.factionAlliances.find(fa => fa === type)
@@ -407,9 +407,9 @@ export function gainOrLoseAlliance(game: GameModel, gained: boolean, type: Facti
   return false;
 }
 
-export function gainOrLoseObjective(game: GameModel, gained: boolean, type: ObjectiveType) {
+export function gainOrLoseObjective(playerName: string, game: GameModel, gained: boolean, type: ObjectiveType) {
   const thisPlayer = assertExists(
-    game.players.find(p => p.isThisPlayer),
+    game.players.find(p => p.name === playerName),
     "This player not found"
   )
 
