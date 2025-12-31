@@ -265,7 +265,6 @@ export function Player(props: {
         {getResourcesDisplay()}
         {getAgentsSpiesFlags()}
         {getModifiers()}
-        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getFeydSignetComponent()}
         {props.playerModel.contracts.length > 0 && <Contracts player={props.playerModel}/>}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
