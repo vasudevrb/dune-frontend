@@ -324,7 +324,7 @@ export function addOrRemoveBonusSpice(game: GameModel, locationId: number, add: 
   return false;
 }
 
-export function addOrRemoveResource(game: GameModel, resourceType: string, add: boolean) {
+export function addOrRemoveResource(game: GameModel, resourceType: string, quantity: number, add: boolean) {
   const player = assertExists(
     game.players.find(p => p.isThisPlayer),
     `This player not found.`
@@ -333,28 +333,28 @@ export function addOrRemoveResource(game: GameModel, resourceType: string, add: 
   switch (resourceType) {
     case "water":
       if (add) {
-        player.resources.water++;
+        player.resources.water+=quantity;
         return true
       } else if (player.resources.water > 0) {
-        player.resources.water--;
+        player.resources.water=Math.max(player.resources.water - quantity, 0);
         return true
       }
       return false;
     case "spice":
       if (add) {
-        player.resources.spice++;
+        player.resources.spice+=quantity;
         return true;
       } else if (player.resources.spice > 0) {
-        player.resources.spice--;
+        player.resources.spice=Math.max(player.resources.spice - quantity, 0);
         return true
       }
       return false;
     case "solari":
       if (add) {
-        player.resources.solari++;
+        player.resources.solari+=quantity;
         return true
       } else if (player.resources.solari > 0) {
-        player.resources.solari--;
+        player.resources.solari=Math.max(player.resources.solari - quantity, 0);
         return true
       }
       return false;
