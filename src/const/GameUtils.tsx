@@ -252,7 +252,7 @@ function moveTroopToGarrison(player: PlayerModel) {
   return true;
 }
 
-export function addOrRemoveCombatUnit(game: GameModel, unit: CombatUnitType, add: boolean) {
+export function addOrRemoveCombatUnit(game: GameModel, quantity: number, unit: CombatUnitType, add: boolean) {
   const player = assertExists(
     game.players.find(p => p.isThisPlayer),
     `This player not found.`
@@ -261,30 +261,30 @@ export function addOrRemoveCombatUnit(game: GameModel, unit: CombatUnitType, add
   switch (unit) {
     case CombatUnitType.Troop:
       if (add) {
-        player.combat.troopsInGarrison++;
+        player.combat.troopsInGarrison+=quantity;
         return true;
       } else if (player.combat.troopsInGarrison > 0) {
-        player.combat.troopsInGarrison--;
+        player.combat.troopsInGarrison = Math.max(player.combat.troopsInGarrison - quantity, 0);
         return true;
       }
       return false;
     case CombatUnitType.Sandworm:
       if (add) {
-        player.combat.wormsInCombat++;
-        player.combat.strength += 3;
+        player.combat.wormsInCombat+=quantity;
+        player.combat.strength += (3 * quantity);
         return true
       } else if (player.combat.wormsInCombat > 0) {
-        player.combat.wormsInCombat--;
-        player.combat.strength -= 3;
+        player.combat.wormsInCombat = Math.max(player.combat.wormsInCombat - quantity, 0);
+        player.combat.strength = Math.max(player.combat.strength - (3 * quantity), 0);
         return true
       }
       return false;
     case CombatUnitType.Strength:
       if (add) {
-        player.combat.strength++;
+        player.combat.strength+=quantity;
         return true
       } else if (player.combat.strength > 0) {
-        player.combat.strength--;
+        player.combat.strength = Math.max(player.combat.strength - quantity, 0);
         return true
       }
       return false;
