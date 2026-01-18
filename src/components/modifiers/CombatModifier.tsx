@@ -1,5 +1,5 @@
 import {CombatUnitType, type PlayerModel} from "../../model/PlayerModel.tsx";
-import {ActionIcon, Group} from "@mantine/core";
+import {Group} from "@mantine/core";
 import {produce} from "immer";
 import {addOrRemoveCombatUnit, getCombatUnitIconByType} from "../../const/GameUtils.tsx";
 import {ADD_OR_REMOVE_COMBAT_UNIT} from "../../const/Actions.tsx";
@@ -8,6 +8,7 @@ import {useGameStore} from "../../store/GameStore.tsx";
 import minus_icon from "../../assets/minus.svg";
 import plus_icon from "../../assets/plus.svg";
 import {QuantityIcon} from "../player/QuantityIcon.tsx";
+import {DebouncedButton} from "./DebouncedButton.tsx";
 
 export function CombatModifier(props: {
   player: PlayerModel;
@@ -16,10 +17,10 @@ export function CombatModifier(props: {
   const {sendMessage} = useWebSocket();
   const {gameState, setGameState} = useGameStore();
 
-  const combatModifierAction = (add: boolean, type: CombatUnitType) => {
+  const combatModifierAction = (add: boolean, quantity: number, type: CombatUnitType) => {
     let success = false;
     setGameState(produce(gameState, draft => {
-      success = addOrRemoveCombatUnit(props.player.name, draft, type, add)
+      success = addOrRemoveCombatUnit(props.player.name, draft, quantity, type, add)
     }))
     if (success) {
       sendMessage({
@@ -27,32 +28,21 @@ export function CombatModifier(props: {
         body: {
           unitType: type,
           add: add,
+          quantity: quantity,
           playerName: props.player.name
         }
       })
     }
   }
 
-  const getButton = (icon: string, onClick?: () => void) => {
-    return (
-      <ActionIcon
-        onClick={onClick}
-        className={"player-resource-modifier-button"}
-        variant={"outline"}
-        radius={"0"}>
-        <img width={30} src={icon} alt="Resource modifier button"/>
-      </ActionIcon>
-    )
-  }
-
   return (
     <Group gap={5}>
-      {getButton(minus_icon, () => combatModifierAction(false, props.modifierType))}
+      <DebouncedButton onclick={(q) => combatModifierAction(false, q, props.modifierType)} icon={minus_icon}/>
       <QuantityIcon
         size={30}
         textSize={"1em"}
         icon={getCombatUnitIconByType(props.modifierType)}/>
-      {getButton(plus_icon, () => combatModifierAction(true, props.modifierType))}
+      <DebouncedButton onclick={(q) => combatModifierAction(true, q, props.modifierType)} icon={plus_icon}/>
     </Group>
   )
 }

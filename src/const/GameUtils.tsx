@@ -252,7 +252,7 @@ function moveTroopToGarrison(player: PlayerModel) {
   return true;
 }
 
-export function addOrRemoveCombatUnit(playerName: string, game: GameModel, unit: CombatUnitType, add: boolean) {
+export function addOrRemoveCombatUnit(playerName: string, game: GameModel, quantity: number, unit: CombatUnitType, add: boolean) {
   const player = assertExists(
     game.players.find(p => p.name === playerName),
     `This player not found.`
@@ -261,30 +261,30 @@ export function addOrRemoveCombatUnit(playerName: string, game: GameModel, unit:
   switch (unit) {
     case CombatUnitType.Troop:
       if (add) {
-        player.combat.troopsInGarrison++;
+        player.combat.troopsInGarrison+=quantity;
         return true;
       } else if (player.combat.troopsInGarrison > 0) {
-        player.combat.troopsInGarrison--;
+        player.combat.troopsInGarrison = Math.max(player.combat.troopsInGarrison - quantity, 0);
         return true;
       }
       return false;
     case CombatUnitType.Sandworm:
       if (add) {
-        player.combat.wormsInCombat++;
-        player.combat.strength += 3;
+        player.combat.wormsInCombat+=quantity;
+        player.combat.strength += (3 * quantity);
         return true
       } else if (player.combat.wormsInCombat > 0) {
-        player.combat.wormsInCombat--;
-        player.combat.strength -= 3;
+        player.combat.wormsInCombat = Math.max(player.combat.wormsInCombat - quantity, 0);
+        player.combat.strength = Math.max(player.combat.strength - (3 * quantity), 0);
         return true
       }
       return false;
     case CombatUnitType.Strength:
       if (add) {
-        player.combat.strength++;
+        player.combat.strength+=quantity;
         return true
       } else if (player.combat.strength > 0) {
-        player.combat.strength--;
+        player.combat.strength = Math.max(player.combat.strength - quantity, 0);
         return true
       }
       return false;
@@ -324,7 +324,7 @@ export function addOrRemoveBonusSpice(game: GameModel, locationId: number, add: 
   return false;
 }
 
-export function addOrRemoveResource(playerName: string, game: GameModel, resourceType: string, add: boolean) {
+export function addOrRemoveResource(playerName: string, game: GameModel, resourceType: string, quantity: number, add: boolean) {
   const player = assertExists(
     game.players.find(p => p.name === playerName),
     `This player not found.`
@@ -333,28 +333,28 @@ export function addOrRemoveResource(playerName: string, game: GameModel, resourc
   switch (resourceType) {
     case "water":
       if (add) {
-        player.resources.water++;
+        player.resources.water+=quantity;
         return true
       } else if (player.resources.water > 0) {
-        player.resources.water--;
+        player.resources.water=Math.max(player.resources.water - quantity, 0);
         return true
       }
       return false;
     case "spice":
       if (add) {
-        player.resources.spice++;
+        player.resources.spice+=quantity;
         return true;
       } else if (player.resources.spice > 0) {
-        player.resources.spice--;
+        player.resources.spice=Math.max(player.resources.spice - quantity, 0);
         return true
       }
       return false;
     case "solari":
       if (add) {
-        player.resources.solari++;
+        player.resources.solari+=quantity;
         return true
       } else if (player.resources.solari > 0) {
-        player.resources.solari--;
+        player.resources.solari=Math.max(player.resources.solari - quantity, 0);
         return true
       }
       return false;
@@ -481,6 +481,15 @@ export function getResourceQuantityByType(player: PlayerModel, resourceType: str
       return player.resources.spice;
     default:
       return player.resources.solari
+  }
+}
+
+export function getResourceTextColorByType(resourceType: string) {
+  switch (resourceType) {
+    case "solari":
+      return "black";
+    default:
+      return "white";
   }
 }
 

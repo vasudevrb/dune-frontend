@@ -4,7 +4,8 @@ export function QuantityIcon(props: {
   icon: string,
   text?: number,
   size?: number,
-  textSize?: string
+  textSize?: string,
+  textColor?: string,
 }) {
   return (
     <Center
@@ -16,6 +17,7 @@ export function QuantityIcon(props: {
         src={props.icon}
         alt="Resource icon"/>
       <Text
+        c={props.textColor ? props.textColor : "white"}
         size={props.textSize ? props.textSize : "1.4em"}
         className={"player-resource-modifier-text"}>
         {props.text}

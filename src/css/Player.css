@@ -68,10 +68,10 @@
 }
 
 .player-container-text {
+  font-size: 14px;
   padding-bottom: 8px;
-  color: #FAFAFA;
-  font-weight: 500;
-  text-shadow: 0 0 5px rgba(31, 31, 31, 1);
+  color: #BABABA;
+  font-family: "Conneqt", sans-serif;
 }
 
 .player-action-button {
@@ -84,14 +84,8 @@
 
 .player-resource-modifier-text {
   position: absolute;
-  padding: 0;
-  margin: 0;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   color: #FAFAFA;
-  font-family: "IBM Plex Sans", sans-serif;
-  text-shadow: 0 0 5px rgba(31, 31, 31, 1);
+  font-family: Conneqt,sans-serif;
 }
 
 .player-resource-modifier-button {
