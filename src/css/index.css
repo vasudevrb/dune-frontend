@@ -1,3 +1,10 @@
+@font-face {
+  font-family: "Conneqt";
+  src: url("../assets/fonts/conneqt-regular.woff2") format("woff2");
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   height: 100%;
   width: 100%;
@@ -5,7 +12,7 @@
   padding: 0;
   position: fixed;
 
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Conneqt, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 

@@ -129,6 +129,14 @@ export function SelectCharacter(props: {
       <Stack
         align={"center"}>
 
+        <Text
+          w={"100%"}
+          c="#d1d1d1"
+          fw={"500"}
+          style={{fontFamily: "IBM Plex Sans", fontSize: "1.2rem", textAlign: "end"}}>
+          Position: {globalProps.initialTurnOrder}
+        </Text>
+
         <Image
           bg={"transparent"}
           w={"auto"}

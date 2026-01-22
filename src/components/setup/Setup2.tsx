@@ -1,7 +1,7 @@
 import '../../css/Setup2.css'
 import type {ObjectiveType, PlayerModel} from "../../model/PlayerModel.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
-import {Box, Divider, Group, Space, Stack, Text} from "@mantine/core";
+import {Box, Group, Text} from "@mantine/core";
 import {useEffect, useState} from "react";
 import {CreateOrJoinGame} from "./CreateOrJoinGame.tsx";
 import {SelectCharacter} from "./SelectCharacter.tsx";

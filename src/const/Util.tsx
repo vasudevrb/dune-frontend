@@ -49,8 +49,24 @@ export const gameStartState: GameModel = {
     "http://localhost:8080/contracts/contract_15.png",
     "http://localhost:8080/contracts/contract_17.png"
   ],
-  imperiumRow: [],
-  reserveRow: []
+  imperiumRow: [
+    {url: "http://localhost:8080/imperium_cards/imperium_45.jpg"},
+    {url: "http://localhost:8080/imperium_cards/imperium_46.jpg"},
+    {url: "http://localhost:8080/imperium_cards/imperium_51.jpg"},
+    {url: "http://localhost:8080/imperium_cards/imperium_48.jpg"},
+    {url: "http://localhost:8080/imperium_cards/imperium_49.jpg"},
+  ],
+  reserveRow: [
+    {url: "http://localhost:8080/reserve_cards/the_spice_must_flow/spice_must_flow_1.jpg"},
+    {url: "http://localhost:8080/reserve_cards/prepare_the_way/prepare_the_way_7.jpg"},
+  ],
+  highCouncil: [
+    "P1",
+    "P4",
+    "",
+    ""
+  ],
+  shieldWallBroken: false
 }
 
 export const characterStartState: CharacterModel = {
@@ -128,7 +144,7 @@ export const PLAYER_1: PlayerModel = {
   name: "P1",
   character: PRINCESS_IRULAN,
   isThisPlayer: false,
-  color: "RED",
+  color: "GREEN",
   agents: [
     {id: `agent-${PRINCESS_IRULAN.name}#1`},
     {id: `agent-${PRINCESS_IRULAN.name}#2`},
@@ -243,7 +259,7 @@ export const PLAYER_4: PlayerModel = {
   name: "P4",
   isThisPlayer: true,
   character: FEYD_RAUTHA,
-  color: "GREEN",
+  color: "RED",
   agents: [
     {id: `agent-${FEYD_RAUTHA.name}#1`},
     {id: `agent-${FEYD_RAUTHA.name}#2`},
@@ -262,10 +278,7 @@ export const PLAYER_4: PlayerModel = {
   private: {
     inHandCards: [
       {url: "http://localhost:8080/imperium_cards_starter/starter_6.jpg"},
-      {url: "http://localhost:8080/imperium_cards_starter/starter_2.jpg"},
-      {url: "http://localhost:8080/imperium_cards_starter/starter_3.jpg"},
-      {url: "http://localhost:8080/imperium_cards_starter/starter_1.jpg"},
-      {url: "http://localhost:8080/imperium_cards_starter/starter_1.jpg"}
+      {url: "http://localhost:8080/imperium_cards_starter/starter_2.jpg"}
     ],
     inPlayCards: [
       {url: "http://localhost:8080/imperium_cards_starter/starter_5.jpg"},
@@ -275,8 +288,8 @@ export const PLAYER_4: PlayerModel = {
       {url: "http://localhost:8080/imperium_cards/imperium_27.jpg"},
     ],
     intrigueCards: [
-      {url: "http://localhost:8080/imperium_cards/imperium_26.jpg"},
-      {url: "http://localhost:8080/imperium_cards/imperium_27.jpg"},
+      {url: "http://localhost:8080/intrigue_cards/intrigue_24.jpg"},
+      {url: "http://localhost:8080/intrigue_cards/intrigue_28.jpg"},
     ]
   },
   contracts: [
@@ -306,6 +319,7 @@ export function createId(items: (string | number)[]): string {
 export function showNotification(message: string) {
   notifications.show({
     message: message,
+    position: 'top-right',
     withCloseButton: false,
     autoClose: 3000,
     radius: 0,
@@ -313,12 +327,13 @@ export function showNotification(message: string) {
     className: "notification-bg",
     styles: {
       root: {
-        height: 90,
-        transition: 'ease-in-out'
+        height: 80,
+        right: '300px',
+        border: "2px solid #cacaca"
       },
       description: {
         fontWeight: 500,
-        fontSize: 18,
+        fontSize: 16,
         fontFamily:  "IBM Plex Sans",
         color: '#cacaca',
       },

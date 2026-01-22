@@ -14,9 +14,11 @@ export interface GameModel {
     haggaBasin: number;
     imperialBasin: number;
   };
+  highCouncil: string[];
   currentContracts: string[];
   currentConflict: string;
   nextConflictLevel: number;
   currentPlayer: string;
   firstPlayer: string;
+  shieldWallBroken: boolean;
 }
