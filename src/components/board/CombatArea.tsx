@@ -1,5 +1,5 @@
 import '../../css/CombatArea.css'
-import {Image, Group, ActionIcon, Popover, Stack, Text, Button} from "@mantine/core";
+import {Image, Group, ActionIcon, Popover, Stack, Text, Button, Box} from "@mantine/core";
 import troop_icon_red from "../../assets/combat/troop_red.png";
 import troop_icon_blue from "../../assets/combat/troop_blue.png";
 import troop_icon_green from "../../assets/combat/troop_green.png";
@@ -24,15 +24,28 @@ import type {JSX} from "react";
 import IconGrid from "./IconGrid.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
 import {produce} from "immer";
-import {moveUnit, TroopMovementLocation} from "../../const/GameUtils.tsx";
+import {assertExists, moveUnit, TroopMovementLocation} from "../../const/GameUtils.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
-import {GET_NEXT_CONFLICT, MOVE_COMBAT_UNIT} from "../../const/Actions.tsx";
-import {UnlockMakerHook} from "./UnlockMakerHook.tsx";
+import {GET_NEXT_CONFLICT, MOVE_COMBAT_UNIT, UNLOCK_MAKER_HOOK} from "../../const/Actions.tsx";
+import {PopoverContainer} from "../PopoverContainer.tsx";
 
 export function CombatArea() {
 
   const {gameState, setGameState} = useGameStore();
   const {sendMessage} = useWebSocket();
+
+  const unlockMakerHook = () => {
+    setGameState(produce(gameState, draft => {
+      const thisPlayer = assertExists(
+        draft.players.find(p => p.isThisPlayer),
+        "This player not found"
+      )
+      thisPlayer.makerHookUnlocked = true;
+    }));
+
+    sendMessage({action: UNLOCK_MAKER_HOOK});
+  }
+
   const getNextConflictBackground = () => {
     const getBg = () => {
       switch (gameState.nextConflictLevel) {
@@ -289,7 +302,16 @@ export function CombatArea() {
 
   return (
     <>
-      <UnlockMakerHook left={"89.2%"} top={"85.6%"} />
+      <PopoverContainer
+        label={"Gain Maker Hook"}
+        onclick={unlockMakerHook}
+        style={{
+          position: "absolute",
+          left: "87.7%",
+          top: "83.9%"
+        }}>
+        <Box w={50} h={65} bg={"#fafafa44"} />
+      </PopoverContainer>
       {getConflictCard()}
       {getNextConflictBackground()}
       {getCombatComponents()}
