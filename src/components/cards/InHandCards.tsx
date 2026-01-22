@@ -40,17 +40,18 @@ export function InHandCards(props: {
     const getOnClickAction = (action: string) => {
       return sendMessage({action: action, body: {url: card.url, source: cardType}})
     }
-    const getIconButton = (action: string, label: string) => {
+    const getIconButton = (action: string, label: string, doubleClick?: boolean) => {
       return {
         type: CardButtonType.Icon,
         label: label,
-        onclick: () => {getOnClickAction(action)}
+        onclick: () => {getOnClickAction(action)},
+        doubleClick: doubleClick
       }
     }
 
     const useButton = getIconButton(USE_CARD, use_card_icon)
     const discardButton = getIconButton(DISCARD_CARD, discard_card_icon)
-    const trashButton = getIconButton(TRASH_CARD, trash_card_icon)
+    const trashButton = getIconButton(TRASH_CARD, trash_card_icon, true)
 
     switch (cardType) {
       case CardType.HAND: return [useButton,  discardButton, trashButton];

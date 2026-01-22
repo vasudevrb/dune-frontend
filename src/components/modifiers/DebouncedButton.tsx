@@ -11,7 +11,7 @@ export function DebouncedButton(props: {
   const debouncedCall = useDebouncedCallback((quantity: number) => {
     props.onclick(quantity)
     setClickCount(0)
-  }, 400)
+  }, 200)
 
   const handleClick = () =>  {
     setClickCount((prev) => {

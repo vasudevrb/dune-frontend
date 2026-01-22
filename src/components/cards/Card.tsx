@@ -14,6 +14,7 @@ interface CardButton {
   type: CardButtonType,
   label: string,
   onclick: () => void,
+  doubleClick?: boolean
 }
 
 export function Card(props: {
@@ -28,7 +29,8 @@ export function Card(props: {
     return (
       <ActionIcon
         key={`button:${button.type}-${button.label}`}
-        onClick={button.onclick}
+        onClick={button.doubleClick ? undefined : button.onclick}
+        onDoubleClick={button.doubleClick ? button.onclick : undefined }
         w={31}
         h={50}
         className={"player-resource-modifier-button"}

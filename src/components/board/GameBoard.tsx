@@ -12,16 +12,32 @@ import {FactionType} from "../../model/PlayerModel.tsx";
 import type {SpyLocationModel} from "../../model/SpyLocationModel.tsx";
 import {SpyLocation} from "./SpyLocation.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
-import {Swordmaster} from "./Swordmaster.tsx";
 import {ControlFlagLocation} from "./ControlFlagLocation.tsx";
 import {BonusSpice} from "./BonusSpice.tsx";
 import {Contract} from "./Contract.tsx";
 import {ShieldWall} from "./ShieldWall.tsx";
 import {HighCouncilToken} from "./HighCouncilToken.tsx";
+import {PopoverContainer} from "../PopoverContainer.tsx";
+import {produce} from "immer";
+import {UNLOCK_SWORDMASTER} from "../../const/Actions.tsx";
+import {useWebSocket} from "../WebSocketContext.tsx";
 
 export function GameBoard() {
 
-  const {gameState} = useGameStore();
+  const {gameState, setGameState} = useGameStore();
+  const {sendMessage} = useWebSocket();
+
+  const unlockSwordmaster = () => {
+    setGameState(produce(gameState, draft => {
+      const thisPlayer = assertExists(
+        draft.players.find(p => p.isThisPlayer),
+        "This player not found"
+      )
+      thisPlayer.swordmasterUnlocked = true;
+    }));
+
+    sendMessage({action: UNLOCK_SWORDMASTER});
+  }
 
   const getAgentDroppable = (
     location: AgentLocationModel,
@@ -161,7 +177,16 @@ export function GameBoard() {
 
           <CombatArea/>
 
-          <Swordmaster left={"60.8%"} top={"16.3%"} />
+          <PopoverContainer
+            label={"Unlock swordmaster"}
+            onclick={unlockSwordmaster}
+            style={{
+              position: "absolute",
+              left: "59%",
+              top: "13.5%"
+            }}>
+            <Box w={50} h={80}/>
+          </PopoverContainer>
 
           <ControlFlagLocation
             location={gameState.locations.find(l => l.id === 11)!!}
