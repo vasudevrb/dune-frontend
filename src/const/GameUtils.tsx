@@ -217,7 +217,7 @@ export function setFeydSignetStatus(game: GameModel, newSignetStatus: number) {
   thisPlayer.character.additionalInfo.signetStatus = newSignetStatus;
 }
 
-export function moveUnit(game: GameModel, destination: TroopMovementLocation) {
+export function moveUnit(type: CombatUnitType, game: GameModel, destination: TroopMovementLocation) {
   const thisPlayer = assertExists(
     game.players.find(p => p.isThisPlayer),
     `This player not found.`
@@ -225,9 +225,9 @@ export function moveUnit(game: GameModel, destination: TroopMovementLocation) {
 
   switch (destination) {
     case TroopMovementLocation.Combat:
-      return moveTroopToCombat(thisPlayer);
+      return type === CombatUnitType.Commander ? moveCommanderToCombat(thisPlayer) : moveTroopToCombat(thisPlayer);
     case TroopMovementLocation.Garrison:
-      return moveTroopToGarrison(thisPlayer);
+      return type === CombatUnitType.Commander ? moveCommanderToGarrison(thisPlayer) : moveTroopToGarrison(thisPlayer);
     case  TroopMovementLocation.Supply:
       return moveTroopToSupply(thisPlayer);
   }
@@ -245,6 +245,18 @@ function moveTroopToCombat(player: PlayerModel) {
   return true;
 }
 
+function moveCommanderToCombat(player: PlayerModel) {
+  if (player.combat.commandersInGarrison < 1) {
+    showNotification("No commanders available in garrison");
+    return false;
+  }
+
+  player.combat.commandersInCombat++;
+  player.combat.strength += 2;
+  player.combat.commandersInGarrison--;
+  return true;
+}
+
 function moveTroopToGarrison(player: PlayerModel) {
   if (player.combat.troopsInCombat < 1) {
     showNotification("No troops participating in the conflict");
@@ -257,7 +269,25 @@ function moveTroopToGarrison(player: PlayerModel) {
   return true;
 }
 
-export function addOrRemoveCombatUnit(playerName: string, game: GameModel, quantity: number, unit: CombatUnitType, add: boolean) {
+function moveCommanderToGarrison(player: PlayerModel) {
+  if (player.combat.commandersInCombat < 1) {
+    showNotification("No commanders participating in the conflict");
+    return false;
+  }
+
+  player.combat.commandersInCombat--;
+  player.combat.strength -= 2;
+  player.combat.commandersInGarrison++;
+  return true;
+}
+
+export function addOrRemoveCombatUnit(
+  playerName: string,
+  game: GameModel,
+  quantity: number,
+  unit: CombatUnitType,
+  add: boolean
+) {
   const player = assertExists(
     game.players.find(p => p.name === playerName),
     `This player not found.`
@@ -265,11 +295,14 @@ export function addOrRemoveCombatUnit(playerName: string, game: GameModel, quant
 
   switch (unit) {
     case CombatUnitType.Troop:
-      if (add) {
+      if (add && player.combat.troopsInSupply >= quantity) {
         player.combat.troopsInGarrison+=quantity;
+        player.combat.troopsInSupply-= quantity;
         return true;
-      } else if (player.combat.troopsInGarrison > 0) {
-        player.combat.troopsInGarrison = Math.max(player.combat.troopsInGarrison - quantity, 0);
+      } else if (!add && player.combat.troopsInGarrison > 0) {
+        const num = Math.max(player.combat.troopsInGarrison - quantity, 0);
+        player.combat.troopsInSupply += player.combat.troopsInGarrison - num;
+        player.combat.troopsInGarrison = num;
         return true;
       }
       return false;
@@ -291,7 +324,7 @@ export function addOrRemoveCombatUnit(playerName: string, game: GameModel, quant
         return true;
       } else if (!add && player.combat.commandersInGarrison > 0) {
         const num = Math.max(player.combat.commandersInGarrison - quantity, 0);
-        player.combat.commandersInSupply = player.combat.commandersInGarrison - num;
+        player.combat.commandersInSupply += player.combat.commandersInGarrison - num;
         player.combat.commandersInGarrison = num;
         return true;
       }

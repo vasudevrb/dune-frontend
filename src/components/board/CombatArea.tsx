@@ -26,6 +26,7 @@ import {GET_NEXT_CONFLICT, MOVE_COMBAT_UNIT, UNLOCK_MAKER_HOOK} from "../../cons
 import {PopoverContainer} from "../PopoverContainer.tsx";
 import {Garrison} from "./Garrison.tsx";
 import {Battlefield} from "./Battlefield.tsx";
+import {CombatUnitType} from "../../model/PlayerModel.tsx";
 
 export function CombatArea() {
 
@@ -119,10 +120,10 @@ export function CombatArea() {
     }
   }
 
-  const moveTroop = (destination: TroopMovementLocation) => {
+  const moveTroop = (type: CombatUnitType, destination: TroopMovementLocation) => {
     let success = false;
     setGameState(produce(gameState, (draft) => {
-      success = moveUnit(draft, destination)
+      success = moveUnit(type, draft, destination)
     }));
 
     if (success) {
@@ -274,7 +275,7 @@ export function CombatArea() {
         <Group
           gap={8}>
           <ActionIcon
-            onClick={() => moveTroop(TroopMovementLocation.Garrison)}
+            onClick={() => moveTroop(CombatUnitType.Troop, TroopMovementLocation.Garrison)}
             className={"player-resource-modifier-button"}
             variant={"outline"}
             radius={"0"}>
@@ -282,7 +283,7 @@ export function CombatArea() {
           </ActionIcon>
           <Image w={30} src={troop_icon}/>
           <ActionIcon
-            onClick={() => moveTroop(TroopMovementLocation.Combat)}
+            onClick={() => moveTroop(CombatUnitType.Troop, TroopMovementLocation.Combat)}
             className={"player-resource-modifier-button"}
             variant={"outline"}
             radius={"0"}>
@@ -292,7 +293,7 @@ export function CombatArea() {
         <Group
           gap={8}>
           <ActionIcon
-            onClick={() => moveTroop(TroopMovementLocation.Garrison)}
+            onClick={() => moveTroop(CombatUnitType.Commander, TroopMovementLocation.Garrison)}
             className={"player-resource-modifier-button"}
             variant={"outline"}
             radius={"0"}>
@@ -300,7 +301,7 @@ export function CombatArea() {
           </ActionIcon>
           <Image w={30} src={sardaukar_commander_icon}/>
           <ActionIcon
-            onClick={() => moveTroop(TroopMovementLocation.Combat)}
+            onClick={() => moveTroop(CombatUnitType.Commander, TroopMovementLocation.Combat)}
             className={"player-resource-modifier-button"}
             variant={"outline"}
             radius={"0"}>
