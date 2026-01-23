@@ -17,6 +17,8 @@ export interface PlayerModel {
   makerHookUnlocked: boolean;
   contracts: ContractModel[];
   combat: CombatModel;
+  skills: CardModel[];
+  techs: CardModel[];
   private?: {
     inHandCards: CardModel[];
     inPlayCards: CardModel[];

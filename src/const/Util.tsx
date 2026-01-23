@@ -156,7 +156,9 @@ export const playerStartState: PlayerModel = {
     commandersInGarrison: 0,
     commandersInCombat: 0,
     strength: 0
-  }
+  },
+  skills: [],
+  techs: []
 }
 
 export const PRINCESS_IRULAN: CharacterModel = {
@@ -346,6 +348,12 @@ export const PLAYER_4: PlayerModel = {
     commandersInCombat: 1,
     strength: 4
   },
+  skills: [
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+  ]
 }
 
 export function createId(items: (string | number)[]): string {

@@ -36,6 +36,7 @@ import {Contracts} from "./Contracts.tsx";
 import {QuantityIcon} from "./QuantityIcon.tsx";
 import {ObjectivesAlliances} from "./ObjectivesAlliances.tsx";
 import {IntrigueModifier} from "../modifiers/IntrigueModifier.tsx";
+import {SardaukarSkills} from "./SardaukarSkills.tsx";
 
 export function Player(props: {
   playerModel: PlayerModel;
@@ -350,7 +351,32 @@ export function Player(props: {
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         <Image draggable={false} fit={"contain"} w={"100%"} h={40} src={signet_ring}/>
         <FeydSignet characterModel={props.playerModel.character}/>
+
+      </>
+    )
+  }
+
+  const getContracts = () => {
+    if (props.playerModel.contracts.length < 1) {
+      return;
+    }
+    return (
+      <>
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <Contracts player={props.playerModel}/>
+      </>
+    )
+  }
+
+  const getSkills = () => {
+    if (props.playerModel.skills.length < 1) {
+      return;
+    }
+
+    return (
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <SardaukarSkills player={props.playerModel}/>
       </>
     )
   }
@@ -368,7 +394,8 @@ export function Player(props: {
         {getTroopsCommanders()}
         {getModifiers()}
         {getFeydSignetComponent()}
-        {props.playerModel.contracts.length > 0 && <Contracts player={props.playerModel}/>}
+        {getContracts()}
+        {getSkills()}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getActions()}
       </Stack>

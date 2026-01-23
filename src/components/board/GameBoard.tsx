@@ -19,7 +19,7 @@ import {ShieldWall} from "./ShieldWall.tsx";
 import {HighCouncilToken} from "./HighCouncilToken.tsx";
 import {PopoverContainer} from "../PopoverContainer.tsx";
 import {produce} from "immer";
-import {UNLOCK_SWORDMASTER} from "../../const/Actions.tsx";
+import {ACQUIRE_SARDAUKAR_COMMANDER, UNLOCK_SWORDMASTER} from "../../const/Actions.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
 
 export function GameBoard() {
@@ -152,6 +152,10 @@ export function GameBoard() {
     {id: 1000, top: "23.5%", left: "54%"}
   ]
 
+  const acquireCommanderAction = (id: number) => {
+    sendMessage({action: ACQUIRE_SARDAUKAR_COMMANDER, body: {commanderId: id}});
+  }
+
   const getCommanders = () => {
     return gameState.sardaukarCommanders.map(c => {
       const location = assertExists(
@@ -161,7 +165,7 @@ export function GameBoard() {
       return (
         <PopoverContainer
           label={"Acquire commander"}
-          onclick={() => 1}
+          onclick={() => acquireCommanderAction(c.id)}
           style={{
             position: "absolute",
             top: location.top,
