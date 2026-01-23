@@ -20,8 +20,10 @@ interface CardButton {
 export function Card(props: {
   className?: string,
   src: string | undefined,
+  w?: Property.Width,
   h?: Property.Height,
   ml?: MantineSpacing,
+  fit?: React.CSSProperties['objectFit'],
   style?: React.CSSProperties,
   buttons?: CardButton[]
 }) {
@@ -71,13 +73,13 @@ export function Card(props: {
       <Image className={props.className}
              style={props.style}
              bg={"transparent"}
-             w={"auto"}
+             w={props.w ? props.w : "auto"}
              h={props.h ? props.h : "270"}
              mah={"270"}
              maw={"190"}
              ml={props.ml}
              draggable={false}
-             fit={"cover"}
+             fit={props.fit ? props.fit : "cover"}
              radius={"md"}
              src={props.src}
              alt="Card"/>

@@ -16,6 +16,8 @@ export interface GameModel {
   };
   highCouncil: string[];
   currentContracts: string[];
+  currentTechs: CardModel[];
+  currentSkills: CardModel[];
   currentConflict: string;
   nextConflictLevel: number;
   currentPlayer: string;

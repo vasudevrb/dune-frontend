@@ -3,19 +3,21 @@ import {ScrollArea, Divider, Drawer, Text, Space, Stack, Group} from "@mantine/c
 import {Card, CardButtonType} from "./Card.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
 import type {CardModel} from "../../model/PlayerModel.tsx";
-import {ACQUIRE_IMPERIUM_CARD, ACQUIRE_RESERVE_CARD} from "../../const/Actions.tsx";
+import {ACQUIRE_IMPERIUM_CARD, ACQUIRE_RESERVE_CARD, ACQUIRE_SKILL, ACQUIRE_TECH} from "../../const/Actions.tsx";
 import use_card_icon from "../../assets/cards/use_card.png";
 import {useWebSocket} from "../WebSocketContext.tsx";
 import type {GameModel} from "../../model/GameModel.tsx";
-import tech_tile from "../../assets/tech_tile.png";
+import * as React from "react";
 
 // Careful changing these values, they are used to send messages over websocket.
-const ImperiumCardType = {
+const SectionType = {
   IMPERIUM: "IMPERIUM",
   RESERVE: "RESERVE",
+  TECH: "TECH",
+  SKILL: "SKILL",
 } as const;
 
-export type ImperiumCardType = keyof typeof ImperiumCardType;
+export type SectionType = keyof typeof SectionType;
 
 export function ImperiumRow(props: {
   game: GameModel
@@ -27,23 +29,29 @@ export function ImperiumRow(props: {
     return <></>
   }
 
-  const getSectionLabel = (cardType: ImperiumCardType) => {
+  const getSectionLabel = (cardType: SectionType) => {
     switch (cardType) {
-      case ImperiumCardType.IMPERIUM: return "Imperium Row";
-      case ImperiumCardType.RESERVE: return "Reserve Cards";
+      case SectionType.IMPERIUM: return "Imperium Row";
+      case SectionType.RESERVE: return "Reserve Cards";
+      case SectionType.TECH: return "Techs";
+      case SectionType.SKILL: return "Sardaukar Skills";
     }
   }
 
-  const getButtons = (cardType: ImperiumCardType, card: CardModel) => {
-    const getOnClickAction = () => {
-      const action = cardType === ImperiumCardType.IMPERIUM ? ACQUIRE_IMPERIUM_CARD : ACQUIRE_RESERVE_CARD;
-      return sendMessage({action: action, body: {url: card.url}})
+  const getButtons = (cardType: SectionType, card: CardModel) => {
+    const getOnClickActionType = () => {
+      switch (cardType) {
+        case SectionType.IMPERIUM: return ACQUIRE_IMPERIUM_CARD;
+        case SectionType.RESERVE: return ACQUIRE_RESERVE_CARD;
+        case SectionType.TECH: return ACQUIRE_TECH;
+        case SectionType.SKILL: return ACQUIRE_SKILL;
+      }
     }
     const getButton = (label: string) => {
       return {
         type: CardButtonType.Icon,
         label: label,
-        onclick: () => {getOnClickAction()}
+        onclick: () => {sendMessage({action: getOnClickActionType(), body: {url: card.url}})}
       }
     }
 
@@ -52,13 +60,16 @@ export function ImperiumRow(props: {
     return [acquireButton]
   }
 
-  const getCardSection = (type: ImperiumCardType, cards: CardModel[]) => {
+  const getCardSection = (type: SectionType, cards: CardModel[], width?: string, height?: string, fit?: React.CSSProperties['objectFit']) => {
     const sectionLabel = getSectionLabel(type);
     const cardElements = cards.map((card, index) => {
       return (
         <Card
           key={index}
           src={`${card.url}`}
+          w={width}
+          h={height}
+          fit={fit}
           buttons={getButtons(type, card)}
         />)
     })
@@ -86,21 +97,14 @@ export function ImperiumRow(props: {
         },
       }}>
       <Stack gap={0}>
-        <Group gap={16} pb={48} ps={88}>
-          <Card src={tech_tile} h={"120"}/>
-          <Card src={tech_tile} h={"120"} />
-          <Card src={tech_tile} h={"120"} />
-          <Card src={tech_tile} h={"120"} />
-          <Card src={tech_tile} h={"120"} />
+
+        <Group ps={16} pb={50}>
+          {getCardSection(SectionType.TECH, props.game.currentTechs, "195", "130", "contain")}
         </Group>
 
-      <Group gap={16} pb={48} ps={88}>
-          <Card src={tech_tile} h={"120"}/>
-          <Card src={tech_tile} h={"120"}/>
-          <Card src={tech_tile} h={"120"}/>
-          <Card src={tech_tile} h={"120"}/>
-          <Card src={tech_tile} h={"120"}/>
-      </Group>
+        <Group ps={16} pb={50}>
+          {getCardSection(SectionType.SKILL, props.game.currentSkills, "150", "150", "contain")}
+        </Group>
 
         <ScrollArea
           className="scrollarea-imperium-row"
@@ -110,8 +114,8 @@ export function ImperiumRow(props: {
           type={"never"}
           scrollbars="x">
           <div style={{display: 'flex', gap: 16, padding: 16}}>
-            {getCardSection(ImperiumCardType.IMPERIUM, props.game.imperiumRow)}
-            {getCardSection(ImperiumCardType.RESERVE, props.game.reserveRow)}
+            {getCardSection(SectionType.IMPERIUM, props.game.imperiumRow)}
+            {getCardSection(SectionType.RESERVE, props.game.reserveRow)}
             <Space w={16}/>
           </div>
         </ScrollArea>

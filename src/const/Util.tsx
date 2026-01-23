@@ -49,6 +49,17 @@ export const gameStartState: GameModel = {
     "http://localhost:8080/contracts/contract_15.png",
     "http://localhost:8080/contracts/contract_17.png"
   ],
+  currentTechs: [
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"},
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"},
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"}
+  ],
+  currentSkills: [
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+  ],
   imperiumRow: [
     {url: "http://localhost:8080/imperium_cards/imperium_45.jpg"},
     {url: "http://localhost:8080/imperium_cards/imperium_46.jpg"},
