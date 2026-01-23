@@ -13,6 +13,8 @@ export interface GameState {
   setImperiumRowOpened: (opened: boolean) => void;
   initialTurnOrder: number;
   setInitialTurnOrder: (newTurnOrder: number) => void;
+  includesRivals: boolean;
+  setIncludesRivals: (rivals: boolean) => void;
 }
 
 export const useGameStore = create<GameState>((set) => ({
@@ -26,4 +28,6 @@ export const useGameStore = create<GameState>((set) => ({
   setImperiumRowOpened: (opened: boolean) => set({ imperiumRowOpened: opened }),
   initialTurnOrder: 0,
   setInitialTurnOrder: (newTurnOrder: number) => set({initialTurnOrder: newTurnOrder}),
+  includesRivals: false,
+  setIncludesRivals: (rivals: boolean) => set({includesRivals: rivals}),
 }));

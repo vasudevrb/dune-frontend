@@ -21,4 +21,5 @@ export interface GameModel {
   currentPlayer: string;
   firstPlayer: string;
   shieldWallBroken: boolean;
+  containsRivals: boolean;
 }

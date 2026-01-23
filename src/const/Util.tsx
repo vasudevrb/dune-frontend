@@ -66,7 +66,8 @@ export const gameStartState: GameModel = {
     "",
     ""
   ],
-  shieldWallBroken: false
+  shieldWallBroken: false,
+  containsRivals: true
 }
 
 export const characterStartState: CharacterModel = {
@@ -80,6 +81,7 @@ export const playerStartState: PlayerModel = {
   name: "",
   character: characterStartState,
   color: "",
+  isRival: false,
   isThisPlayer: false,
   victoryPoints: 0,
   objectives: [
@@ -184,6 +186,7 @@ export const MUAD_DIB: CharacterModel = {
 export const PLAYER_2: PlayerModel = {
   ...playerStartState,
   name: "P2",
+  isRival: true,
   isThisPlayer: false,
   character: MUAD_DIB,
   color: "BLUE",
@@ -328,7 +331,7 @@ export function showNotification(message: string) {
     styles: {
       root: {
         height: 80,
-        right: '300px',
+        pointerEvents: 'none',
         border: "2px solid #cacaca"
       },
       description: {

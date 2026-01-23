@@ -252,9 +252,9 @@ function moveTroopToGarrison(player: PlayerModel) {
   return true;
 }
 
-export function addOrRemoveCombatUnit(game: GameModel, quantity: number, unit: CombatUnitType, add: boolean) {
+export function addOrRemoveCombatUnit(playerName: string, game: GameModel, quantity: number, unit: CombatUnitType, add: boolean) {
   const player = assertExists(
-    game.players.find(p => p.isThisPlayer),
+    game.players.find(p => p.name === playerName),
     `This player not found.`
   )
 
@@ -324,9 +324,9 @@ export function addOrRemoveBonusSpice(game: GameModel, locationId: number, add: 
   return false;
 }
 
-export function addOrRemoveResource(game: GameModel, resourceType: string, quantity: number, add: boolean) {
+export function addOrRemoveResource(playerName: string, game: GameModel, resourceType: string, quantity: number, add: boolean) {
   const player = assertExists(
-    game.players.find(p => p.isThisPlayer),
+    game.players.find(p => p.name === playerName),
     `This player not found.`
   )
 
@@ -362,9 +362,9 @@ export function addOrRemoveResource(game: GameModel, resourceType: string, quant
   return false;
 }
 
-export function addOrRemoveVP(game: GameModel, add: boolean) {
+export function addOrRemoveVP(playerName: string, game: GameModel, add: boolean) {
   const player = assertExists(
-    game.players.find(p => p.isThisPlayer),
+    game.players.find(p => p.name === playerName),
     `This player not found.`
   )
   if (add) {
@@ -389,9 +389,9 @@ function moveTroopToSupply(player: PlayerModel) {
   return true;
 }
 
-export function gainOrLoseAlliance(game: GameModel, gained: boolean, type: FactionType) {
+export function gainOrLoseAlliance(playerName: string, game: GameModel, gained: boolean, type: FactionType) {
   const thisPlayer = assertExists(
-    game.players.find(p => p.isThisPlayer),
+    game.players.find(p => p.name === playerName),
     "This player not found"
   )
   const alreadyHasAlliance = thisPlayer.factionAlliances.find(fa => fa === type)
@@ -407,9 +407,9 @@ export function gainOrLoseAlliance(game: GameModel, gained: boolean, type: Facti
   return false;
 }
 
-export function gainOrLoseObjective(game: GameModel, gained: boolean, type: ObjectiveType) {
+export function gainOrLoseObjective(playerName: string, game: GameModel, gained: boolean, type: ObjectiveType) {
   const thisPlayer = assertExists(
-    game.players.find(p => p.isThisPlayer),
+    game.players.find(p => p.name === playerName),
     "This player not found"
   )
 
@@ -428,7 +428,12 @@ export function canMoveComponent(game: GameModel, playerName: string) {
     game.players.find(p => p.isThisPlayer),
     "This player not found"
   )
-  return thisPlayer.name === playerName;
+
+  const rivalPlayerNames = assertExists(
+    game.players.filter(p => p.isRival).map(p => p.name),
+    "This player not found"
+  )
+  return thisPlayer.name === playerName || rivalPlayerNames.includes(playerName);
 }
 
 export function acquireContract(game: GameModel, url: string) {

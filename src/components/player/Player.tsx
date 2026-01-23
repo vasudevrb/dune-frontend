@@ -4,6 +4,9 @@ import signet_ring from '../../assets/cards/signet_ring.png';
 import draw_intrigue_card from '../../assets/cards/draw_intrigue_card.png';
 import steal_intrigue_card from '../../assets/cards/steal_intrigue_card.png';
 import draw_card from '../../assets/cards/draw_card.png';
+import imperium_card from '../../assets/cards/imperium_card.jpg';
+import maker_hook_icon from '../../assets/combat/maker_hook.png';
+import draw_hagal_card from "../../assets/cards/draw_hagal.png";
 import {CombatUnitType, type PlayerModel} from "../../model/PlayerModel.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
 import {FeydSignet} from "./FeydSignet.tsx";
@@ -13,9 +16,10 @@ import {
   END_TURN,
   GAIN_INTRIGUE_CARD,
   REVEAL,
-  STEAL_INTRIGUE_CARD
+  GET_HAGAL_CARD,
+  STEAL_INTRIGUE_CARD, UNLOCK_MAKER_HOOK, UNLOCK_SWORDMASTER
 } from "../../const/Actions.tsx";
-import {getResourceIconByType, getResourceTextColorByType} from "../../const/GameUtils.tsx";
+import {getAgentIcon, getResourceIconByType, getResourceTextColorByType} from "../../const/GameUtils.tsx";
 import {CharacterImage} from "./CharacterImage.tsx";
 import {ResourceModifier} from "../modifiers/ResourceModifier.tsx";
 import {VictoryPointModifier} from "../modifiers/VictoryPointModifier.tsx";
@@ -25,12 +29,14 @@ import {CardStats} from "./CardStats.tsx";
 import {Contracts} from "./Contracts.tsx";
 import {QuantityIcon} from "./QuantityIcon.tsx";
 import {ObjectivesAlliances} from "./ObjectivesAlliances.tsx";
+import {IntrigueModifier} from "../modifiers/IntrigueModifier.tsx";
 
 export function Player(props: {
   playerModel: PlayerModel;
   currentPlayer: string;
   firstPlayer: string;
 }) {
+  const {gameState} = useGameStore();
   const {sendMessage} = useWebSocket();
   const isThisPlayerCurrentPlayer = props.playerModel.name === props.currentPlayer;
   const {setImperiumRowOpened} = useGameStore();
@@ -91,6 +97,7 @@ export function Player(props: {
             <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Troop}/>
             <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Sandworm}/>
             <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Strength}/>
+            {props.playerModel.isRival ? <IntrigueModifier player={props.playerModel}/> : null}
           </Stack>
         </Group>
       </>
@@ -143,18 +150,56 @@ export function Player(props: {
           {getIconButton(draw_card, () => {sendMessage({action: DRAW_CARD})})}
           {getIconButton(draw_intrigue_card, () => {sendMessage({action: GAIN_INTRIGUE_CARD})})}
           {getIconButton(steal_intrigue_card, () => {sendMessage({action: STEAL_INTRIGUE_CARD})})}
-        </Group>
-        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
-        <Group w={"100%"} gap={"xs"}>
-          {getTextButton("Imperium Row", () => setImperiumRowOpened(true))}
+          {getIconButton(imperium_card, () => setImperiumRowOpened(true))}
         </Group>
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         <Group w={"100%"} gap={"xs"} justify={"flex-end"}>
           {getTextButton("REVEAL", () => revealAction(), "outline")}
-          {isThisPlayerCurrentPlayer && getTextButton("END TURN", () => endTurnAction())}
+          {(isThisPlayerCurrentPlayer || gameState.containsRivals)
+            && getTextButton("END TURN", () => endTurnAction())}
         </Group>
 
       </>
+    )
+  }
+
+  const getRivalActions = () => {
+    const getIconButton = (
+      icon: string,
+      onClick?: () => void,
+    ) => {
+      return (
+        <ActionIcon
+          onClick={onClick}
+          w={"auto"}
+          h={35}
+          className={"player-resource-modifier-button"}
+          variant={"none"}
+          radius={"0"}>
+          <Image fit="contain" h={35} src={icon}/>
+        </ActionIcon>
+
+      )
+    }
+
+    const unlockSwordMasterAction = () => {
+      sendMessage(
+        {action: UNLOCK_SWORDMASTER, body: {playerName: props.playerModel.name}}
+      )
+    }
+
+    const unlockMakerHookAction = () => {
+      sendMessage(
+        {action: UNLOCK_MAKER_HOOK, body: {playerName: props.playerModel.name}}
+      )
+    }
+
+    return (
+      <Group ps={16} pb={8}>
+        {getIconButton(draw_hagal_card, () => {sendMessage({action: GET_HAGAL_CARD})})}
+        {getIconButton(getAgentIcon("gray"), () => {unlockSwordMasterAction()})}
+        {getIconButton(maker_hook_icon, () => {unlockMakerHookAction()})}
+      </Group>
     )
   }
 
@@ -227,7 +272,7 @@ export function Player(props: {
     : null;
 
   const getOppositionPlayer = () => {
-    return (
+    return props.playerModel.isRival ? getRivalPlayer() : (
       <Stack
         className={`player-container ${currentPlayerStyleClass}`}
         w={"100%"}
@@ -241,6 +286,27 @@ export function Player(props: {
         </Group>
         {getAgentsSpiesFlags()}
         {getResourcesDisplay()}
+      </Stack>
+    )
+  }
+
+  const getRivalPlayer = () => {
+    return (
+      <Stack
+        className={`player-container ${currentPlayerStyleClass}`}
+        w={"100%"}
+        gap={0}>
+        <Text ta="left" className={"player-container-text"}>
+          {props.playerModel.character.name}
+        </Text>
+        <Group w={"100%"} wrap={"nowrap"} gap={0}>
+          {getAvatar()}
+          <ObjectivesAlliances player={props.playerModel}/>
+        </Group>
+        {getAgentsSpiesFlags()}
+        {getModifiers()}
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        {getRivalActions()}
       </Stack>
     )
   }

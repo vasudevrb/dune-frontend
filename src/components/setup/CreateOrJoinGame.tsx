@@ -1,7 +1,7 @@
 import {useWebSocket} from "../WebSocketContext.tsx";
 import {type ChangeEvent, type MouseEventHandler, useState} from "react";
 import {useGameStore} from "../../store/GameStore.tsx";
-import {ActionIcon, Box, Button, Group, Image, Overlay, Stack, Text, TextInput} from "@mantine/core";
+import {ActionIcon, Box, Button, Checkbox, Group, Image, Overlay, Stack, Text, TextInput} from "@mantine/core";
 import {showNotification} from "../../const/Util.tsx";
 import createGameImage from "../../assets/create_game_bg.png";
 import joinGameImage from "../../assets/join_game_bg.png";
@@ -17,14 +17,9 @@ export function CreateOrJoinGame(props: {
   const globalProps = useGameStore();
 
   const getGameId = async () => {
-    const url = `${baseUrl}/create-game?playerName=${globalProps.playerName}`
+    const url = `${baseUrl}/create-game?playerName=${globalProps.playerName}&includeRivals=${globalProps.includesRivals}`
     try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: new Headers({
-          "ngrok-skip-browser-warning": "69420",
-        })
-      })
+      const response = await fetch(url)
         .then(res => res.json())
       globalProps.setInitialTurnOrder(response.turnOrder)
       return response.gameId
@@ -123,13 +118,13 @@ export function CreateOrJoinGame(props: {
       globalProps.setInitialTurnOrder(response.turnOrder)
       switch(response.joinGameState) {
         case "JOINED":
-          props.stepper(1)
+          props.stepper(globalProps.includesRivals ? 2: 1)
           break;
         case "PREVIOUSLY_JOINED":
-          props.stepper(1)
+          props.stepper(globalProps.includesRivals ? 2 : 1)
           break;
         case "IN_LOBBY":
-          props.stepper(2)
+          props.stepper(3)
           break;
         case "IN_GAME":
           sendMessage({action: RESUME_GAME})
@@ -176,6 +171,16 @@ export function CreateOrJoinGame(props: {
             globalProps.gameId,
             ev => globalProps.setGameId(ev.currentTarget.value)
           )
+        }
+
+        {isHost &&
+          <Checkbox
+            pt={8}
+            checked={globalProps.includesRivals}
+            onChange={(event) => globalProps.setIncludesRivals(event.currentTarget.checked)}
+            radius={0}
+            label="Include rivals"
+            c={"#d1d1d1"}/>
         }
 
         <Button
