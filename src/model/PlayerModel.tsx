@@ -2,6 +2,7 @@ export interface PlayerModel {
   name: string;
   character: CharacterModel;
   color: string;
+  isRival: boolean;
   isThisPlayer: boolean;
   victoryPoints: number;
   objectives: ObjectiveType[];

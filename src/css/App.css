@@ -45,9 +45,10 @@
   display: none;
 }
 
-.mantine-Notification-root {
+.mantine-Notifications-root {
   animation: fadeIn 1s !important;
   transition: none !important;
+  right: 300px;
 }
 
 .card-used-preview {

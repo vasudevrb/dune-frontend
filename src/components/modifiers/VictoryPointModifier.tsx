@@ -20,7 +20,7 @@ export function VictoryPointModifier(props: {
   const VPModifierAction = (add: boolean) => {
     let success = false;
     setGameState(produce(gameState, draft => {
-      success = addOrRemoveVP(draft, add)
+      success = addOrRemoveVP(props.player.name, draft, add)
     }))
     if (success) {
       sendMessage({

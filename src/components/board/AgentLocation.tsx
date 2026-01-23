@@ -88,7 +88,12 @@ export function AgentLocation(props: {
   const {sendMessage} = useWebSocket();
 
   const sendAgent = () => {
-    const player = assertExists(
+    const player = gameState.containsRivals
+      ? assertExists(
+        gameState.players.find(p => p.name === gameState.currentPlayer),
+        "Current player not found"
+      )
+      : assertExists(
       gameState.players.find(p => p.isThisPlayer),
       "Current player not found"
     )
@@ -112,10 +117,15 @@ export function AgentLocation(props: {
   }
 
   const canSendAgent = () => {
-    const player = assertExists(
-      gameState.players.find(p => p.isThisPlayer),
-      "Current player not found"
-    )
+    const player = gameState.containsRivals
+      ? assertExists(
+        gameState.players.find(p => p.name === gameState.currentPlayer),
+        "Current player not found"
+      )
+      : assertExists(
+        gameState.players.find(p => p.isThisPlayer),
+        "Current player not found"
+      )
 
     return !props.location.agents.map(a => a.playerName).includes(player.name)
   }

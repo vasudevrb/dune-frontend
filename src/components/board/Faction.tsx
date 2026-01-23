@@ -33,7 +33,7 @@ function FactionInfluenceMarker(props: {
     height: isDragging ? '25px' : '45%'
   } : undefined;
 
-  const draggableProps = (props.player.isThisPlayer)
+  const draggableProps = (props.player.isThisPlayer || props.player.isRival)
     ? {
       ref: setNodeRef,
       ...listeners,

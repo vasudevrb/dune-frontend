@@ -8,6 +8,7 @@ import {SelectCharacter} from "./SelectCharacter.tsx";
 import {Lobby} from "./Lobby.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
 import {GET_CHARACTER_READY_STATES} from "../../const/Actions.tsx";
+import {SelectRivals} from "./SelectRivals.tsx";
 
 export interface LobbyPlayer {
   playerName: string;
@@ -54,8 +55,9 @@ export function Setup2(props: {
       h={"100%"}
       gap={0}>
       {(step === 0) && <CreateOrJoinGame stepper={(toStep) => setStep(toStep)}/>}
-      {step === 1 && <SelectCharacter stepper={() => setStep(prev => prev + 1)}/>}
-      {step === 2 && <Lobby players={players} gameStartHandler={props.gameStartHandler}/>}
+      {step === 1 && <SelectCharacter stepper={(toStep) => setStep(toStep)}/>}
+      {step === 2 && <SelectRivals stepper={() => setStep(prev => prev + 1)}/>}
+      {step === 3 && <Lobby players={players} gameStartHandler={props.gameStartHandler}/>}
 
       <Box
         hidden={globalProps.gameId === ""}

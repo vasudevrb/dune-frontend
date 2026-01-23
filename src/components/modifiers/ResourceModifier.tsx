@@ -21,7 +21,7 @@ export function ResourceModifier(props: {
   const resourceModifierAction = (add: boolean, quantity: number, resourceType: string) => {
     let success = false;
     setGameState(produce(gameState, draft => {
-      success = addOrRemoveResource(draft, resourceType, quantity, add)
+      success = addOrRemoveResource(props.player.name, draft, resourceType, quantity, add)
     }))
     if (success) {
       sendMessage({

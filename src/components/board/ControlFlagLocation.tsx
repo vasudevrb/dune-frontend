@@ -65,10 +65,15 @@ export function ControlFlagLocation(props: {
   const {sendMessage} = useWebSocket();
 
   const sendControlFlag = () => {
-    const player = assertExists(
-      gameState.players.find(p => p.isThisPlayer),
-      "Current player not found"
-    )
+    const player = gameState.containsRivals
+      ? assertExists(
+        gameState.players.find(p => p.name === gameState.currentPlayer),
+        "Current player not found"
+      )
+      : assertExists(
+        gameState.players.find(p => p.isThisPlayer),
+        "Current player not found"
+      )
 
     const controlFlagId = player.controlFlags[0].id
     setGameState(produce(gameState, draft => {
@@ -85,10 +90,15 @@ export function ControlFlagLocation(props: {
   }
 
   const canSendControlFlag = () => {
-    const player = assertExists(
-      gameState.players.find(p => p.isThisPlayer),
-      "Current player not found"
-    )
+    const player = gameState.containsRivals
+      ? assertExists(
+        gameState.players.find(p => p.name === gameState.currentPlayer),
+        "Current player not found"
+      )
+      : assertExists(
+        gameState.players.find(p => p.isThisPlayer),
+        "Current player not found"
+      )
     return player.controlFlags.length > 0 && props.location.controlFlag?.playerName !== player.name;
   }
 
