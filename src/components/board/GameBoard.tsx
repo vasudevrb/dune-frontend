@@ -142,6 +142,41 @@ export function GameBoard() {
     })
   }
 
+  const sardaukarCommanderLocations = [
+    {id: 1, top: "2%", left: "12.5%"},
+    {id: 2, top: "12%", left: "12.5%"},
+    {id: 4, top: "36.5%", left: "12.5%"},
+    {id: 16, top: "1%", left: "28%"},
+    {id: 17, top: "1%", left: "63%"},
+    {id: 20, top: "10%", left: "63%"},
+    {id: 1000, top: "23.5%", left: "54%"}
+  ]
+
+  const getCommanders = () => {
+    return gameState.sardaukarCommanders.map(c => {
+      const location = assertExists(
+        sardaukarCommanderLocations.find(l => l.id === c.id),
+        "Error finding sardarkar commander location"
+      )
+      return (
+        <PopoverContainer
+          label={"Acquire commander"}
+          onclick={() => 1}
+          style={{
+            position: "absolute",
+            top: location.top,
+            left: location.left,
+          }}>
+          <Image
+            pos={"absolute"}
+            w={50}
+            fit={"contain"}
+            src={sardaukar_commander} />
+        </PopoverContainer>
+      )
+    })
+  }
+
   const getBoard = () => {
     return (
       <Stack>
@@ -223,21 +258,7 @@ export function GameBoard() {
           {gameState.currentContracts.length > 0 && <Contract url={gameState.currentContracts[0]} top={"25%"} left={"34.5%"}/>}
           {gameState.currentContracts.length > 1 && <Contract url={gameState.currentContracts[1]} top={"25%"} left={"45.5%"}/>}
 
-          <Image
-            pos={"absolute"}
-            w={60}
-            fit={"contain"}
-            src={sardaukar_commander}
-            top={"3%"}
-            left={"19.5%"}/>
-
-          <Image
-            pos={"absolute"}
-            w={60}
-            fit={"contain"}
-            src={sardaukar_commander}
-            top={"13%"}
-            left={"19.5%"}/>
+          {getCommanders()}
 
           <img
             src={board}

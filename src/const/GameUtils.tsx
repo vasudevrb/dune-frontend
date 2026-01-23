@@ -7,6 +7,7 @@ import spice_icon from "../assets/resources/spice.png";
 import solari_icon from "../assets/resources/solari.png";
 import troop_icon from "../assets/combat/troop.png";
 import worm_icon from "../assets/combat/worm.png";
+import sardaukar_icon from "../assets/combat/sardaukar_commander.png";
 import strength_icon from "../assets/combat/strength.png";
 import agent_icon_disabled from '../assets/agents/agent_disabled.svg';
 import agent_icon_red from '../assets/agents/agent_red.svg';
@@ -279,6 +280,18 @@ export function addOrRemoveCombatUnit(playerName: string, game: GameModel, quant
         return true
       }
       return false;
+    case CombatUnitType.Commander:
+      if (add && player.combat.commandersInSupply >= quantity) {
+        player.combat.commandersInGarrison+=quantity;
+        player.combat.commandersInSupply-=quantity;
+        return true;
+      } else if (player.combat.commandersInGarrison > 0) {
+        const num = Math.max(player.combat.commandersInGarrison - quantity, 0);
+        player.combat.commandersInSupply = player.combat.commandersInGarrison - num;
+        player.combat.commandersInGarrison = num;
+        return true;
+      }
+      return false;
     case CombatUnitType.Strength:
       if (add) {
         player.combat.strength+=quantity;
@@ -499,6 +512,8 @@ export function getCombatUnitIconByType(modifierType: CombatUnitType) {
       return troop_icon;
     case CombatUnitType.Sandworm:
       return worm_icon;
+      case CombatUnitType.Commander:
+        return sardaukar_icon;
     default:
       return strength_icon;
   }

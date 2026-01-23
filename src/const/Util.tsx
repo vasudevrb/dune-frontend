@@ -49,17 +49,6 @@ export const gameStartState: GameModel = {
     "http://localhost:8080/contracts/contract_15.png",
     "http://localhost:8080/contracts/contract_17.png"
   ],
-  currentTechs: [
-    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"},
-    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"},
-    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"}
-  ],
-  currentSkills: [
-    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
-    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
-    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
-    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
-  ],
   imperiumRow: [
     {url: "http://localhost:8080/imperium_cards/imperium_45.jpg"},
     {url: "http://localhost:8080/imperium_cards/imperium_46.jpg"},
@@ -78,7 +67,27 @@ export const gameStartState: GameModel = {
     ""
   ],
   shieldWallBroken: false,
-  containsRivals: true
+  containsRivals: true,
+  currentTechs: [
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"},
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"},
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"}
+  ],
+  currentSkills: [
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+  ],
+  sardaukarCommanders: [
+    {id: 1},
+    {id: 2},
+    {id: 4},
+    {id: 16},
+    {id: 17},
+    {id: 20},
+    {id: 1000},
+  ]
 }
 
 export const characterStartState: CharacterModel = {
@@ -142,6 +151,9 @@ export const playerStartState: PlayerModel = {
     troopsInGarrison: 3,
     troopsInCombat: 0,
     wormsInCombat: 0,
+    commandersInSupply: 0,
+    commandersInGarrison: 0,
+    commandersInCombat: 0,
     strength: 0
   }
 }
@@ -183,6 +195,9 @@ export const PLAYER_1: PlayerModel = {
     troopsInCombat: 2,
     troopsInGarrison: 4,
     wormsInCombat: 1,
+    commandersInSupply: 1,
+    commandersInGarrison: 1,
+    commandersInCombat: 0,
     strength: 9
   },
   makerHookUnlocked: true,
@@ -197,7 +212,7 @@ export const MUAD_DIB: CharacterModel = {
 export const PLAYER_2: PlayerModel = {
   ...playerStartState,
   name: "P2",
-  isRival: true,
+  isRival: false,
   isThisPlayer: false,
   character: MUAD_DIB,
   color: "BLUE",
@@ -220,7 +235,10 @@ export const PLAYER_2: PlayerModel = {
     troopsInCombat: 4,
     troopsInGarrison: 2,
     wormsInCombat: 2,
-    strength: 17
+    commandersInSupply: 0,
+    commandersInGarrison: 0,
+    commandersInCombat: 0,
+    strength: 10
   },
 }
 
@@ -256,7 +274,10 @@ export const PLAYER_3: PlayerModel = {
     troopsInCombat: 8,
     troopsInGarrison: 4,
     wormsInCombat: 3,
-    strength: 23
+    commandersInSupply: 0,
+    commandersInGarrison: 0,
+    commandersInCombat: 0,
+    strength: 13
   },
 }
 
@@ -313,8 +334,11 @@ export const PLAYER_4: PlayerModel = {
   ],
   combat: {
     troopsInCombat: 1,
-    troopsInGarrison: 15,
+    troopsInGarrison: 9,
     wormsInCombat: 0,
+    commandersInSupply: 2,
+    commandersInGarrison: 1,
+    commandersInCombat: 0,
     strength: 4
   },
 }

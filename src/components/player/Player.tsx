@@ -96,6 +96,7 @@ export function Player(props: {
           <Stack>
             <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Troop}/>
             <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Sandworm}/>
+            <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Commander}/>
             <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Strength}/>
             {props.playerModel.isRival ? <IntrigueModifier player={props.playerModel}/> : null}
           </Stack>
@@ -318,6 +319,7 @@ export function Player(props: {
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         <Image draggable={false} fit={"contain"} w={"100%"} h={40} src={signet_ring}/>
         <FeydSignet characterModel={props.playerModel.character}/>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
       </>
     )
   }

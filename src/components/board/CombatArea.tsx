@@ -360,7 +360,7 @@ export function CombatArea() {
           left: "87.7%",
           top: "83.9%"
         }}>
-        <Box w={50} h={65} bg={"#fafafa44"} />
+        <Box w={50} h={65} />
       </PopoverContainer>
       {getConflictCard()}
       {getNextConflictBackground()}

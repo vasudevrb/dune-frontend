@@ -1,6 +1,7 @@
 import type {CardModel, PlayerModel} from "./PlayerModel.tsx";
 import type {AgentLocationModel} from "./AgentLocationModel.tsx";
 import type {SpyLocationModel} from "./SpyLocationModel.tsx";
+import type {SardaukarCommanderModel} from "./SardaukarCommanderModel.tsx";
 
 export interface GameModel {
   gameId: string;
@@ -16,12 +17,14 @@ export interface GameModel {
   };
   highCouncil: string[];
   currentContracts: string[];
-  currentTechs: CardModel[];
-  currentSkills: CardModel[];
   currentConflict: string;
   nextConflictLevel: number;
   currentPlayer: string;
   firstPlayer: string;
   shieldWallBroken: boolean;
   containsRivals: boolean;
+
+  currentTechs: CardModel[];
+  currentSkills: CardModel[];
+  sardaukarCommanders: SardaukarCommanderModel[];
 }

@@ -59,6 +59,7 @@ export type FactionType = keyof typeof FactionType;
 export const CombatUnitType = {
   Troop: "Troop",
   Sandworm: "Sandworm",
+  Commander: "Commander",
   Strength: "Strength",
 } as const;
 
@@ -74,6 +75,9 @@ export interface CharacterModel {
 export interface CombatModel {
   troopsInGarrison: number;
   troopsInCombat: number;
+  commandersInSupply: number;
+  commandersInGarrison: number;
+  commandersInCombat: number;
   wormsInCombat: number;
   strength: number;
 }
