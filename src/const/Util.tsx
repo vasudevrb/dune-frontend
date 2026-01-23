@@ -342,8 +342,8 @@ export const PLAYER_4: PlayerModel = {
     troopsInGarrison: 5,
     wormsInCombat: 0,
     commandersInSupply: 2,
-    commandersInGarrison: 3,
-    commandersInCombat: 0,
+    commandersInGarrison: 2,
+    commandersInCombat: 1,
     strength: 4
   },
 }

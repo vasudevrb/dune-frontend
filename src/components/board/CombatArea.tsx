@@ -1,10 +1,7 @@
 import '../../css/CombatArea.css'
 import {Image, Group, ActionIcon, Popover, Stack, Text, Button, Box} from "@mantine/core";
-import troop_icon_red from "../../assets/combat/troop_red.png";
-import troop_icon_blue from "../../assets/combat/troop_blue.png";
-import troop_icon_green from "../../assets/combat/troop_green.png";
-import troop_icon_gold from "../../assets/combat/troop_gold.png";
-import worm_icon from "../../assets/combat/worm.png";
+import troop_icon from "../../assets/combat/troop.png";
+import sardaukar_commander_icon from "../../assets/combat/sardaukar_commander.png";
 import conflict_bg_1 from "../../assets/conflicts/conflict_l1.jpg";
 import conflict_bg_2 from "../../assets/conflicts/conflict_l2.jpg";
 import conflict_bg_3 from "../../assets/conflicts/conflict_l3.jpg";
@@ -21,7 +18,6 @@ import minus_icon from "../../assets/minus.svg";
 import plus_icon from "../../assets/plus.svg";
 import cross_icon from "../../assets/cross.svg";
 import type {JSX} from "react";
-import IconGrid from "./IconGrid.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
 import {produce} from "immer";
 import {assertExists, moveUnit, TroopMovementLocation} from "../../const/GameUtils.tsx";
@@ -29,6 +25,7 @@ import {useWebSocket} from "../WebSocketContext.tsx";
 import {GET_NEXT_CONFLICT, MOVE_COMBAT_UNIT, UNLOCK_MAKER_HOOK} from "../../const/Actions.tsx";
 import {PopoverContainer} from "../PopoverContainer.tsx";
 import {Garrison} from "./Garrison.tsx";
+import {Battlefield} from "./Battlefield.tsx";
 
 export function CombatArea() {
 
@@ -50,9 +47,12 @@ export function CombatArea() {
   const getNextConflictBackground = () => {
     const getBg = () => {
       switch (gameState.nextConflictLevel) {
-        case 1: return conflict_bg_1;
-        case 2: return conflict_bg_2;
-        case 3: return conflict_bg_3;
+        case 1:
+          return conflict_bg_1;
+        case 2:
+          return conflict_bg_2;
+        case 3:
+          return conflict_bg_3;
       }
     }
 
@@ -106,21 +106,16 @@ export function CombatArea() {
     )
   }
 
-  const getTroopIcon = (color: string) => {
-    switch (color) {
-      case "RED": return troop_icon_red;
-      case "BLUE": return troop_icon_blue;
-      case "GREEN": return troop_icon_green;
-      default: return troop_icon_gold;
-    }
-  }
-
   const getCombatMarkerIcon = (color: string, strength: number) => {
     switch (color) {
-      case "RED": return strength > 20 ? combat_marker_red_2 : combat_marker_red_1;
-      case "BLUE": return strength > 20 ? combat_marker_blue_2 : combat_marker_blue_1;
-      case "GREEN": return strength > 20 ? combat_marker_green_2 : combat_marker_green_1;
-      case "GOLD": return strength > 20 ? combat_marker_gold_2 : combat_marker_gold_1;
+      case "RED":
+        return strength > 20 ? combat_marker_red_2 : combat_marker_red_1;
+      case "BLUE":
+        return strength > 20 ? combat_marker_blue_2 : combat_marker_blue_1;
+      case "GREEN":
+        return strength > 20 ? combat_marker_green_2 : combat_marker_green_1;
+      case "GOLD":
+        return strength > 20 ? combat_marker_gold_2 : combat_marker_gold_1;
     }
   }
 
@@ -162,13 +157,6 @@ export function CombatArea() {
       {top: "84.2%", left: "87%"},
     ]
 
-    const combatUnitsPositions = [
-      {top: "78.5%", right: "36.5%"},
-      {right: "36.5%", bottom: "23.9%"},
-      {left: "66.5%", bottom: "23.9%"},
-      {top: "78.5%", left: "66.5%"},
-    ]
-
     const combatMarkerPositions = [
       {top: "94%", left: "43.5%"},
       {top: "91%", left: "50.8%"},
@@ -207,8 +195,8 @@ export function CombatArea() {
       if (p.isThisPlayer) index = 3;
 
       if (p.makerHookUnlocked) {
-        const flipY = index === 2 || index === 3? "-1": "1";
-        const flipX = index === 1 || index === 2 ? "-1": "1";
+        const flipY = index === 2 || index === 3 ? "-1" : "1";
+        const flipX = index === 1 || index === 2 ? "-1" : "1";
         elements.push(
           <Image
             pos={"absolute"}
@@ -216,12 +204,12 @@ export function CombatArea() {
             top={makerHookPositions[index].top}
             left={makerHookPositions[index].left}
             src={maker_hook_icon}
-            style={{ transform: `rotate(90deg) scaleX(${flipX}) scaleY(${flipY})` }}
+            style={{transform: `rotate(90deg) scaleX(${flipX}) scaleY(${flipY})`}}
             alt="Maker hook"/>
         )
       }
 
-      let normalizedStrength = p.combat.strength > 20 ? p.combat.strength - 20: p.combat.strength;
+      let normalizedStrength = p.combat.strength > 20 ? p.combat.strength - 20 : p.combat.strength;
       normalizedStrength = Math.min(Math.max(normalizedStrength, 0), 20)
 
       elements.push(
@@ -238,30 +226,8 @@ export function CombatArea() {
         <Garrison player={p} index={index}/>
       )
 
-      const wormIcons = (
-        <IconGrid
-          icon={worm_icon}
-          size={p.combat.wormsInCombat}
-          iconSize={45}
-          pos={"unset"}/>
-      )
-      const troopIcons = (
-        <IconGrid
-          icon={getTroopIcon(p.color)}
-          size={p.combat.troopsInCombat}
-          pos={"unset"}/>
-      )
       elements.push(
-        <Group
-          pos={"absolute"}
-          align={"flex-end"}
-          top={combatUnitsPositions[index].top}
-          left={combatUnitsPositions[index].left}
-          right={combatUnitsPositions[index].right}
-          bottom={combatUnitsPositions[index].bottom}>
-          {index === 2 || index === 3 ? troopIcons : wormIcons}
-          {index === 0 || index === 1 ? troopIcons: wormIcons}
-        </Group>
+        <Battlefield player={p} index={index}/>
       )
 
       if (p.isRival) {
@@ -298,42 +264,51 @@ export function CombatArea() {
     })
 
     elements.push(
-      <ActionIcon
-        onClick={() => moveTroop(TroopMovementLocation.Combat)}
+      <Stack
+        gap={8}
+        p={16}
+        bg={"#323232"}
         pos={"absolute"}
-        right={"25%"}
-        bottom={"12%"}
-        className={"player-resource-modifier-button"}
-        variant={"outline"}
-        radius={"0"}>
-        <img width={30} src={plus_icon} alt="Resource modifier button"/>
-      </ActionIcon>
-    )
+        bottom={"11.7%"}
+        right={"0%"}>
+        <Group
+          gap={8}>
+          <ActionIcon
+            onClick={() => moveTroop(TroopMovementLocation.Garrison)}
+            className={"player-resource-modifier-button"}
+            variant={"outline"}
+            radius={"0"}>
+            <Image w={30} src={minus_icon}/>
+          </ActionIcon>
+          <Image w={30} src={troop_icon}/>
+          <ActionIcon
+            onClick={() => moveTroop(TroopMovementLocation.Combat)}
+            className={"player-resource-modifier-button"}
+            variant={"outline"}
+            radius={"0"}>
+            <Image w={30} src={plus_icon}/>
+          </ActionIcon>
+        </Group>
+        <Group
+          gap={8}>
+          <ActionIcon
+            onClick={() => moveTroop(TroopMovementLocation.Garrison)}
+            className={"player-resource-modifier-button"}
+            variant={"outline"}
+            radius={"0"}>
+            <Image w={30} src={minus_icon}/>
+          </ActionIcon>
+          <Image w={30} src={sardaukar_commander_icon}/>
+          <ActionIcon
+            onClick={() => moveTroop(TroopMovementLocation.Combat)}
+            className={"player-resource-modifier-button"}
+            variant={"outline"}
+            radius={"0"}>
+            <Image w={30} src={plus_icon}/>
+          </ActionIcon>
 
-    elements.push(
-      <ActionIcon
-        onClick={() => moveTroop(TroopMovementLocation.Garrison)}
-        pos={"absolute"}
-        right={"22.5%"}
-        bottom={"12%"}
-        className={"player-resource-modifier-button"}
-        variant={"outline"}
-        radius={"0"}>
-        <img width={30} src={minus_icon} alt="Resource modifier button"/>
-      </ActionIcon>
-    )
-
-    elements.push(
-      <ActionIcon
-        onClick={() => moveTroop(TroopMovementLocation.Supply)}
-        pos={"absolute"}
-        right={"20%"}
-        bottom={"12%"}
-        className={"player-resource-modifier-button"}
-        variant={"outline"}
-        radius={"0"}>
-        <img width={30} src={cross_icon} alt="Resource modifier button"/>
-      </ActionIcon>
+        </Group>
+      </Stack>
     )
     return elements
   }
@@ -348,7 +323,7 @@ export function CombatArea() {
           left: "87.7%",
           top: "83.9%"
         }}>
-        <Box w={50} h={65} />
+        <Box w={50} h={65}/>
       </PopoverContainer>
       {getConflictCard()}
       {getNextConflictBackground()}

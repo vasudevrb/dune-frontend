@@ -25,6 +25,7 @@ export function Garrison(props: {
       top={garrissonedTroopsPositions[props.index].top}
       left={garrissonedTroopsPositions[props.index].left}
       style={{
+        pointerEvents: 'none',
         transform: "translate(-50%, -50%)",
       }}>
 
