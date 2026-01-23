@@ -148,6 +148,7 @@ export const playerStartState: PlayerModel = {
   swordmasterUnlocked: false,
   makerHookUnlocked: false,
   combat: {
+    troopsInSupply: 9,
     troopsInGarrison: 3,
     troopsInCombat: 0,
     wormsInCombat: 0,
@@ -192,7 +193,8 @@ export const PLAYER_1: PlayerModel = {
     Emperor: 2
   },
   combat: {
-    troopsInCombat: 2,
+    troopsInSupply: 5,
+    troopsInCombat: 3,
     troopsInGarrison: 4,
     wormsInCombat: 1,
     commandersInSupply: 1,
@@ -232,6 +234,7 @@ export const PLAYER_2: PlayerModel = {
     {id: `control_flag-${MUAD_DIB.name}#3`},
   ],
   combat: {
+    troopsInSupply: 6,
     troopsInCombat: 4,
     troopsInGarrison: 2,
     wormsInCombat: 2,
@@ -271,6 +274,7 @@ export const PLAYER_3: PlayerModel = {
   ],
   makerHookUnlocked: true,
   combat: {
+    troopsInSupply: 0,
     troopsInCombat: 8,
     troopsInGarrison: 4,
     wormsInCombat: 3,
@@ -333,11 +337,12 @@ export const PLAYER_4: PlayerModel = {
     { url: "http://localhost:8080/contracts/contract_19.png", completed: true}
   ],
   combat: {
+    troopsInSupply: 6,
     troopsInCombat: 1,
-    troopsInGarrison: 9,
+    troopsInGarrison: 5,
     wormsInCombat: 0,
     commandersInSupply: 2,
-    commandersInGarrison: 1,
+    commandersInGarrison: 3,
     commandersInCombat: 0,
     strength: 4
   },

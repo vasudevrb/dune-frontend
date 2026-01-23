@@ -28,6 +28,7 @@ import {assertExists, moveUnit, TroopMovementLocation} from "../../const/GameUti
 import {useWebSocket} from "../WebSocketContext.tsx";
 import {GET_NEXT_CONFLICT, MOVE_COMBAT_UNIT, UNLOCK_MAKER_HOOK} from "../../const/Actions.tsx";
 import {PopoverContainer} from "../PopoverContainer.tsx";
+import {Garrison} from "./Garrison.tsx";
 
 export function CombatArea() {
 
@@ -161,13 +162,6 @@ export function CombatArea() {
       {top: "84.2%", left: "87%"},
     ]
 
-    const garrissonedTroopsPositions = [
-      {top: "83%", left: "44.5%"},
-      {top: "71.5%", left: "44.5%"},
-      {top: "71.5%", left: "85.5%"},
-      {top: "83%", left: "85.5%"},
-    ]
-
     const combatUnitsPositions = [
       {top: "78.5%", right: "36.5%"},
       {right: "36.5%", bottom: "23.9%"},
@@ -241,13 +235,7 @@ export function CombatArea() {
       )
 
       elements.push(
-        <IconGrid
-          icon={getTroopIcon(p.color)}
-          size={p.combat.troopsInGarrison}
-          pos={"absolute"}
-          anchorToCenter={true}
-          top={garrissonedTroopsPositions[index].top}
-          left={garrissonedTroopsPositions[index].left} />
+        <Garrison player={p} index={index}/>
       )
 
       const wormIcons = (

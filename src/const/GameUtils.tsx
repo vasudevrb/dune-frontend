@@ -18,6 +18,10 @@ import objective_desert_mouse from "../assets/objectives/desert_mouse_tr.png";
 import objective_ornithopter from "../assets/objectives/ornithopter_tr.png";
 import objective_cryskife from "../assets/objectives/crysknife_tr.png";
 import objective_any from "../assets/objectives/any.png";
+import troop_icon_red from "../assets/combat/troop_red.png";
+import troop_icon_blue from "../assets/combat/troop_blue.png";
+import troop_icon_green from "../assets/combat/troop_green.png";
+import troop_icon_gold from "../assets/combat/troop_gold.png";
 
 export const TroopMovementLocation = {
   Combat: "Combat", Garrison: "Garrison", Supply: "Supply",
@@ -285,7 +289,7 @@ export function addOrRemoveCombatUnit(playerName: string, game: GameModel, quant
         player.combat.commandersInGarrison+=quantity;
         player.combat.commandersInSupply-=quantity;
         return true;
-      } else if (player.combat.commandersInGarrison > 0) {
+      } else if (!add && player.combat.commandersInGarrison > 0) {
         const num = Math.max(player.combat.commandersInGarrison - quantity, 0);
         player.combat.commandersInSupply = player.combat.commandersInGarrison - num;
         player.combat.commandersInGarrison = num;
@@ -516,5 +520,18 @@ export function getCombatUnitIconByType(modifierType: CombatUnitType) {
         return sardaukar_icon;
     default:
       return strength_icon;
+  }
+}
+
+export const getColoredTroopIcon = (color: string) => {
+  switch (color) {
+    case "RED":
+      return troop_icon_red;
+    case "BLUE":
+      return troop_icon_blue;
+    case "GREEN":
+      return troop_icon_green;
+    default:
+      return troop_icon_gold;
   }
 }

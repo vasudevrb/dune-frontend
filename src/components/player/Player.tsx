@@ -7,6 +7,7 @@ import draw_card from '../../assets/cards/draw_card.png';
 import imperium_card from '../../assets/cards/imperium_card.jpg';
 import maker_hook_icon from '../../assets/combat/maker_hook.png';
 import draw_hagal_card from "../../assets/cards/draw_hagal.png";
+import sardaukar_commander_icon from "../../assets/combat/sardaukar_commander.png";
 import {CombatUnitType, type PlayerModel} from "../../model/PlayerModel.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
 import {FeydSignet} from "./FeydSignet.tsx";
@@ -19,7 +20,12 @@ import {
   GET_HAGAL_CARD,
   STEAL_INTRIGUE_CARD, UNLOCK_MAKER_HOOK, UNLOCK_SWORDMASTER
 } from "../../const/Actions.tsx";
-import {getAgentIcon, getResourceIconByType, getResourceTextColorByType} from "../../const/GameUtils.tsx";
+import {
+  getAgentIcon,
+  getColoredTroopIcon,
+  getResourceIconByType,
+  getResourceTextColorByType
+} from "../../const/GameUtils.tsx";
 import {CharacterImage} from "./CharacterImage.tsx";
 import {ResourceModifier} from "../modifiers/ResourceModifier.tsx";
 import {VictoryPointModifier} from "../modifiers/VictoryPointModifier.tsx";
@@ -249,6 +255,31 @@ export function Player(props: {
     )
   }
 
+  const getTroopsCommanders = () => {
+    return (
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <Group ps={16} gap={5} justify={"center"}>
+          <Text
+            c={"white"}
+            className={"player-resource-info-text"}
+            size={"1.4em"}>{props.playerModel.combat.troopsInSupply}</Text>
+          <Image
+            w={30}
+            src={getColoredTroopIcon(props.playerModel.color)}/>
+          <Divider orientation="vertical" ms={"10"} me={"10"} color={"#cacaca44"}/>
+          <Text
+            c={"white"}
+            className={"player-resource-info-text"}
+            size={"1.4em"}>{props.playerModel.combat.commandersInSupply}</Text>
+          <Image
+            w={30}
+            src={sardaukar_commander_icon}/>
+        </Group>
+      </>
+    )
+  }
+
   const getCurrentPlayerStyleClass = () => {
     switch (props.playerModel.color) {
       case "RED":
@@ -326,7 +357,7 @@ export function Player(props: {
 
   const getThisPlayer = () => {
     return (
-      <Stack className={`current-player-container ${currentPlayerStyleClass}`} gap={"5"}>
+      <Stack className={`current-player-container ${currentPlayerStyleClass}`} gap={"0"}>
         <Text ta="left" className={"player-container-text"}>{props.playerModel.character.name} ({props.playerModel.name})</Text>
         <Group w={"100%"} wrap={"nowrap"} gap={0}>
           {getAvatar()}
@@ -334,6 +365,7 @@ export function Player(props: {
         </Group>
         {getResourcesDisplay()}
         {getAgentsSpiesFlags()}
+        {getTroopsCommanders()}
         {getModifiers()}
         {getFeydSignetComponent()}
         {props.playerModel.contracts.length > 0 && <Contracts player={props.playerModel}/>}

@@ -71,7 +71,7 @@
   font-size: 14px;
   padding-bottom: 8px;
   color: #BABABA;
-  font-family: "Conneqt", sans-serif;
+  font-family: sans-serif;
 }
 
 .player-action-button {
@@ -85,7 +85,12 @@
 .player-resource-modifier-text {
   position: absolute;
   color: #FAFAFA;
-  font-family: Conneqt,sans-serif;
+  font-weight: 500;
+}
+
+.player-resource-info-text {
+  color: #FAFAFA;
+  font-family: sans-serif;
 }
 
 .player-resource-modifier-button {

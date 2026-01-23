@@ -73,6 +73,7 @@ export interface CharacterModel {
 }
 
 export interface CombatModel {
+  troopsInSupply: number,
   troopsInGarrison: number;
   troopsInCombat: number;
   commandersInSupply: number;
