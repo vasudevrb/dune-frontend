@@ -241,8 +241,8 @@ export const PLAYER_2: PlayerModel = {
     { url: "http://localhost:8080/contracts/contract_19.png", completed: false}
   ],
   techs: [
-    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"},
-    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_08.png"}
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png", flipped: false},
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_08.png", flipped: true}
   ],
   skills: [
     {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
@@ -374,9 +374,9 @@ export const PLAYER_4: PlayerModel = {
     {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
   ],
   techs: [
-    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"},
-    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_08.png"},
-    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_02.png"}
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png", flipped: false},
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_08.png", flipped: false},
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_02.png", flipped: false}
   ],
 }
 

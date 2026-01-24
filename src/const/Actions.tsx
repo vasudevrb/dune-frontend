@@ -5,6 +5,7 @@ export const ADD_TO_GAME = "ADD_TO_GAME"
 
 export const PLACE_AGENT = "PLACE_AGENT"
 export const RECALL_AGENT = "RECALL_AGENT"
+export const DEPLOY_DUNCAN_AGENT = "DEPLOY_DUNCAN_AGENT"
 export const PLACE_SPY = "PLACE_SPY"
 export const RECALL_SPY = "RECALL_SPY"
 export const PLACE_CONTROL_FLAG = "PLACE_CONTROL_FLAG"

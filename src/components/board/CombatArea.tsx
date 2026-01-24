@@ -130,7 +130,7 @@ export function CombatArea() {
       sendMessage({
         action: MOVE_COMBAT_UNIT,
         body: {
-          unitType: "troop",
+          unitType: type,
           destination: destination,
         }
       });

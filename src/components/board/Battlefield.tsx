@@ -1,6 +1,6 @@
-import {Center, Group, Stack} from "@mantine/core";
+import {Center, Group, Image, Stack} from "@mantine/core";
 import IconGrid from "./IconGrid.tsx";
-import {getColoredTroopIcon} from "../../const/GameUtils.tsx";
+import {getAgentIcon, getColoredTroopIcon} from "../../const/GameUtils.tsx";
 import worm_icon from "../../assets/combat/worm.png";
 import sardaukar_commander_icon from "../../assets/combat/sardaukar_commander.png";
 import type {PlayerModel} from "../../model/PlayerModel.tsx";
@@ -45,6 +45,25 @@ export function Battlefield(props: {
     </Center>
   )
 
+  const shouldShowDuncanAgent = props.player.character.name === "Duncan Idaho"
+    && props.player.character.additionalInfo.duncanAgentDeployed;
+
+  const duncanAgent = (
+    <Image
+      draggable={false}
+      w={55}
+      pos={"absolute"}
+      top={"50%"}
+      left={"50%"}
+      style={{
+        transform: "translate(-50%, -50%)",
+        zIndex: 0,
+        opacity: 0.3
+      }}
+      src={getAgentIcon(props.player.color)}
+      className={"locations-agent-icon"}/>
+  )
+
   return (
     <Group
       w={"175px"}
@@ -58,9 +77,9 @@ export function Battlefield(props: {
         transform: "translate(-50%, -50%)",
       }}>
 
+      {shouldShowDuncanAgent && duncanAgent}
       {props.index === 0 || props.index === 1 ? commandersAndWorms : troops}
       {props.index === 0 || props.index === 1 ? troops : commandersAndWorms}
-
     </Group>
 
   );
