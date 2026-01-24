@@ -87,7 +87,7 @@ export function InHandCards(props: {
     <ScrollArea
       className={"in-hand-card in-hand-cards-row"}
       w={"100%"}
-      style={{flexShrink: 0}}
+      style={{flexShrink: 0, zIndex: 5}}
       offsetScrollbars={false}
       type={"never"}
       scrollbars="x">

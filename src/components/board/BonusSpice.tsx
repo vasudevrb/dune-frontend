@@ -41,6 +41,8 @@ export function BonusSpice(
         return gameState.bonusSpice.haggaBasin;
       case 11:
         return gameState.bonusSpice.imperialBasin;
+      case 23:
+        return gameState.bonusSpice.tueksSietch;
     }
   }
 
@@ -49,8 +51,9 @@ export function BonusSpice(
       onClick={() => clickAction(props.locationId, true)}
       className={"player-resource-modifier-button"}
       variant={"outline"}
+      size={"20"}
       radius={"0"}>
-      <img width={30} src={plus_icon} alt="Resource modifier button"/>
+      <img width={20} src={plus_icon} alt="Resource modifier button"/>
     </ActionIcon>
   )
   const minusIcon = (
@@ -58,8 +61,9 @@ export function BonusSpice(
       onClick={() => clickAction(props.locationId, false)}
       className={"player-resource-modifier-button"}
       variant={"outline"}
+      size={"20"}
       radius={"0"}>
-      <img width={30} src={minus_icon} alt="Resource modifier button"/>
+      <img width={20} src={minus_icon} alt="Resource modifier button"/>
     </ActionIcon>
   )
   const text = (
@@ -79,7 +83,10 @@ export function BonusSpice(
   const horizontalLayout = (
     <Group
       align={"center"}
-      gap={0}
+      gap={2}
+      style={{
+        zIndex: 1
+      }}
       pos={"absolute"}
       top={props.top}
       left={props.left}>
@@ -92,7 +99,10 @@ export function BonusSpice(
   const verticalLayout = (
     <Stack
       align={"center"}
-      gap={0}
+      gap={2}
+      style={{
+        zIndex: 1
+      }}
       pos={"absolute"}
       top={props.top}
       left={props.left}>

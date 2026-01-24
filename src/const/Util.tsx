@@ -43,7 +43,8 @@ export const gameStartState: GameModel = {
   bonusSpice: {
     deepDesert: 0,
     haggaBasin: 0,
-    imperialBasin: 0
+    imperialBasin: 0,
+    tueksSietch: 0,
   },
   currentContracts: [
     "http://localhost:8080/contracts/contract_15.png",

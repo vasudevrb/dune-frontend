@@ -1,6 +1,7 @@
 import '../../css/GameBoard.css'
 import {Box, Image, ScrollArea, Space, Stack} from "@mantine/core";
 import board from '../../assets/board.jpg';
+import tueks_sietch from '../../assets/tueks_sietch.png';
 import {AgentLocation} from "./AgentLocation.tsx";
 import {CombatArea} from "./CombatArea.tsx";
 import type {Property} from "csstype";
@@ -27,6 +28,8 @@ export function GameBoard() {
   const {gameState, setGameState} = useGameStore();
   const {sendMessage} = useWebSocket();
 
+  const containsEsmarTuek = gameState.players.map(p => p.character.name).includes("Esmar Tuek")
+
   const unlockSwordmaster = () => {
     setGameState(produce(gameState, draft => {
       const thisPlayer = assertExists(
@@ -52,6 +55,7 @@ export function GameBoard() {
         location={location}
         style={{
           position: "absolute",
+          zIndex: 2,
           top: `${top}`,
           left: `${left}`,
           transform: `translate(-50%, -50%)`
@@ -103,6 +107,7 @@ export function GameBoard() {
       {id: 20, top: "16%", left: "69.4%"},
       {id: 21, top: "7.3%", left: "88.8%"},
       {id: 22, top: "16%", left: "88.8%"},
+      {id: 23, top: "61.5%", left: "79.8%"},
     ];
     const locations = gameState.locations;
 
@@ -111,6 +116,9 @@ export function GameBoard() {
         locations.find(l => l.id === offset.id),
         `Location with id: ${offset.id} not found `
       )
+
+      if (location.id === 23 && !containsEsmarTuek) return;
+
       return getAgentDroppable(location, offset.top, offset.left);
     })
   }
@@ -248,9 +256,13 @@ export function GameBoard() {
             style={{top: "36.7%", left: "78.8%", transform: "translate(-50%, -50%)"}}
           />
 
-          <BonusSpice locationId={9} top={"60.2%"} left={"40.1%"}/>
-          <BonusSpice locationId={10} top={"53%"} left={"58.6%"}/>
-          <BonusSpice locationId={11} top={"44.7%"} left={"86.4%"}/>
+          <BonusSpice locationId={9} top={"60.2%"} left={"40.5%"}/>
+          <BonusSpice locationId={10} top={"52.8%"} left={"59.1%"}/>
+          <BonusSpice locationId={11} top={"45.1%"} left={"86.4%"}/>
+          {containsEsmarTuek &&
+            <BonusSpice locationId={23} top={"61.3%"} left={"83.2%"}/>
+          }
+
 
           <HighCouncilToken id={0} left={"42.2%"} top={"5.3%"}/>
           <HighCouncilToken id={1} left={"46%"} top={"5.3%"}/>
@@ -263,6 +275,18 @@ export function GameBoard() {
           {gameState.currentContracts.length > 1 && <Contract url={gameState.currentContracts[1]} top={"25%"} left={"45.5%"}/>}
 
           {getCommanders()}
+
+          {
+            containsEsmarTuek &&
+            <img
+              style={{
+                position: "absolute",
+                top: "57%",
+                right: "10%"
+              }}
+              src={tueks_sietch}
+              width={220}/>
+          }
 
           <img
             src={board}

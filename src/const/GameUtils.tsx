@@ -378,6 +378,15 @@ export function addOrRemoveBonusSpice(game: GameModel, locationId: number, add: 
         return true;
       }
       return false;
+    case 23:
+      if (add) {
+        game.bonusSpice.tueksSietch++;
+        return true;
+      } else if (game.bonusSpice.tueksSietch > 0) {
+        game.bonusSpice.tueksSietch--;
+        return true;
+      }
+      return false;
   }
   return false;
 }

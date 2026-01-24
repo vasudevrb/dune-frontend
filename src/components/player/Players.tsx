@@ -38,6 +38,9 @@ export function Players(props: { game: GameModel }) {
       h={"100%"}
       offsetScrollbars={false}
       type={"never"}
+      style={{
+        zIndex: 5
+      }}
       scrollbars="y">
       <Stack
         gap="0"

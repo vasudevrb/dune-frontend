@@ -14,6 +14,7 @@ export interface GameModel {
     deepDesert: number;
     haggaBasin: number;
     imperialBasin: number;
+    tueksSietch: number;
   };
   highCouncil: string[];
   currentContracts: string[];

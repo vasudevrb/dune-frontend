@@ -131,4 +131,9 @@ export const locations: AgentLocationModel[] = [
     name: "Accept Contract",
     id: 22
   },
+  {
+    ...emptyLocation,
+    name: "Tuek's Sietch",
+    id: 23
+  }
 ]
