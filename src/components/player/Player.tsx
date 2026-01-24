@@ -37,6 +37,7 @@ import {QuantityIcon} from "./QuantityIcon.tsx";
 import {ObjectivesAlliances} from "./ObjectivesAlliances.tsx";
 import {IntrigueModifier} from "../modifiers/IntrigueModifier.tsx";
 import {SardaukarSkills} from "./SardaukarSkills.tsx";
+import {ChaniSignet} from "./ChaniSignet.tsx";
 
 export function Player(props: {
   playerModel: PlayerModel;
@@ -356,6 +357,17 @@ export function Player(props: {
     )
   }
 
+  const getChaniSignetComponent = () => {
+    if (props.playerModel.character.name !== "Chani") return;
+    return (
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <Image draggable={false} fit={"contain"} w={"100%"} h={30} mb={8} src={signet_ring}/>
+        <ChaniSignet characterModel={props.playerModel.character}/>
+      </>
+    )
+  }
+
   const getContracts = () => {
     if (props.playerModel.contracts.length < 1) {
       return;
@@ -394,6 +406,7 @@ export function Player(props: {
         {getTroopsCommanders()}
         {getModifiers()}
         {getFeydSignetComponent()}
+        {getChaniSignetComponent()}
         {getContracts()}
         {getSkills()}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>

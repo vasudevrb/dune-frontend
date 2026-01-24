@@ -295,26 +295,34 @@ export const FEYD_RAUTHA: CharacterModel = {
     signetStatus: 0
   }
 }
+export const CHANI: CharacterModel = {
+  name: "Chani",
+  urls: ["http://localhost:8080/characters/chani.jpg"],
+  avatarUrl: "http://localhost:8080/avatars/chani.jpg",
+  additionalInfo: {
+    signetStatus: 0
+  }
+}
 export const PLAYER_4: PlayerModel = {
   ...playerStartState,
   name: "P4",
   isThisPlayer: true,
-  character: FEYD_RAUTHA,
+  character: CHANI,
   color: "RED",
   agents: [
-    {id: `agent-${FEYD_RAUTHA.name}#1`},
-    {id: `agent-${FEYD_RAUTHA.name}#2`},
-    {id: `agent-${FEYD_RAUTHA.name}#3`},
+    {id: `agent-${CHANI.name}#1`},
+    {id: `agent-${CHANI.name}#2`},
+    {id: `agent-${CHANI.name}#3`},
   ],
   spies: [
-    {id: `spy-${FEYD_RAUTHA.name}#1`},
-    {id: `spy-${FEYD_RAUTHA.name}#2`},
-    {id: `spy-${FEYD_RAUTHA.name}#3`},
+    {id: `spy-${CHANI.name}#1`},
+    {id: `spy-${CHANI.name}#2`},
+    {id: `spy-${CHANI.name}#3`},
   ],
   controlFlags: [
-    {id: `control_flag-${FEYD_RAUTHA.name}#1`},
-    {id: `control_flag-${FEYD_RAUTHA.name}#2`},
-    {id: `control_flag-${FEYD_RAUTHA.name}#3`},
+    {id: `control_flag-${CHANI.name}#1`},
+    {id: `control_flag-${CHANI.name}#2`},
+    {id: `control_flag-${CHANI.name}#3`},
   ],
   private: {
     inHandCards: [

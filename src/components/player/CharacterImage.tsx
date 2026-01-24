@@ -38,7 +38,7 @@ export function CharacterImage(
             w={"auto"}
             mah={"400"}
             fit={"cover"}
-            radius={"xs"}
+            radius={"md"}
             src={props.playerModel.character.urls[selectedImageSide]}
             alt="Character"/>
 

@@ -217,6 +217,14 @@ export function setFeydSignetStatus(game: GameModel, newSignetStatus: number) {
   thisPlayer.character.additionalInfo.signetStatus = newSignetStatus;
 }
 
+export function setChaniSignetStatus(game: GameModel, newSignetStatus: number) {
+  const thisPlayer = assertExists(
+    game.players.find(p => p.isThisPlayer),
+    `This player not found.`
+  )
+  thisPlayer.character.additionalInfo.signetStatus = newSignetStatus;
+}
+
 export function moveUnit(type: CombatUnitType, game: GameModel, destination: TroopMovementLocation) {
   const thisPlayer = assertExists(
     game.players.find(p => p.isThisPlayer),

@@ -17,7 +17,7 @@ import {
   PLACE_AGENT, PLACE_CONTROL_FLAG,
   PLACE_SPY,
   RECALL_AGENT, RECALL_CONTROL_FLAG,
-  RECALL_SPY, REVEAL_CARDS, SET_FACTION_INFLUENCE, SET_FEYD_SIGNET_STATUS,
+  RECALL_SPY, REVEAL_CARDS, SET_CHANI_SIGNET_STATUS, SET_FACTION_INFLUENCE, SET_FEYD_SIGNET_STATUS,
   SHOW_NOTIFICATION,
   START_GAME, TRASH_CARD, UPDATE_COMBAT, UPDATE_GAME,
   UPDATE_LOCATION,
@@ -38,7 +38,7 @@ import {
   placeAgent, placeControlFlag,
   placeSpy,
   recallAgent, recallControlFlag,
-  recallSpy,
+  recallSpy, setChaniSignetStatus,
   setFactionInfluence,
   setFeydSignetStatus
 } from "../const/GameUtils.tsx";
@@ -208,7 +208,7 @@ export function Game() {
   const [gameStarted, setGameStarted] = useState(false);
 
   useEffect(() => {
-    const setup = false;
+    const setup = true;
     if (setup) {
       setGameStarted(true);
       setGameState({
@@ -386,6 +386,9 @@ export function Game() {
       } else if (activeData.location === 'feyd-rautha' && overData.location === 'feyd-rautha') {
         setFeydSignetStatus(draft, overData.signetValue)
         action = SET_FEYD_SIGNET_STATUS
+      }  else if (activeData.location === 'chani' && overData.location === 'chani') {
+        setChaniSignetStatus(draft, overData.signetValue)
+        action = SET_CHANI_SIGNET_STATUS
       }
     }))
 
@@ -453,6 +456,9 @@ export function Game() {
           break;
         case SET_FEYD_SIGNET_STATUS:
           sendMessage({action: SET_FEYD_SIGNET_STATUS, body: {status: overData.signetValue}})
+          break;
+        case SET_CHANI_SIGNET_STATUS:
+          sendMessage({action: SET_CHANI_SIGNET_STATUS, body: {status: overData.signetValue}})
           break;
       }
     }
