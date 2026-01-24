@@ -1,5 +1,5 @@
 import {ScrollArea} from "@mantine/core";
-import type {PlayerModel} from "../../model/PlayerModel.tsx";
+import type {CardModel, PlayerModel} from "../../model/PlayerModel.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
 import {TRASH_COMMANDER_SKILL} from "../../const/Actions.tsx";
 import trash_icon from "../../assets/cards/trash_card.png";
@@ -7,9 +7,25 @@ import {Card, CardButtonType} from "../cards/Card.tsx";
 
 export function SardaukarSkills(props: {
   player: PlayerModel;
+  nonInteractive?: boolean;
 }) {
 
   const {sendMessage} = useWebSocket();
+
+  const getButtons = (skill: CardModel) => {
+    if (props.nonInteractive) return undefined;
+
+    return [
+      {
+        type: CardButtonType.Icon,
+        label: trash_icon,
+        onclick: () => {
+          sendMessage({action: TRASH_COMMANDER_SKILL, body: {url: skill.url}})
+        },
+        doubleClick: true
+      }
+    ]
+  }
 
   const getSkills = () => {
     return props.player.skills
@@ -21,16 +37,7 @@ export function SardaukarSkills(props: {
             w={"120"}
             h={"120"}
             fit={"contain"}
-            buttons={[
-              {
-                type: CardButtonType.Icon,
-                label: trash_icon,
-                onclick: () => {
-                  sendMessage({action: TRASH_COMMANDER_SKILL, body: {url: sk.url}})
-                },
-                doubleClick: true
-              }
-            ]}
+            buttons={getButtons(sk)}
           />
         )
       })

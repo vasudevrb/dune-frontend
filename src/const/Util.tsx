@@ -235,6 +235,19 @@ export const PLAYER_2: PlayerModel = {
     {id: `control_flag-${MUAD_DIB.name}#2`},
     {id: `control_flag-${MUAD_DIB.name}#3`},
   ],
+  contracts: [
+    { url: "http://localhost:8080/contracts/contract_17.png", completed: true},
+    { url: "http://localhost:8080/contracts/contract_18.png", completed: false},
+    { url: "http://localhost:8080/contracts/contract_19.png", completed: false}
+  ],
+  techs: [
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"},
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_08.png"}
+  ],
+  skills: [
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+  ],
   combat: {
     troopsInSupply: 6,
     troopsInCombat: 4,
@@ -357,8 +370,6 @@ export const PLAYER_4: PlayerModel = {
     strength: 4
   },
   skills: [
-    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
-    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
     {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
     {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
   ]
