@@ -1,4 +1,4 @@
-import {ActionIcon, Button, Group, Image, Stack} from "@mantine/core";
+import {ActionIcon, Button, Group, Image, type MantineRadius, Stack} from "@mantine/core";
 import type {MantineSpacing} from "@mantine/core";
 import * as React from "react";
 import type {Property} from "csstype";
@@ -25,6 +25,8 @@ export function Card(props: {
   ml?: MantineSpacing,
   fit?: React.CSSProperties['objectFit'],
   style?: React.CSSProperties,
+  onclick?: () => void,
+  radius?: MantineRadius,
   buttons?: CardButton[]
 }) {
   const getImageButton = (button: CardButton) => {
@@ -80,8 +82,9 @@ export function Card(props: {
              ml={props.ml}
              draggable={false}
              fit={props.fit ? props.fit : "cover"}
-             radius={"md"}
+             radius={props.radius ? props.radius: "md"}
              src={props.src}
+             onClick={props.onclick}
              alt="Card"/>
 
       {getActionButtons()}

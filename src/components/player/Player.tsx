@@ -38,6 +38,7 @@ import {ObjectivesAlliances} from "./ObjectivesAlliances.tsx";
 import {IntrigueModifier} from "../modifiers/IntrigueModifier.tsx";
 import {SardaukarSkills} from "./SardaukarSkills.tsx";
 import {ChaniSignet} from "./ChaniSignet.tsx";
+import {TechTiles} from "./TechTiles.tsx";
 
 export function Player(props: {
   playerModel: PlayerModel;
@@ -393,6 +394,19 @@ export function Player(props: {
     )
   }
 
+  const getTechs = () => {
+    if (props.playerModel.techs.length < 1) {
+      return;
+    }
+
+    return (
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <TechTiles player={props.playerModel}/>
+      </>
+    )
+  }
+
   const getThisPlayer = () => {
     return (
       <Stack className={`current-player-container ${currentPlayerStyleClass}`} gap={"0"}>
@@ -409,6 +423,7 @@ export function Player(props: {
         {getChaniSignetComponent()}
         {getContracts()}
         {getSkills()}
+        {getTechs()}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getActions()}
       </Stack>

@@ -372,7 +372,12 @@ export const PLAYER_4: PlayerModel = {
   skills: [
     {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
     {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
-  ]
+  ],
+  techs: [
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"},
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_08.png"},
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_02.png"}
+  ],
 }
 
 export function createId(items: (string | number)[]): string {

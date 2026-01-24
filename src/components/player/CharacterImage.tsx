@@ -7,6 +7,7 @@ import {Contracts} from "./Contracts.tsx";
 import {SardaukarSkills} from "./SardaukarSkills.tsx";
 import {getColoredTroopIcon} from "../../const/GameUtils.tsx";
 import sardaukar_commander_icon from "../../assets/combat/sardaukar_commander.png";
+import {TechTiles} from "./TechTiles.tsx";
 
 export function CharacterImage(
   props: {
@@ -30,6 +31,9 @@ export function CharacterImage(
         onClose={close}
         withCloseButton={false}
         transitionProps={{ transition: 'fade' }}
+        overlayProps={{
+          backgroundOpacity: 0.85,
+        }}
         styles={{
           content: {
             backgroundColor: 'transparent'
@@ -75,6 +79,7 @@ export function CharacterImage(
 
           <Contracts player={props.playerModel} nonInteractive={true}/>
           <SardaukarSkills player={props.playerModel} nonInteractive={true}/>
+          <TechTiles player={props.playerModel} nonInteractive={true}/>
         </Stack>
       </Modal>
 

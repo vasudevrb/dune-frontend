@@ -3,7 +3,7 @@ import {ScrollArea, Divider, Drawer, Text, Space, Stack, Group} from "@mantine/c
 import {Card, CardButtonType} from "./Card.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
 import type {CardModel} from "../../model/PlayerModel.tsx";
-import {ACQUIRE_COMMANDER_SKILL, ACQUIRE_IMPERIUM_CARD, ACQUIRE_RESERVE_CARD, ACQUIRE_TECH} from "../../const/Actions.tsx";
+import {ACQUIRE_COMMANDER_SKILL, ACQUIRE_IMPERIUM_CARD, ACQUIRE_RESERVE_CARD, ACQUIRE_TECH_TILE} from "../../const/Actions.tsx";
 import use_card_icon from "../../assets/cards/use_card.png";
 import {useWebSocket} from "../WebSocketContext.tsx";
 import type {GameModel} from "../../model/GameModel.tsx";
@@ -43,7 +43,7 @@ export function ImperiumRow(props: {
       switch (cardType) {
         case SectionType.IMPERIUM: return ACQUIRE_IMPERIUM_CARD;
         case SectionType.RESERVE: return ACQUIRE_RESERVE_CARD;
-        case SectionType.TECH: return ACQUIRE_TECH;
+        case SectionType.TECH: return ACQUIRE_TECH_TILE;
         case SectionType.SKILL: return ACQUIRE_COMMANDER_SKILL;
       }
     }

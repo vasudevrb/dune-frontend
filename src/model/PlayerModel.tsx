@@ -18,7 +18,7 @@ export interface PlayerModel {
   contracts: ContractModel[];
   combat: CombatModel;
   skills: CardModel[];
-  techs: CardModel[];
+  techs: TechModel[];
   private?: {
     inHandCards: CardModel[];
     inPlayCards: CardModel[];
@@ -96,6 +96,11 @@ export interface NumCardsModel {
 export interface ContractModel {
   url: string;
   completed: boolean;
+}
+
+export interface TechModel {
+  url: string;
+  flipped: boolean;
 }
 
 export interface AgentModel {

@@ -1,6 +1,6 @@
 import type {GameModel} from "../model/GameModel.tsx";
 import type {UniqueIdentifier} from "@dnd-kit/core";
-import {CombatUnitType, type ContractModel, FactionType, ObjectiveType, type PlayerModel} from "../model/PlayerModel.tsx";
+import {CombatUnitType, type ContractModel, FactionType, ObjectiveType, type PlayerModel, type TechModel} from "../model/PlayerModel.tsx";
 import {showNotification} from "./Util.tsx";
 import water_icon from "../assets/resources/water.png";
 import spice_icon from "../assets/resources/spice.png";
@@ -518,6 +518,20 @@ export function setContractCompleted(game: GameModel, contract: ContractModel, c
   )
 
   c.completed = completed;
+}
+
+export function flipTech(game: GameModel, tech: TechModel, flipped: boolean) {
+  const thisPlayer = assertExists(
+    game.players.find(p => p.isThisPlayer),
+    "This player not found"
+  )
+
+  const c = assertExists(
+    thisPlayer.techs.find(c => c.url === tech.url),
+    `This contract ${tech.url} not found`
+  )
+
+  c.flipped = flipped;
 }
 
 export function getResourceIconByType(resourceType: string) {
