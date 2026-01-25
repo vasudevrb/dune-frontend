@@ -18,7 +18,7 @@ import {
   GAIN_INTRIGUE_CARD,
   REVEAL,
   GET_HAGAL_CARD,
-  STEAL_INTRIGUE_CARD, UNLOCK_MAKER_HOOK, UNLOCK_SWORDMASTER
+  STEAL_INTRIGUE_CARD, UNLOCK_MAKER_HOOK, UNLOCK_SWORDMASTER, PEEK_DECK_CARD
 } from "../../const/Actions.tsx";
 import {
   getAgentIcon,
@@ -39,6 +39,7 @@ import {IntrigueModifier} from "../modifiers/IntrigueModifier.tsx";
 import {SardaukarSkills} from "./SardaukarSkills.tsx";
 import {ChaniSignet} from "./ChaniSignet.tsx";
 import {TechTiles} from "./TechTiles.tsx";
+import {IconButton} from "./IconButton.tsx";
 
 export function Player(props: {
   playerModel: PlayerModel;
@@ -126,17 +127,10 @@ export function Player(props: {
     const getIconButton = (
       icon: string,
       onClick?: () => void,
+      onHover?: () => void,
     ) => {
       return (
-        <ActionIcon
-          onClick={onClick}
-          w={"auto"}
-          h={50}
-          className={"player-resource-modifier-button"}
-          variant={"none"}
-          radius={"0"}>
-          <Image fit="contain" h={50} src={icon}/>
-        </ActionIcon>
+        <IconButton icon={icon} onClick={onClick} onHover={onHover}/>
       )
     }
     const getTextButton = (
@@ -154,10 +148,15 @@ export function Player(props: {
           variant={variant ? variant : "filled"}>{label}</Button>
       )
     }
+
+    const shouldShowPeekDeckButton = props.playerModel.character.name === "Paul Atreides"
+      || props.playerModel.techs.find(t => t.url.includes("tech_3"))
+
+    const peekDeckAction = shouldShowPeekDeckButton && (() => {sendMessage({action: PEEK_DECK_CARD})})
     return (
       <>
         <Group w={"100%"} gap={"xs"}>
-          {getIconButton(draw_card, () => {sendMessage({action: DRAW_CARD})})}
+          {getIconButton(draw_card, () => {sendMessage({action: DRAW_CARD})}, peekDeckAction)}
           {getIconButton(draw_intrigue_card, () => {sendMessage({action: GAIN_INTRIGUE_CARD})})}
           {getIconButton(steal_intrigue_card, () => {sendMessage({action: STEAL_INTRIGUE_CARD})})}
           {getIconButton(imperium_card, () => setImperiumRowOpened(true))}
