@@ -101,13 +101,19 @@ export function ImperiumRow(props: {
       }}>
       <Stack gap={0}>
 
-        <Group ps={16} pb={50}>
-          {getCardSection(SectionType.TECH, props.game.currentTechs, "195", "130", "contain")}
-        </Group>
+        {
+          props.game.currentTechs.length > 0 &&
+          <Group ps={16} pb={50}>
+            {getCardSection(SectionType.TECH, props.game.currentTechs, "195", "130", "contain")}
+          </Group>
+        }
 
-        <Group ps={16} pb={50}>
-          {getCardSection(SectionType.SKILL, props.game.currentSkills, "150", "150", "contain")}
-        </Group>
+        {
+          props.game.currentSkills.length > 0 &&
+          <Group ps={16} pb={50}>
+            {getCardSection(SectionType.SKILL, props.game.currentSkills, "150", "150", "contain")}
+          </Group>
+        }
 
         <ScrollArea
           className="scrollarea-imperium-row"
