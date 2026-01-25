@@ -15,6 +15,7 @@ export interface PlayerModel {
   controlFlags: ControlFlagModel[];
   swordmasterUnlocked: boolean;
   makerHookUnlocked: boolean;
+  hasAtomicsToken: boolean;
   contracts: ContractModel[];
   combat: CombatModel;
   skills: CardModel[];

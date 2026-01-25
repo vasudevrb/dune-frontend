@@ -1,8 +1,10 @@
-import {ActionIcon, Image} from "@mantine/core";
+import {ActionIcon, Image, type StyleProp} from "@mantine/core";
 import {useRef} from "react";
+import type {Property} from "csstype";
 
 export function IconButton(props: {
   icon: string;
+  h?: StyleProp<Property.Height>
   onClick?: () => void;
   onHover?: () => void;
 }) {
@@ -31,11 +33,11 @@ export function IconButton(props: {
       onMouseEnter={props.onHover ? handleMouseEnter : undefined}
       onMouseLeave={props.onHover ? handleMouseLeave : undefined}
       w={"auto"}
-      h={50}
+      h={props.h ? props.h : 50}
       className={"player-resource-modifier-button"}
       variant={"none"}
       radius={"0"}>
-      <Image fit="contain" h={50} src={props.icon}/>
+      <Image fit="contain" h={props.h ? props.h : 50} src={props.icon}/>
     </ActionIcon>
   )
 }

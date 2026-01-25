@@ -1,5 +1,5 @@
 import '../../css/Player.css'
-import {ActionIcon, Button, Divider, Flex, Group, Image, ScrollArea, Stack, Text} from "@mantine/core";
+import {ActionIcon, Divider, Flex, Group, Image, ScrollArea, Stack, Text} from "@mantine/core";
 import signet_ring from '../../assets/cards/signet_ring.png';
 import draw_intrigue_card from '../../assets/cards/draw_intrigue_card.png';
 import steal_intrigue_card from '../../assets/cards/steal_intrigue_card.png';
@@ -14,9 +14,7 @@ import {FeydSignet} from "./FeydSignet.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
 import {
   DRAW_CARD,
-  END_TURN,
   GAIN_INTRIGUE_CARD,
-  REVEAL,
   GET_HAGAL_CARD,
   STEAL_INTRIGUE_CARD, UNLOCK_MAKER_HOOK, UNLOCK_SWORDMASTER, PEEK_DECK_CARD
 } from "../../const/Actions.tsx";
@@ -46,7 +44,7 @@ export function Player(props: {
   currentPlayer: string;
   firstPlayer: string;
 }) {
-  const {gameState} = useGameStore();
+
   const {sendMessage} = useWebSocket();
   const isThisPlayerCurrentPlayer = props.playerModel.name === props.currentPlayer;
   const {setImperiumRowOpened} = useGameStore();
@@ -115,13 +113,7 @@ export function Player(props: {
     )
   }
 
-  const endTurnAction = () => {
-    sendMessage({action: END_TURN})
-  }
 
-  const revealAction = () => {
-    sendMessage({action: REVEAL})
-  }
 
   const getActions = () => {
     const getIconButton = (
@@ -131,21 +123,6 @@ export function Player(props: {
     ) => {
       return (
         <IconButton icon={icon} onClick={onClick} onHover={onHover}/>
-      )
-    }
-    const getTextButton = (
-      label: string,
-      onClick?: () => void,
-      variant?: string,
-    ) => {
-      return (
-        <Button
-          onClick={onClick}
-          className={`setup-action-button-next`}
-          color={"#A08170"}
-          size="md"
-          radius="0"
-          variant={variant ? variant : "filled"}>{label}</Button>
       )
     }
 
@@ -160,13 +137,9 @@ export function Player(props: {
           {getIconButton(draw_intrigue_card, () => {sendMessage({action: GAIN_INTRIGUE_CARD})})}
           {getIconButton(steal_intrigue_card, () => {sendMessage({action: STEAL_INTRIGUE_CARD})})}
           {getIconButton(imperium_card, () => setImperiumRowOpened(true))}
+
         </Group>
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
-        <Group w={"100%"} gap={"xs"} justify={"flex-end"}>
-          {getTextButton("REVEAL", () => revealAction(), "outline")}
-          {(isThisPlayerCurrentPlayer || gameState.containsRivals)
-            && getTextButton("END TURN", () => endTurnAction())}
-        </Group>
 
       </>
     )

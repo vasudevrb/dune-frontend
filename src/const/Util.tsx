@@ -69,6 +69,7 @@ export const gameStartState: GameModel = {
   ],
   shieldWallBroken: false,
   containsRivals: true,
+  containsAtomics: true,
   currentTechs: [
     {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"},
     {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"},
@@ -148,6 +149,7 @@ export const playerStartState: PlayerModel = {
   contracts: [],
   swordmasterUnlocked: false,
   makerHookUnlocked: false,
+  hasAtomicsToken: true,
   combat: {
     troopsInSupply: 9,
     troopsInGarrison: 3,

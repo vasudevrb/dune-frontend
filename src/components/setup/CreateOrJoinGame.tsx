@@ -17,7 +17,7 @@ export function CreateOrJoinGame(props: {
   const globalProps = useGameStore();
 
   const getGameId = async () => {
-    const url = `${baseUrl}/create-game?playerName=${globalProps.playerName}&includeRivals=${globalProps.includesRivals}&includeBloodlines=${globalProps.includesBloodlines}`;
+    const url = `${baseUrl}/create-game?playerName=${globalProps.playerName}&includeRivals=${globalProps.includesRivals}&includeBloodlines=${globalProps.includesBloodlines}&includeAtomics=${globalProps.includesAtomics}`;
     try {
       const response = await fetch(url)
         .then(res => res.json())
@@ -190,6 +190,16 @@ export function CreateOrJoinGame(props: {
             onChange={(event) => globalProps.setIncludesBloodlines(event.currentTarget.checked)}
             radius={0}
             label="Include bloodlines"
+            c={"#d1d1d1"}/>
+        }
+
+        {isHost &&
+          <Checkbox
+            pt={8}
+            checked={globalProps.includesAtomics}
+            onChange={(event) => globalProps.setIncludesAtomics(event.currentTarget.checked)}
+            radius={0}
+            label="Include Family Atomics"
             c={"#d1d1d1"}/>
         }
 

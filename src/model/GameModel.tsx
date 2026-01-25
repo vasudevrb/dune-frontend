@@ -24,6 +24,7 @@ export interface GameModel {
   firstPlayer: string;
   shieldWallBroken: boolean;
   containsRivals: boolean;
+  containsAtomics: boolean;
 
   currentTechs: CardModel[];
   currentSkills: CardModel[];
