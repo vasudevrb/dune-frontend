@@ -1,10 +1,11 @@
 import {ScrollArea} from "@mantine/core";
 import type {PlayerModel, TechModel} from "../../model/PlayerModel.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
-import {FLIP_TECH_TILE, TRASH_TECH_TILE} from "../../const/Actions.tsx";
+import {ACQUIRE_TECH_TILE, FLIP_TECH_TILE, TRASH_TECH_TILE} from "../../const/Actions.tsx";
 import trash_icon from "../../assets/cards/trash_card.png";
+import use_card_icon from "../../assets/cards/use_card.png";
 import tech_flipped from "../../assets/tech_tile_flipped.jpg";
-import {Card, CardButtonType} from "../cards/Card.tsx";
+import {Card, type CardButton, CardButtonType} from "../cards/Card.tsx";
 import {produce} from "immer";
 import {flipTech} from "../../const/GameUtils.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
@@ -12,6 +13,7 @@ import {useGameStore} from "../../store/GameStore.tsx";
 export function TechTiles(props: {
   player: PlayerModel;
   nonInteractive?: boolean;
+  source?: string
 }) {
 
   const {gameState, setGameState} = useGameStore();
@@ -20,16 +22,28 @@ export function TechTiles(props: {
   const getButtons = (techTile: TechModel) => {
     if (props.nonInteractive) return undefined;
 
-    return [
+    const buttons: CardButton[] = [
       {
         type: CardButtonType.Icon,
         label: trash_icon,
         onclick: () => {
-          sendMessage({action: TRASH_TECH_TILE, body: {url: techTile.url}})
+          sendMessage({action: TRASH_TECH_TILE, body: {url: techTile.url, source: props.source}})
         },
         doubleClick: true
       }
     ]
+
+    if (props.source) {
+      buttons.splice(0, 0, {
+        type: CardButtonType.Icon,
+        label: use_card_icon,
+        onclick: () => {
+          sendMessage({action: ACQUIRE_TECH_TILE, body: {url: techTile.url, source: props.source}})
+        }
+      })
+    }
+
+    return buttons;
   }
 
   const techClickAction = (tech: TechModel) => {
@@ -49,7 +63,8 @@ export function TechTiles(props: {
   }
 
   const getSkills = () => {
-    return props.player.techs
+    const techs = props.source === "kota" ? (props.player.character.additionalInfo.kotaSecretProjects as TechModel[]) : props.player.techs
+    return techs
       .map(tech => {
         return (
           <Card

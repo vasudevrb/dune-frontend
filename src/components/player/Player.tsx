@@ -341,6 +341,19 @@ export function Player(props: {
     )
   }
 
+  const getKotaSecretProjects = () => {
+    if (props.playerModel.character.name !== "Kota Odax") return;
+    if (props.playerModel.character.additionalInfo.kotaSecretProjects.length < 1) return;
+
+    return (
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <Text w={"100%"} c={"white"}>Secret Projects</Text>
+        <TechTiles player={props.playerModel} source={"kota"}/>
+      </>
+    )
+  }
+
   const getContracts = () => {
     if (props.playerModel.contracts.length < 1) {
       return;
@@ -393,6 +406,7 @@ export function Player(props: {
         {getModifiers()}
         {getFeydSignetComponent()}
         {getChaniSignetComponent()}
+        {getKotaSecretProjects()}
         {getContracts()}
         {getSkills()}
         {getTechs()}

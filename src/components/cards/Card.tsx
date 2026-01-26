@@ -10,7 +10,7 @@ export const CardButtonType = {
 
 export type CardButtonType = keyof typeof CardButtonType;
 
-interface CardButton {
+export interface CardButton {
   type: CardButtonType,
   label: string,
   onclick: () => void,
