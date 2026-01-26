@@ -38,6 +38,7 @@ import {SardaukarSkills} from "./SardaukarSkills.tsx";
 import {ChaniSignet} from "./ChaniSignet.tsx";
 import {TechTiles} from "./TechTiles.tsx";
 import {IconButton} from "./IconButton.tsx";
+import {NavigationCards} from "./NavigationCards.tsx";
 
 export function Player(props: {
   playerModel: PlayerModel;
@@ -354,6 +355,32 @@ export function Player(props: {
     )
   }
 
+  const getYrkoonSelectedNavigationCards = () => {
+    if (props.playerModel.character.name !== "Steersman Y'rkoon") return;
+    if (props.playerModel.character.additionalInfo.yrkoonSelectedNavigationCards.length < 1) return;
+
+    return (
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <Text w={"100%"} c={"white"}>Plot Course</Text>
+        <NavigationCards player={props.playerModel} nonInteractive={true}/>
+      </>
+    )
+  }
+
+  const getYrkoonPresentedNavigationCards = () => {
+    if (props.playerModel.character.name !== "Steersman Y'rkoon") return;
+    if (props.playerModel.character.additionalInfo.yrkoonPresentedNavigationCards.length < 1) return;
+
+    return (
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <Text w={"100%"} c={"white"}>Select Navigation Cards</Text>
+        <NavigationCards player={props.playerModel} nonInteractive={false}/>
+      </>
+    )
+  }
+
   const getContracts = () => {
     if (props.playerModel.contracts.length < 1) {
       return;
@@ -410,6 +437,8 @@ export function Player(props: {
         {getContracts()}
         {getSkills()}
         {getTechs()}
+        {getYrkoonSelectedNavigationCards()}
+        {getYrkoonPresentedNavigationCards()}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getActions()}
       </Stack>
