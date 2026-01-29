@@ -1,8 +1,14 @@
 import type {PlayerModel} from "../../model/PlayerModel.tsx";
-import {Avatar, Box, Button, Image, Modal, Stack, Tooltip} from "@mantine/core";
+import {Avatar, Box, Button, Divider, Group, Image, Modal, Stack, Text, Tooltip} from "@mantine/core";
 import first_player_icon from "../../assets/agents/first_player_token.png";
 import {useDisclosure} from "@mantine/hooks";
 import {useState} from "react";
+import {Contracts} from "./Contracts.tsx";
+import {SardaukarSkills} from "./SardaukarSkills.tsx";
+import {getColoredTroopIcon} from "../../const/GameUtils.tsx";
+import sardaukar_commander_icon from "../../assets/combat/sardaukar_commander.png";
+import {TechTiles} from "./TechTiles.tsx";
+import {NavigationCards} from "./NavigationCards.tsx";
 
 export function CharacterImage(
   props: {
@@ -26,19 +32,22 @@ export function CharacterImage(
         onClose={close}
         withCloseButton={false}
         transitionProps={{ transition: 'fade' }}
+        overlayProps={{
+          backgroundOpacity: 0.85,
+        }}
         styles={{
           content: {
             backgroundColor: 'transparent'
           },
         }}
         centered>
-        <Stack align={"flex-end"}>
+        <Stack align={"center"}>
           <Image
             bg={"transparent"}
             w={"auto"}
             mah={"400"}
             fit={"cover"}
-            radius={"xs"}
+            radius={"md"}
             src={props.playerModel.character.urls[selectedImageSide]}
             alt="Character"/>
 
@@ -50,6 +59,29 @@ export function CharacterImage(
               size="md"
               radius="0"
               variant="filled">Flip card</Button>}
+
+          <Group ps={16} gap={5} justify={"center"}>
+            <Text
+              c={"white"}
+              className={"player-resource-info-text"}
+              size={"1.4em"}>{props.playerModel.combat.troopsInSupply}</Text>
+            <Image
+              w={30}
+              src={getColoredTroopIcon(props.playerModel.color)}/>
+            <Divider orientation="vertical" ms={"10"} me={"10"} color={"#cacaca44"}/>
+            <Text
+              c={"white"}
+              className={"player-resource-info-text"}
+              size={"1.4em"}>{props.playerModel.combat.commandersInSupply}</Text>
+            <Image
+              w={30}
+              src={sardaukar_commander_icon}/>
+          </Group>
+
+          <NavigationCards player={props.playerModel} nonInteractive={true}/>
+          <Contracts player={props.playerModel} nonInteractive={true}/>
+          <SardaukarSkills player={props.playerModel} nonInteractive={true}/>
+          <TechTiles player={props.playerModel} nonInteractive={true}/>
         </Stack>
       </Modal>
 

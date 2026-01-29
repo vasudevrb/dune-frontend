@@ -1,9 +1,11 @@
 import '../../css/GameBoard.css'
-import {Box, ScrollArea, Space, Stack} from "@mantine/core";
+import {Box, Image, ScrollArea, Space, Stack} from "@mantine/core";
 import board from '../../assets/board.jpg';
+import tueks_sietch from '../../assets/tueks_sietch.png';
 import {AgentLocation} from "./AgentLocation.tsx";
 import {CombatArea} from "./CombatArea.tsx";
 import type {Property} from "csstype";
+import sardaukar_commander from "../../assets/combat/sardaukar_commander.png"
 import type {AgentLocationModel} from "../../model/AgentLocationModel.tsx";
 import {assertExists} from "../../const/GameUtils.tsx";
 import {Faction} from "./Faction.tsx";
@@ -18,13 +20,15 @@ import {ShieldWall} from "./ShieldWall.tsx";
 import {HighCouncilToken} from "./HighCouncilToken.tsx";
 import {PopoverContainer} from "../PopoverContainer.tsx";
 import {produce} from "immer";
-import {UNLOCK_SWORDMASTER} from "../../const/Actions.tsx";
+import {ACQUIRE_SARDAUKAR_COMMANDER, UNLOCK_SWORDMASTER} from "../../const/Actions.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
 
 export function GameBoard() {
 
   const {gameState, setGameState} = useGameStore();
   const {sendMessage} = useWebSocket();
+
+  const containsEsmarTuek = gameState.players.map(p => p.character.name).includes("Esmar Tuek")
 
   const unlockSwordmaster = () => {
     setGameState(produce(gameState, draft => {
@@ -51,6 +55,7 @@ export function GameBoard() {
         location={location}
         style={{
           position: "absolute",
+          zIndex: 2,
           top: `${top}`,
           left: `${left}`,
           transform: `translate(-50%, -50%)`
@@ -102,6 +107,7 @@ export function GameBoard() {
       {id: 20, top: "16%", left: "69.4%"},
       {id: 21, top: "7.3%", left: "88.8%"},
       {id: 22, top: "16%", left: "88.8%"},
+      {id: 23, top: "61.5%", left: "79.8%"},
     ];
     const locations = gameState.locations;
 
@@ -110,6 +116,9 @@ export function GameBoard() {
         locations.find(l => l.id === offset.id),
         `Location with id: ${offset.id} not found `
       )
+
+      if (location.id === 23 && !containsEsmarTuek) return;
+
       return getAgentDroppable(location, offset.top, offset.left);
     })
   }
@@ -138,6 +147,45 @@ export function GameBoard() {
         `Location with id: ${offset.id} not found `
       )
       return getSpyDroppable(spyLocation, offset.top, offset.left);
+    })
+  }
+
+  const sardaukarCommanderLocations = [
+    {id: 1, top: "2%", left: "12.5%"},
+    {id: 2, top: "12%", left: "12.5%"},
+    {id: 4, top: "36.5%", left: "12.5%"},
+    {id: 16, top: "1%", left: "28%"},
+    {id: 17, top: "1%", left: "63%"},
+    {id: 20, top: "10%", left: "63%"},
+    {id: 1000, top: "23.5%", left: "54%"}
+  ]
+
+  const acquireCommanderAction = (id: number) => {
+    sendMessage({action: ACQUIRE_SARDAUKAR_COMMANDER, body: {commanderId: id}});
+  }
+
+  const getCommanders = () => {
+    return gameState.sardaukarCommanders.map(c => {
+      const location = assertExists(
+        sardaukarCommanderLocations.find(l => l.id === c.id),
+        "Error finding sardarkar commander location"
+      )
+      return (
+        <PopoverContainer
+          label={"Acquire commander"}
+          onclick={() => acquireCommanderAction(c.id)}
+          style={{
+            position: "absolute",
+            top: location.top,
+            left: location.left,
+          }}>
+          <Image
+            pos={"absolute"}
+            w={50}
+            fit={"contain"}
+            src={sardaukar_commander} />
+        </PopoverContainer>
+      )
     })
   }
 
@@ -208,9 +256,13 @@ export function GameBoard() {
             style={{top: "36.7%", left: "78.8%", transform: "translate(-50%, -50%)"}}
           />
 
-          <BonusSpice locationId={9} top={"60.2%"} left={"40.1%"}/>
-          <BonusSpice locationId={10} top={"53%"} left={"58.6%"}/>
-          <BonusSpice locationId={11} top={"44.7%"} left={"86.4%"}/>
+          <BonusSpice locationId={9} top={"60.2%"} left={"40.5%"}/>
+          <BonusSpice locationId={10} top={"52.8%"} left={"59.1%"}/>
+          <BonusSpice locationId={11} top={"45.1%"} left={"86.4%"}/>
+          {containsEsmarTuek &&
+            <BonusSpice locationId={23} top={"61.3%"} left={"83.2%"}/>
+          }
+
 
           <HighCouncilToken id={0} left={"42.2%"} top={"5.3%"}/>
           <HighCouncilToken id={1} left={"46%"} top={"5.3%"}/>
@@ -221,6 +273,20 @@ export function GameBoard() {
 
           {gameState.currentContracts.length > 0 && <Contract url={gameState.currentContracts[0]} top={"25%"} left={"34.5%"}/>}
           {gameState.currentContracts.length > 1 && <Contract url={gameState.currentContracts[1]} top={"25%"} left={"45.5%"}/>}
+
+          {getCommanders()}
+
+          {
+            containsEsmarTuek &&
+            <img
+              style={{
+                position: "absolute",
+                top: "57%",
+                right: "10%"
+              }}
+              src={tueks_sietch}
+              width={220}/>
+          }
 
           <img
             src={board}

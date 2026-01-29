@@ -17,6 +17,18 @@
   background-size: cover;
 }
 
+.current-player-global-actions-container {
+  background: linear-gradient(
+    to right,
+    rgba(25, 25, 25, 0.6) 0%,
+    rgba(25, 25, 25, 0.4) 20%,
+    rgba(25, 25, 25, 0.25) 80%,
+    rgba(25, 25, 25, 0.1) 100%
+  ), url("../assets/container_bg.png") no-repeat;
+  border: 1px solid #cacaca55;
+  background-size: cover;
+}
+
 .player-container-current-player-red {
   background: linear-gradient(
     to right,
@@ -71,7 +83,7 @@
   font-size: 14px;
   padding-bottom: 8px;
   color: #BABABA;
-  font-family: "Conneqt", sans-serif;
+  font-family: sans-serif;
 }
 
 .player-action-button {
@@ -85,7 +97,12 @@
 .player-resource-modifier-text {
   position: absolute;
   color: #FAFAFA;
-  font-family: Conneqt,sans-serif;
+  font-weight: 500;
+}
+
+.player-resource-info-text {
+  color: #FAFAFA;
+  font-family: sans-serif;
 }
 
 .player-resource-modifier-button {

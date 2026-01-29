@@ -15,8 +15,11 @@ export interface PlayerModel {
   controlFlags: ControlFlagModel[];
   swordmasterUnlocked: boolean;
   makerHookUnlocked: boolean;
+  hasAtomicsToken: boolean;
   contracts: ContractModel[];
   combat: CombatModel;
+  skills: CardModel[];
+  techs: TechModel[];
   private?: {
     inHandCards: CardModel[];
     inPlayCards: CardModel[];
@@ -59,6 +62,7 @@ export type FactionType = keyof typeof FactionType;
 export const CombatUnitType = {
   Troop: "Troop",
   Sandworm: "Sandworm",
+  Commander: "Commander",
   Strength: "Strength",
 } as const;
 
@@ -72,8 +76,12 @@ export interface CharacterModel {
 }
 
 export interface CombatModel {
+  troopsInSupply: number,
   troopsInGarrison: number;
   troopsInCombat: number;
+  commandersInSupply: number;
+  commandersInGarrison: number;
+  commandersInCombat: number;
   wormsInCombat: number;
   strength: number;
 }
@@ -89,6 +97,11 @@ export interface NumCardsModel {
 export interface ContractModel {
   url: string;
   completed: boolean;
+}
+
+export interface TechModel {
+  url: string;
+  flipped: boolean;
 }
 
 export interface AgentModel {

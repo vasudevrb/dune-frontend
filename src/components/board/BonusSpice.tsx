@@ -1,4 +1,4 @@
-import {ActionIcon, Center, Group, Stack, Text} from "@mantine/core";
+import {ActionIcon, Image, Center, Group, Stack, Text} from "@mantine/core";
 import spice_icon from '../../assets/resources/spice.png';
 import minus_icon from "../../assets/minus.svg";
 import plus_icon from "../../assets/plus.svg";
@@ -41,6 +41,8 @@ export function BonusSpice(
         return gameState.bonusSpice.haggaBasin;
       case 11:
         return gameState.bonusSpice.imperialBasin;
+      case 23:
+        return gameState.bonusSpice.tueksSietch;
     }
   }
 
@@ -49,8 +51,9 @@ export function BonusSpice(
       onClick={() => clickAction(props.locationId, true)}
       className={"player-resource-modifier-button"}
       variant={"outline"}
+      size={"20"}
       radius={"0"}>
-      <img width={30} src={plus_icon} alt="Resource modifier button"/>
+      <img width={20} src={plus_icon} alt="Resource modifier button"/>
     </ActionIcon>
   )
   const minusIcon = (
@@ -58,14 +61,19 @@ export function BonusSpice(
       onClick={() => clickAction(props.locationId, false)}
       className={"player-resource-modifier-button"}
       variant={"outline"}
+      size={"20"}
       radius={"0"}>
-      <img width={30} src={minus_icon} alt="Resource modifier button"/>
+      <img width={20} src={minus_icon} alt="Resource modifier button"/>
     </ActionIcon>
   )
   const text = (
     <Center pos={"relative"} w={50} h={50}>
-      <img width={50} src={spice_icon} alt="Resource icon"/>
-      <Text size="1.4em" className={"player-resource-modifier-text"}>
+      <Image w={50} src={spice_icon} alt="Resource icon"/>
+      <Text
+        lh={1}
+        display="flex"
+        style={{ alignItems: 'center' }}
+        size="1.4em" className={"player-resource-modifier-text"}>
         {getSpiceValue()}
       </Text>
     </Center>
@@ -75,7 +83,10 @@ export function BonusSpice(
   const horizontalLayout = (
     <Group
       align={"center"}
-      gap={0}
+      gap={2}
+      style={{
+        zIndex: 1
+      }}
       pos={"absolute"}
       top={props.top}
       left={props.left}>
@@ -88,7 +99,10 @@ export function BonusSpice(
   const verticalLayout = (
     <Stack
       align={"center"}
-      gap={0}
+      gap={2}
+      style={{
+        zIndex: 1
+      }}
       pos={"absolute"}
       top={props.top}
       left={props.left}>

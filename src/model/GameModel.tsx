@@ -1,6 +1,7 @@
 import type {CardModel, PlayerModel} from "./PlayerModel.tsx";
 import type {AgentLocationModel} from "./AgentLocationModel.tsx";
 import type {SpyLocationModel} from "./SpyLocationModel.tsx";
+import type {SardaukarCommanderModel} from "./SardaukarCommanderModel.tsx";
 
 export interface GameModel {
   gameId: string;
@@ -13,6 +14,7 @@ export interface GameModel {
     deepDesert: number;
     haggaBasin: number;
     imperialBasin: number;
+    tueksSietch: number;
   };
   highCouncil: string[];
   currentContracts: string[];
@@ -22,4 +24,9 @@ export interface GameModel {
   firstPlayer: string;
   shieldWallBroken: boolean;
   containsRivals: boolean;
+  containsAtomics: boolean;
+
+  currentTechs: CardModel[];
+  currentSkills: CardModel[];
+  sardaukarCommanders: SardaukarCommanderModel[];
 }

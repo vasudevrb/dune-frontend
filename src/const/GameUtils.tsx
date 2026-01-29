@@ -1,12 +1,13 @@
 import type {GameModel} from "../model/GameModel.tsx";
 import type {UniqueIdentifier} from "@dnd-kit/core";
-import {CombatUnitType, type ContractModel, FactionType, ObjectiveType, type PlayerModel} from "../model/PlayerModel.tsx";
+import {CombatUnitType, type ContractModel, FactionType, ObjectiveType, type PlayerModel, type TechModel} from "../model/PlayerModel.tsx";
 import {showNotification} from "./Util.tsx";
 import water_icon from "../assets/resources/water.png";
 import spice_icon from "../assets/resources/spice.png";
 import solari_icon from "../assets/resources/solari.png";
 import troop_icon from "../assets/combat/troop.png";
 import worm_icon from "../assets/combat/worm.png";
+import sardaukar_icon from "../assets/combat/sardaukar_commander.png";
 import strength_icon from "../assets/combat/strength.png";
 import agent_icon_disabled from '../assets/agents/agent_disabled.svg';
 import agent_icon_red from '../assets/agents/agent_red.svg';
@@ -17,6 +18,10 @@ import objective_desert_mouse from "../assets/objectives/desert_mouse_tr.png";
 import objective_ornithopter from "../assets/objectives/ornithopter_tr.png";
 import objective_cryskife from "../assets/objectives/crysknife_tr.png";
 import objective_any from "../assets/objectives/any.png";
+import troop_icon_red from "../assets/combat/troop_red.png";
+import troop_icon_blue from "../assets/combat/troop_blue.png";
+import troop_icon_green from "../assets/combat/troop_green.png";
+import troop_icon_gold from "../assets/combat/troop_gold.png";
 
 export const TroopMovementLocation = {
   Combat: "Combat", Garrison: "Garrison", Supply: "Supply",
@@ -212,7 +217,15 @@ export function setFeydSignetStatus(game: GameModel, newSignetStatus: number) {
   thisPlayer.character.additionalInfo.signetStatus = newSignetStatus;
 }
 
-export function moveUnit(game: GameModel, destination: TroopMovementLocation) {
+export function setChaniSignetStatus(game: GameModel, newSignetStatus: number) {
+  const thisPlayer = assertExists(
+    game.players.find(p => p.isThisPlayer),
+    `This player not found.`
+  )
+  thisPlayer.character.additionalInfo.signetStatus = newSignetStatus;
+}
+
+export function moveUnit(type: CombatUnitType, game: GameModel, destination: TroopMovementLocation) {
   const thisPlayer = assertExists(
     game.players.find(p => p.isThisPlayer),
     `This player not found.`
@@ -220,9 +233,9 @@ export function moveUnit(game: GameModel, destination: TroopMovementLocation) {
 
   switch (destination) {
     case TroopMovementLocation.Combat:
-      return moveTroopToCombat(thisPlayer);
+      return type === CombatUnitType.Commander ? moveCommanderToCombat(thisPlayer) : moveTroopToCombat(thisPlayer);
     case TroopMovementLocation.Garrison:
-      return moveTroopToGarrison(thisPlayer);
+      return type === CombatUnitType.Commander ? moveCommanderToGarrison(thisPlayer) : moveTroopToGarrison(thisPlayer);
     case  TroopMovementLocation.Supply:
       return moveTroopToSupply(thisPlayer);
   }
@@ -240,6 +253,18 @@ function moveTroopToCombat(player: PlayerModel) {
   return true;
 }
 
+function moveCommanderToCombat(player: PlayerModel) {
+  if (player.combat.commandersInGarrison < 1) {
+    showNotification("No commanders available in garrison");
+    return false;
+  }
+
+  player.combat.commandersInCombat++;
+  player.combat.strength += 2;
+  player.combat.commandersInGarrison--;
+  return true;
+}
+
 function moveTroopToGarrison(player: PlayerModel) {
   if (player.combat.troopsInCombat < 1) {
     showNotification("No troops participating in the conflict");
@@ -252,7 +277,25 @@ function moveTroopToGarrison(player: PlayerModel) {
   return true;
 }
 
-export function addOrRemoveCombatUnit(playerName: string, game: GameModel, quantity: number, unit: CombatUnitType, add: boolean) {
+function moveCommanderToGarrison(player: PlayerModel) {
+  if (player.combat.commandersInCombat < 1) {
+    showNotification("No commanders participating in the conflict");
+    return false;
+  }
+
+  player.combat.commandersInCombat--;
+  player.combat.strength -= 2;
+  player.combat.commandersInGarrison++;
+  return true;
+}
+
+export function addOrRemoveCombatUnit(
+  playerName: string,
+  game: GameModel,
+  quantity: number,
+  unit: CombatUnitType,
+  add: boolean
+) {
   const player = assertExists(
     game.players.find(p => p.name === playerName),
     `This player not found.`
@@ -260,11 +303,14 @@ export function addOrRemoveCombatUnit(playerName: string, game: GameModel, quant
 
   switch (unit) {
     case CombatUnitType.Troop:
-      if (add) {
+      if (add && player.combat.troopsInSupply >= quantity) {
         player.combat.troopsInGarrison+=quantity;
+        player.combat.troopsInSupply-= quantity;
         return true;
-      } else if (player.combat.troopsInGarrison > 0) {
-        player.combat.troopsInGarrison = Math.max(player.combat.troopsInGarrison - quantity, 0);
+      } else if (!add && player.combat.troopsInGarrison > 0) {
+        const num = Math.max(player.combat.troopsInGarrison - quantity, 0);
+        player.combat.troopsInSupply += player.combat.troopsInGarrison - num;
+        player.combat.troopsInGarrison = num;
         return true;
       }
       return false;
@@ -277,6 +323,18 @@ export function addOrRemoveCombatUnit(playerName: string, game: GameModel, quant
         player.combat.wormsInCombat = Math.max(player.combat.wormsInCombat - quantity, 0);
         player.combat.strength = Math.max(player.combat.strength - (3 * quantity), 0);
         return true
+      }
+      return false;
+    case CombatUnitType.Commander:
+      if (add && player.combat.commandersInSupply >= quantity) {
+        player.combat.commandersInGarrison+=quantity;
+        player.combat.commandersInSupply-=quantity;
+        return true;
+      } else if (!add && player.combat.commandersInGarrison > 0) {
+        const num = Math.max(player.combat.commandersInGarrison - quantity, 0);
+        player.combat.commandersInSupply += player.combat.commandersInGarrison - num;
+        player.combat.commandersInGarrison = num;
+        return true;
       }
       return false;
     case CombatUnitType.Strength:
@@ -317,6 +375,15 @@ export function addOrRemoveBonusSpice(game: GameModel, locationId: number, add: 
         return true;
       } else if (game.bonusSpice.imperialBasin > 0) {
         game.bonusSpice.imperialBasin--;
+        return true;
+      }
+      return false;
+    case 23:
+      if (add) {
+        game.bonusSpice.tueksSietch++;
+        return true;
+      } else if (game.bonusSpice.tueksSietch > 0) {
+        game.bonusSpice.tueksSietch--;
         return true;
       }
       return false;
@@ -462,6 +529,20 @@ export function setContractCompleted(game: GameModel, contract: ContractModel, c
   c.completed = completed;
 }
 
+export function flipTech(game: GameModel, tech: TechModel, flipped: boolean) {
+  const thisPlayer = assertExists(
+    game.players.find(p => p.isThisPlayer),
+    "This player not found"
+  )
+
+  const c = assertExists(
+    thisPlayer.techs.find(c => c.url === tech.url),
+    `This contract ${tech.url} not found`
+  )
+
+  c.flipped = flipped;
+}
+
 export function getResourceIconByType(resourceType: string) {
   switch (resourceType) {
     case "water":
@@ -499,7 +580,22 @@ export function getCombatUnitIconByType(modifierType: CombatUnitType) {
       return troop_icon;
     case CombatUnitType.Sandworm:
       return worm_icon;
+      case CombatUnitType.Commander:
+        return sardaukar_icon;
     default:
       return strength_icon;
+  }
+}
+
+export const getColoredTroopIcon = (color: string) => {
+  switch (color) {
+    case "RED":
+      return troop_icon_red;
+    case "BLUE":
+      return troop_icon_blue;
+    case "GREEN":
+      return troop_icon_green;
+    default:
+      return troop_icon_gold;
   }
 }

@@ -43,7 +43,8 @@ export const gameStartState: GameModel = {
   bonusSpice: {
     deepDesert: 0,
     haggaBasin: 0,
-    imperialBasin: 0
+    imperialBasin: 0,
+    tueksSietch: 0,
   },
   currentContracts: [
     "http://localhost:8080/contracts/contract_15.png",
@@ -67,7 +68,28 @@ export const gameStartState: GameModel = {
     ""
   ],
   shieldWallBroken: false,
-  containsRivals: true
+  containsRivals: true,
+  containsAtomics: true,
+  currentTechs: [
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"},
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"},
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"}
+  ],
+  currentSkills: [
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+  ],
+  sardaukarCommanders: [
+    {id: 1},
+    {id: 2},
+    {id: 4},
+    {id: 16},
+    {id: 17},
+    {id: 20},
+    {id: 1000},
+  ]
 }
 
 export const characterStartState: CharacterModel = {
@@ -127,12 +149,19 @@ export const playerStartState: PlayerModel = {
   contracts: [],
   swordmasterUnlocked: false,
   makerHookUnlocked: false,
+  hasAtomicsToken: true,
   combat: {
+    troopsInSupply: 9,
     troopsInGarrison: 3,
     troopsInCombat: 0,
     wormsInCombat: 0,
+    commandersInSupply: 0,
+    commandersInGarrison: 0,
+    commandersInCombat: 0,
     strength: 0
-  }
+  },
+  skills: [],
+  techs: []
 }
 
 export const PRINCESS_IRULAN: CharacterModel = {
@@ -169,9 +198,13 @@ export const PLAYER_1: PlayerModel = {
     Emperor: 2
   },
   combat: {
-    troopsInCombat: 2,
+    troopsInSupply: 5,
+    troopsInCombat: 3,
     troopsInGarrison: 4,
     wormsInCombat: 1,
+    commandersInSupply: 1,
+    commandersInGarrison: 1,
+    commandersInCombat: 0,
     strength: 9
   },
   makerHookUnlocked: true,
@@ -186,7 +219,7 @@ export const MUAD_DIB: CharacterModel = {
 export const PLAYER_2: PlayerModel = {
   ...playerStartState,
   name: "P2",
-  isRival: true,
+  isRival: false,
   isThisPlayer: false,
   character: MUAD_DIB,
   color: "BLUE",
@@ -205,11 +238,28 @@ export const PLAYER_2: PlayerModel = {
     {id: `control_flag-${MUAD_DIB.name}#2`},
     {id: `control_flag-${MUAD_DIB.name}#3`},
   ],
+  contracts: [
+    { url: "http://localhost:8080/contracts/contract_17.png", completed: true},
+    { url: "http://localhost:8080/contracts/contract_18.png", completed: false},
+    { url: "http://localhost:8080/contracts/contract_19.png", completed: false}
+  ],
+  techs: [
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png", flipped: false},
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_08.png", flipped: true}
+  ],
+  skills: [
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+  ],
   combat: {
+    troopsInSupply: 6,
     troopsInCombat: 4,
     troopsInGarrison: 2,
     wormsInCombat: 2,
-    strength: 17
+    commandersInSupply: 0,
+    commandersInGarrison: 0,
+    commandersInCombat: 0,
+    strength: 10
   },
 }
 
@@ -242,10 +292,14 @@ export const PLAYER_3: PlayerModel = {
   ],
   makerHookUnlocked: true,
   combat: {
+    troopsInSupply: 0,
     troopsInCombat: 8,
     troopsInGarrison: 4,
     wormsInCombat: 3,
-    strength: 23
+    commandersInSupply: 0,
+    commandersInGarrison: 0,
+    commandersInCombat: 0,
+    strength: 13
   },
 }
 
@@ -257,26 +311,34 @@ export const FEYD_RAUTHA: CharacterModel = {
     signetStatus: 0
   }
 }
+export const CHANI: CharacterModel = {
+  name: "Chani",
+  urls: ["http://localhost:8080/characters/chani.jpg"],
+  avatarUrl: "http://localhost:8080/avatars/chani.jpg",
+  additionalInfo: {
+    signetStatus: 0
+  }
+}
 export const PLAYER_4: PlayerModel = {
   ...playerStartState,
   name: "P4",
   isThisPlayer: true,
-  character: FEYD_RAUTHA,
+  character: CHANI,
   color: "RED",
   agents: [
-    {id: `agent-${FEYD_RAUTHA.name}#1`},
-    {id: `agent-${FEYD_RAUTHA.name}#2`},
-    {id: `agent-${FEYD_RAUTHA.name}#3`},
+    {id: `agent-${CHANI.name}#1`},
+    {id: `agent-${CHANI.name}#2`},
+    {id: `agent-${CHANI.name}#3`},
   ],
   spies: [
-    {id: `spy-${FEYD_RAUTHA.name}#1`},
-    {id: `spy-${FEYD_RAUTHA.name}#2`},
-    {id: `spy-${FEYD_RAUTHA.name}#3`},
+    {id: `spy-${CHANI.name}#1`},
+    {id: `spy-${CHANI.name}#2`},
+    {id: `spy-${CHANI.name}#3`},
   ],
   controlFlags: [
-    {id: `control_flag-${FEYD_RAUTHA.name}#1`},
-    {id: `control_flag-${FEYD_RAUTHA.name}#2`},
-    {id: `control_flag-${FEYD_RAUTHA.name}#3`},
+    {id: `control_flag-${CHANI.name}#1`},
+    {id: `control_flag-${CHANI.name}#2`},
+    {id: `control_flag-${CHANI.name}#3`},
   ],
   private: {
     inHandCards: [
@@ -301,11 +363,24 @@ export const PLAYER_4: PlayerModel = {
     { url: "http://localhost:8080/contracts/contract_19.png", completed: true}
   ],
   combat: {
+    troopsInSupply: 6,
     troopsInCombat: 1,
-    troopsInGarrison: 15,
+    troopsInGarrison: 5,
     wormsInCombat: 0,
+    commandersInSupply: 2,
+    commandersInGarrison: 2,
+    commandersInCombat: 1,
     strength: 4
   },
+  skills: [
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+    {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
+  ],
+  techs: [
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png", flipped: false},
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_08.png", flipped: false},
+    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_02.png", flipped: false}
+  ],
 }
 
 export function createId(items: (string | number)[]): string {

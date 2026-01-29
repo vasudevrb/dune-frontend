@@ -25,12 +25,6 @@ export default function IconGrid(
   return (
     <Box
       style={{
-        position: props.pos,
-        top: props.top,
-        left: props.left,
-        right: props.right,
-        bottom: props.bottom,
-        transform: `${props.anchorToCenter ? 'translate(-50%, -50%)': ''}`,
         display: "grid",
         gridTemplateColumns: `repeat(${cols}, ${iconSize}px)`,
         justifyContent: "center",

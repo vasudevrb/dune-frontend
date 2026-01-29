@@ -1,6 +1,6 @@
 import type {AgentLocationModel} from "../../model/AgentLocationModel.tsx";
 import '../../css/Swordmaster.css';
-import {Button, Center, Group, Image, type MantineStyleProp, Popover, type StyleProp} from "@mantine/core";
+import {Button, Center, Group, Image, type MantineStyleProp, Popover, Stack, type StyleProp} from "@mantine/core";
 import agent_icon_blue from '../../assets/agents/agent_blue.svg';
 import type {Property} from "csstype";
 import agent_icon_red from "../../assets/agents/agent_red.svg";
@@ -11,7 +11,7 @@ import {useGameStore} from "../../store/GameStore.tsx";
 import {useDisclosure} from "@mantine/hooks";
 import {assertExists, canMoveComponent, hasAvailableAgent, placeAgent, recallAgent} from "../../const/GameUtils.tsx";
 import {produce} from "immer";
-import {PLACE_AGENT, RECALL_AGENT} from "../../const/Actions.tsx";
+import {DEPLOY_DUNCAN_AGENT, PLACE_AGENT, RECALL_AGENT} from "../../const/Actions.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
 import {showNotification} from "../../const/Util.tsx";
 
@@ -23,6 +23,11 @@ function Agent(props: {
   const {gameState, setGameState} = useGameStore();
   const {sendMessage} = useWebSocket();
   const [opened, {close, toggle}] = useDisclosure(false);
+
+  const isPlayerDuncan = assertExists(
+    gameState.players.find(p => p.name === props.playerName),
+    "Current player not found"
+  ).character.name === "Duncan Idaho";
 
   const getAgentIcon = (color: string) => {
     if (color === "RED") return agent_icon_red;
@@ -45,6 +50,18 @@ function Agent(props: {
     close();
   }
 
+  const deployAgentAction = () => {
+    sendMessage({
+      action: DEPLOY_DUNCAN_AGENT, body: {
+        agentId: props.agentId,
+        playerName: props.playerName,
+      }
+    });
+    close();
+  }
+
+
+
   return (
     <Popover
       opened={opened}
@@ -60,14 +77,24 @@ function Agent(props: {
           className={"locations-agent-icon"}/>
       </Popover.Target>
       <Popover.Dropdown className={"popover-dialog"}>
-        <Group justify={"center"}>
+        <Stack justify={"center"}>
           <Button
             onClick={recallAgentAction}
             className={`setup-action-button-next`}
             size="xs"
             radius="0"
             variant={"filled"}>Recall agent</Button>
-        </Group>
+
+          {
+            isPlayerDuncan &&
+            <Button
+              onClick={deployAgentAction}
+              className={`setup-action-button-next`}
+              size="xs"
+              radius="0"
+              variant={"filled"}>Deploy agent</Button>
+          }
+        </Stack>
       </Popover.Dropdown>
     </Popover>
   )

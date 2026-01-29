@@ -1,5 +1,5 @@
 import '../../css/Player.css'
-import {ActionIcon, Button, Divider, Flex, Group, Image, ScrollArea, Stack, Text} from "@mantine/core";
+import {ActionIcon, Divider, Flex, Group, Image, ScrollArea, Stack, Text} from "@mantine/core";
 import signet_ring from '../../assets/cards/signet_ring.png';
 import draw_intrigue_card from '../../assets/cards/draw_intrigue_card.png';
 import steal_intrigue_card from '../../assets/cards/steal_intrigue_card.png';
@@ -7,19 +7,23 @@ import draw_card from '../../assets/cards/draw_card.png';
 import imperium_card from '../../assets/cards/imperium_card.jpg';
 import maker_hook_icon from '../../assets/combat/maker_hook.png';
 import draw_hagal_card from "../../assets/cards/draw_hagal.png";
+import sardaukar_commander_icon from "../../assets/combat/sardaukar_commander.png";
 import {CombatUnitType, type PlayerModel} from "../../model/PlayerModel.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
 import {FeydSignet} from "./FeydSignet.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
 import {
   DRAW_CARD,
-  END_TURN,
   GAIN_INTRIGUE_CARD,
-  REVEAL,
   GET_HAGAL_CARD,
-  STEAL_INTRIGUE_CARD, UNLOCK_MAKER_HOOK, UNLOCK_SWORDMASTER
+  STEAL_INTRIGUE_CARD, UNLOCK_MAKER_HOOK, UNLOCK_SWORDMASTER, PEEK_DECK_CARD
 } from "../../const/Actions.tsx";
-import {getAgentIcon, getResourceIconByType, getResourceTextColorByType} from "../../const/GameUtils.tsx";
+import {
+  getAgentIcon,
+  getColoredTroopIcon,
+  getResourceIconByType,
+  getResourceTextColorByType
+} from "../../const/GameUtils.tsx";
 import {CharacterImage} from "./CharacterImage.tsx";
 import {ResourceModifier} from "../modifiers/ResourceModifier.tsx";
 import {VictoryPointModifier} from "../modifiers/VictoryPointModifier.tsx";
@@ -30,13 +34,18 @@ import {Contracts} from "./Contracts.tsx";
 import {QuantityIcon} from "./QuantityIcon.tsx";
 import {ObjectivesAlliances} from "./ObjectivesAlliances.tsx";
 import {IntrigueModifier} from "../modifiers/IntrigueModifier.tsx";
+import {SardaukarSkills} from "./SardaukarSkills.tsx";
+import {ChaniSignet} from "./ChaniSignet.tsx";
+import {TechTiles} from "./TechTiles.tsx";
+import {IconButton} from "./IconButton.tsx";
+import {NavigationCards} from "./NavigationCards.tsx";
 
 export function Player(props: {
   playerModel: PlayerModel;
   currentPlayer: string;
   firstPlayer: string;
 }) {
-  const {gameState} = useGameStore();
+
   const {sendMessage} = useWebSocket();
   const isThisPlayerCurrentPlayer = props.playerModel.name === props.currentPlayer;
   const {setImperiumRowOpened} = useGameStore();
@@ -96,6 +105,7 @@ export function Player(props: {
           <Stack>
             <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Troop}/>
             <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Sandworm}/>
+            <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Commander}/>
             <CombatModifier player={props.playerModel} modifierType={CombatUnitType.Strength}/>
             {props.playerModel.isRival ? <IntrigueModifier player={props.playerModel}/> : null}
           </Stack>
@@ -104,60 +114,33 @@ export function Player(props: {
     )
   }
 
-  const endTurnAction = () => {
-    sendMessage({action: END_TURN})
-  }
 
-  const revealAction = () => {
-    sendMessage({action: REVEAL})
-  }
 
   const getActions = () => {
     const getIconButton = (
       icon: string,
       onClick?: () => void,
+      onHover?: () => void,
     ) => {
       return (
-        <ActionIcon
-          onClick={onClick}
-          w={"auto"}
-          h={50}
-          className={"player-resource-modifier-button"}
-          variant={"none"}
-          radius={"0"}>
-          <Image fit="contain" h={50} src={icon}/>
-        </ActionIcon>
+        <IconButton icon={icon} onClick={onClick} onHover={onHover}/>
       )
     }
-    const getTextButton = (
-      label: string,
-      onClick?: () => void,
-      variant?: string,
-    ) => {
-      return (
-        <Button
-          onClick={onClick}
-          className={`setup-action-button-next`}
-          color={"#A08170"}
-          size="md"
-          radius="0"
-          variant={variant ? variant : "filled"}>{label}</Button>
-      )
-    }
+
+    const shouldShowPeekDeckButton = props.playerModel.character.name === "Paul Atreides"
+      || props.playerModel.techs.find(t => t.url.includes("tech_3"))
+
+    const peekDeckAction = shouldShowPeekDeckButton && (() => {sendMessage({action: PEEK_DECK_CARD})})
     return (
       <>
         <Group w={"100%"} gap={"xs"}>
-          {getIconButton(draw_card, () => {sendMessage({action: DRAW_CARD})})}
+          {getIconButton(draw_card, () => {sendMessage({action: DRAW_CARD})}, peekDeckAction)}
           {getIconButton(draw_intrigue_card, () => {sendMessage({action: GAIN_INTRIGUE_CARD})})}
           {getIconButton(steal_intrigue_card, () => {sendMessage({action: STEAL_INTRIGUE_CARD})})}
           {getIconButton(imperium_card, () => setImperiumRowOpened(true))}
+
         </Group>
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
-        <Group w={"100%"} gap={"xs"} justify={"flex-end"}>
-          {getTextButton("REVEAL", () => revealAction(), "outline")}
-          {(isThisPlayerCurrentPlayer || gameState.containsRivals)
-            && getTextButton("END TURN", () => endTurnAction())}
-        </Group>
 
       </>
     )
@@ -248,6 +231,31 @@ export function Player(props: {
     )
   }
 
+  const getTroopsCommanders = () => {
+    return (
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <Group ps={16} gap={5} justify={"center"}>
+          <Text
+            c={"white"}
+            className={"player-resource-info-text"}
+            size={"1.4em"}>{props.playerModel.combat.troopsInSupply}</Text>
+          <Image
+            w={30}
+            src={getColoredTroopIcon(props.playerModel.color)}/>
+          <Divider orientation="vertical" ms={"10"} me={"10"} color={"#cacaca44"}/>
+          <Text
+            c={"white"}
+            className={"player-resource-info-text"}
+            size={"1.4em"}>{props.playerModel.combat.commandersInSupply}</Text>
+          <Image
+            w={30}
+            src={sardaukar_commander_icon}/>
+        </Group>
+      </>
+    )
+  }
+
   const getCurrentPlayerStyleClass = () => {
     switch (props.playerModel.color) {
       case "RED":
@@ -318,13 +326,102 @@ export function Player(props: {
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         <Image draggable={false} fit={"contain"} w={"100%"} h={40} src={signet_ring}/>
         <FeydSignet characterModel={props.playerModel.character}/>
+
+      </>
+    )
+  }
+
+  const getChaniSignetComponent = () => {
+    if (props.playerModel.character.name !== "Chani") return;
+    return (
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <Image draggable={false} fit={"contain"} w={"100%"} h={30} mb={8} src={signet_ring}/>
+        <ChaniSignet characterModel={props.playerModel.character}/>
+      </>
+    )
+  }
+
+  const getKotaSecretProjects = () => {
+    if (props.playerModel.character.name !== "Kota Odax") return;
+    if (props.playerModel.character.additionalInfo.kotaSecretProjects.length < 1) return;
+
+    return (
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <Text w={"100%"} c={"white"}>Secret Projects</Text>
+        <TechTiles player={props.playerModel} source={"kota"}/>
+      </>
+    )
+  }
+
+  const getYrkoonSelectedNavigationCards = () => {
+    if (props.playerModel.character.name !== "Steersman Y'rkoon") return;
+    if (props.playerModel.character.additionalInfo.yrkoonSelectedNavigationCards.length < 1) return;
+
+    return (
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <Text w={"100%"} c={"white"}>Plot Course</Text>
+        <NavigationCards player={props.playerModel} nonInteractive={true}/>
+      </>
+    )
+  }
+
+  const getYrkoonPresentedNavigationCards = () => {
+    if (props.playerModel.character.name !== "Steersman Y'rkoon") return;
+    if (props.playerModel.character.additionalInfo.yrkoonPresentedNavigationCards.length < 1) return;
+
+    return (
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <Text w={"100%"} c={"white"}>Select Navigation Cards</Text>
+        <NavigationCards player={props.playerModel} nonInteractive={false}/>
+      </>
+    )
+  }
+
+  const getContracts = () => {
+    if (props.playerModel.contracts.length < 1) {
+      return;
+    }
+    return (
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <Contracts player={props.playerModel}/>
+      </>
+    )
+  }
+
+  const getSkills = () => {
+    if (props.playerModel.skills.length < 1) {
+      return;
+    }
+
+    return (
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <SardaukarSkills player={props.playerModel}/>
+      </>
+    )
+  }
+
+  const getTechs = () => {
+    if (props.playerModel.techs.length < 1) {
+      return;
+    }
+
+    return (
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <TechTiles player={props.playerModel}/>
       </>
     )
   }
 
   const getThisPlayer = () => {
     return (
-      <Stack className={`current-player-container ${currentPlayerStyleClass}`} gap={"5"}>
+      <Stack className={`current-player-container ${currentPlayerStyleClass}`} gap={"0"}>
         <Text ta="left" className={"player-container-text"}>{props.playerModel.character.name} ({props.playerModel.name})</Text>
         <Group w={"100%"} wrap={"nowrap"} gap={0}>
           {getAvatar()}
@@ -332,9 +429,16 @@ export function Player(props: {
         </Group>
         {getResourcesDisplay()}
         {getAgentsSpiesFlags()}
+        {getTroopsCommanders()}
         {getModifiers()}
         {getFeydSignetComponent()}
-        {props.playerModel.contracts.length > 0 && <Contracts player={props.playerModel}/>}
+        {getChaniSignetComponent()}
+        {getKotaSecretProjects()}
+        {getContracts()}
+        {getSkills()}
+        {getTechs()}
+        {getYrkoonSelectedNavigationCards()}
+        {getYrkoonPresentedNavigationCards()}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         {getActions()}
       </Stack>

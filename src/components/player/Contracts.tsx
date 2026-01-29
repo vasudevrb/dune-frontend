@@ -9,12 +9,15 @@ import contract_completed from '../../assets/contract_completed.png';
 
 export function Contracts(props: {
   player: PlayerModel;
+  nonInteractive?: boolean;
 }) {
 
   const {gameState, setGameState} = useGameStore();
   const {sendMessage} = useWebSocket();
 
   const contractClickAction = (contract: ContractModel) => {
+    if (props.nonInteractive) return;
+
     const alreadyCompleted = contract.completed;
     setGameState(produce(gameState, draft => {
       setContractCompleted(draft, contract, !alreadyCompleted);
