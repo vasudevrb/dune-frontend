@@ -34,8 +34,8 @@ export const useGameStore = create<GameState>((set) => ({
   setInitialTurnOrder: (newTurnOrder: number) => set({initialTurnOrder: newTurnOrder}),
   includesRivals: false,
   setIncludesRivals: (rivals: boolean) => set({includesRivals: rivals}),
-  includesBloodlines: false,
+  includesBloodlines: true,
   setIncludesBloodlines: (bloodlines: boolean) => set({includesBloodlines: bloodlines}),
-  includesAtomics: false,
+  includesAtomics: true,
   setIncludesAtomics: (atomics: boolean) => set({includesAtomics: atomics}),
 }));

@@ -155,7 +155,7 @@ export function CreateOrJoinGame(props: {
         w={"400px"}
         h={"400px"}
         p={"48px"}
-        align={"center"}
+        align={"flex-start"}
         bg={"#94664d45"}>
         {
           getTextBox(
