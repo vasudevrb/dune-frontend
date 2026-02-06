@@ -123,7 +123,8 @@ export function SelectCharacter(props: {
 
       <ScrollArea
         className={"fadeScroll-character-picker"}
-        h={"100%"}
+        h={shownCharacters.length > 3 ? "100%" : "undefined"}
+        mah={"100%"}
         offsetScrollbars={false}
         type={"never"}
         scrollbars="y">
