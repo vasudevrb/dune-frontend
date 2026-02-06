@@ -2,7 +2,7 @@ import {ActionIcon, Box, Button, Group, Image, Overlay, ScrollArea, Stack, Text}
 import {useGameStore} from "../../store/GameStore.tsx";
 import {type MouseEventHandler, useEffect, useState} from "react";
 
-import {ADD_TO_GAME, UPDATE_GAME} from "../../const/Actions.tsx";
+import {ADD_TO_GAME} from "../../const/Actions.tsx";
 import {useWebSocket} from "../WebSocketContext.tsx";
 import {BASE_URL} from "../../const/ApiConstants.tsx";
 
@@ -24,9 +24,6 @@ export function SelectCharacter(props: {
 
   useEffect(() => {
     getCharacters();
-    setTimeout(() => {
-      sendMessage({action: UPDATE_GAME})
-    }, 5000);
   }, []);
 
   const getCharacters = async () => {
