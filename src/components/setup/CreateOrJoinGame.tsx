@@ -22,6 +22,7 @@ export function CreateOrJoinGame(props: {
       const response = await fetch(url)
         .then(res => res.json())
       globalProps.setInitialTurnOrder(response.turnOrder)
+      globalProps.setGameState(response.game)
       return response.gameId
     } catch (err) {
       console.error(err);
@@ -33,7 +34,7 @@ export function CreateOrJoinGame(props: {
     const id = globalProps.gameId
     const url = `${baseUrl}/join-game?playerName=${name}&gameId=${id}`
     try {
-      return await fetch(url).then(res => res.json());
+      return await fetch(url);
     } catch (err) {
       console.error(err);
     }
@@ -115,8 +116,15 @@ export function CreateOrJoinGame(props: {
       }
     } else {
       const response = await joinGame();
-      globalProps.setInitialTurnOrder(response.turnOrder)
-      switch(response.joinGameState) {
+      let state = "ERROR";
+      if (response && response.status == 200) {
+        const res = await response.json();
+        state = res.joinGameState;
+        globalProps.setInitialTurnOrder(res.turnOrder);
+        globalProps.setGameState(res.game)
+      }
+
+      switch(state) {
         case "JOINED":
           props.stepper(globalProps.includesRivals ? 2: 1)
           break;
@@ -134,6 +142,9 @@ export function CreateOrJoinGame(props: {
           break;
         case "CANNOT_JOIN_GAME_STARTED":
           showNotification("This game has already started. You cannot join now.")
+          break;
+        default:
+          showNotification("This game doesn't exist");
           break;
       }
     }

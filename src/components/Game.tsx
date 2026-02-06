@@ -165,7 +165,6 @@ function Content() {
   }
 
   return <Box w={"100%"} h={"100%"}>
-    <ImperiumRow game={gameState}/>
     {getCardPreview()}
     {getRevealPreview()}
 
@@ -471,6 +470,7 @@ export function Game() {
       autoScroll={false}>
       <MantineProvider theme={duneTheme}>
         <Notifications position={"bottom-right"}/>
+        <ImperiumRow game={gameState}/>
         {gameStarted ? contentComponent() : setupComponent()}
       </MantineProvider>
     </DndContext>
