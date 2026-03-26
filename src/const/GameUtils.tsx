@@ -1,6 +1,14 @@
 import type {GameModel} from "../model/GameModel.tsx";
 import type {UniqueIdentifier} from "@dnd-kit/core";
-import {CombatUnitType, type ContractModel, FactionType, ObjectiveType, type PlayerModel, type TechModel} from "../model/PlayerModel.tsx";
+import {
+  CombatUnitType,
+  type ContractModel,
+  FactionType,
+  type NavigationCardModel,
+  ObjectiveType,
+  type PlayerModel,
+  type TechModel
+} from "../model/PlayerModel.tsx";
 import {showNotification} from "./Util.tsx";
 import water_icon from "../assets/resources/water.png";
 import spice_icon from "../assets/resources/spice.png";
@@ -527,6 +535,22 @@ export function setContractCompleted(game: GameModel, contract: ContractModel, c
   )
 
   c.completed = completed;
+}
+
+export function setNavigationCardRevealed(game: GameModel, card: NavigationCardModel, revealed: boolean) {
+  const thisPlayer = assertExists(
+    game.players.find(p => p.isThisPlayer),
+    "This player not found"
+  )
+
+  const cards = thisPlayer.character.additionalInfo.yrkoonSelectedNavigationCards as NavigationCardModel[];
+
+  const c = assertExists(
+    cards.find(c => c.url === card.url),
+    `This navigation card ${card.url} not found`
+  )
+
+  c.revealed = revealed;
 }
 
 export function flipTech(game: GameModel, tech: TechModel, flipped: boolean) {

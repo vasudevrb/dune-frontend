@@ -78,7 +78,7 @@ export function CharacterImage(
               src={sardaukar_commander_icon}/>
           </Group>
 
-          <NavigationCards player={props.playerModel} nonInteractive={true}/>
+          <NavigationCards player={props.playerModel} showPresented={false} nonInteractive={true}/>
           <Contracts player={props.playerModel} nonInteractive={true}/>
           <SardaukarSkills player={props.playerModel} nonInteractive={true}/>
           <TechTiles player={props.playerModel} nonInteractive={true}/>

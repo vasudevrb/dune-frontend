@@ -121,3 +121,8 @@ export interface ControlFlagModel {
 export interface CardModel {
   url: string;
 }
+
+export interface NavigationCardModel extends CardModel {
+  url: string;
+  revealed: boolean;
+}

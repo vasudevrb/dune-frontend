@@ -363,7 +363,7 @@ export function Player(props: {
       <>
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         <Text w={"100%"} c={"white"}>Plot Course</Text>
-        <NavigationCards player={props.playerModel} nonInteractive={true}/>
+        <NavigationCards player={props.playerModel} showPresented={false} nonInteractive={true}/>
       </>
     )
   }
@@ -376,7 +376,7 @@ export function Player(props: {
       <>
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
         <Text w={"100%"} c={"white"}>Select Navigation Cards</Text>
-        <NavigationCards player={props.playerModel} nonInteractive={false}/>
+        <NavigationCards player={props.playerModel} showPresented={true} nonInteractive={false}/>
       </>
     )
   }
