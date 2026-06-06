@@ -36,6 +36,6 @@ export const useGameStore = create<GameState>((set) => ({
   setIncludesRivals: (rivals: boolean) => set({includesRivals: rivals}),
   includesBloodlines: true,
   setIncludesBloodlines: (bloodlines: boolean) => set({includesBloodlines: bloodlines}),
-  includesAtomics: true,
+  includesAtomics: false,
   setIncludesAtomics: (atomics: boolean) => set({includesAtomics: atomics}),
 }));
