@@ -377,9 +377,9 @@ export const PLAYER_4: PlayerModel = {
     {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},
   ],
   techs: [
-    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png", flipped: false},
-    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_08.png", flipped: false},
-    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_02.png", flipped: false}
+    {url: "https://dunecardshub.com/images/bloodlines-tech-delivery-bay.webp", flipped: false},
+    {url: "https://dunecardshub.com/images/bloodlines-tech-delivery-bay.webp", flipped: false},
+    {url: "https://dunecardshub.com/images/bloodlines-tech-delivery-bay.webp", flipped: false}
   ],
 }
 

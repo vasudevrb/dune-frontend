@@ -39,6 +39,7 @@ import {ChaniSignet} from "./ChaniSignet.tsx";
 import {TechTiles} from "./TechTiles.tsx";
 import {IconButton} from "./IconButton.tsx";
 import {NavigationCards} from "./NavigationCards.tsx";
+import {RaidBoard} from "./RaidBoard.tsx";
 
 export function Player(props: {
   playerModel: PlayerModel;
@@ -419,6 +420,16 @@ export function Player(props: {
     )
   }
 
+  const getRaids = () => {
+    return (
+      <>
+        <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
+        <RaidBoard player={props.playerModel}/>
+      </>
+    )
+  }
+
+
   const getThisPlayer = () => {
     return (
       <Stack className={`current-player-container ${currentPlayerStyleClass}`} gap={"0"}>
@@ -437,6 +448,7 @@ export function Player(props: {
         {getContracts()}
         {getSkills()}
         {getTechs()}
+        {getRaids()}
         {getYrkoonSelectedNavigationCards()}
         {getYrkoonPresentedNavigationCards()}
         <Divider orientation={"horizontal"} m={"md"} color={"#cacaca44"}/>
