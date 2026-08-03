@@ -17,6 +17,8 @@ export interface GameState {
   setIncludesRivals: (rivals: boolean) => void;
   includesBloodlines: boolean;
   setIncludesBloodlines: (bloodlines: boolean) => void;
+  includesConspiracy: boolean;
+  setIncludesConspiracy: (conspiracy: boolean) => void;
   includesAtomics: boolean;
   setIncludesAtomics: (atomics: boolean) => void;
 }
@@ -36,6 +38,8 @@ export const useGameStore = create<GameState>((set) => ({
   setIncludesRivals: (rivals: boolean) => set({includesRivals: rivals}),
   includesBloodlines: true,
   setIncludesBloodlines: (bloodlines: boolean) => set({includesBloodlines: bloodlines}),
+  includesConspiracy: true,
+  setIncludesConspiracy: (conspiracy: boolean) => set({includesConspiracy: conspiracy}),
   includesAtomics: false,
   setIncludesAtomics: (atomics: boolean) => set({includesAtomics: atomics}),
 }));

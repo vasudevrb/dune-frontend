@@ -17,7 +17,7 @@ export function CreateOrJoinGame(props: {
   const globalProps = useGameStore();
 
   const getGameId = async () => {
-    const url = `${baseUrl}/create-game?playerName=${globalProps.playerName}&includeRivals=${globalProps.includesRivals}&includeBloodlines=${globalProps.includesBloodlines}&includeAtomics=${globalProps.includesAtomics}`;
+    const url = `${baseUrl}/create-game?playerName=${globalProps.playerName}&includeRivals=${globalProps.includesRivals}&includeBloodlines=${globalProps.includesBloodlines}&includeConspiracy=${globalProps.includesConspiracy}&includeAtomics=${globalProps.includesAtomics}`;
     try {
       const response = await fetch(url)
         .then(res => res.json())
@@ -204,13 +204,23 @@ export function CreateOrJoinGame(props: {
             c={"#d1d1d1"}/>
         }
 
+        {/*{isHost &&*/}
+        {/*  <Checkbox*/}
+        {/*    pt={8}*/}
+        {/*    checked={globalProps.includesAtomics}*/}
+        {/*    onChange={(event) => globalProps.setIncludesAtomics(event.currentTarget.checked)}*/}
+        {/*    radius={0}*/}
+        {/*    label="Include Family Atomics"*/}
+        {/*    c={"#d1d1d1"}/>*/}
+        {/*}*/}
+
         {isHost &&
           <Checkbox
             pt={8}
-            checked={globalProps.includesAtomics}
-            onChange={(event) => globalProps.setIncludesAtomics(event.currentTarget.checked)}
+            checked={globalProps.includesConspiracy}
+            onChange={(event) => globalProps.setIncludesConspiracy(event.currentTarget.checked)}
             radius={0}
-            label="Include Family Atomics"
+            label="Include Conspiracy"
             c={"#d1d1d1"}/>
         }
 

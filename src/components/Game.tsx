@@ -207,7 +207,7 @@ export function Game() {
   const [gameStarted, setGameStarted] = useState(false);
 
   useEffect(() => {
-    const setup = true;
+    const setup = false;
     if (setup) {
       setGameStarted(true);
       setGameState({
