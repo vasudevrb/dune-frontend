@@ -50,8 +50,12 @@ export const gameStartState: GameModel = {
     "http://localhost:8080/contracts/contract_15.png",
     "http://localhost:8080/contracts/contract_17.png"
   ],
+  currentRaids: [
+    {url: "http://localhost:8080/raid_tokens/large/raid_large_10.png"},
+    {url: "http://localhost:8080/raid_tokens/small/raid_small_10.png"},
+  ],
   imperiumRow: [
-    {url: "http://localhost:8080/imperium_cards/imperium_45.jpg"},
+    {url: "http://localhost:8080/imperium_cards/imperium_43.jpg"},
     {url: "http://localhost:8080/imperium_cards/imperium_46.jpg"},
     {url: "http://localhost:8080/imperium_cards/imperium_51.jpg"},
     {url: "http://localhost:8080/imperium_cards/imperium_48.jpg"},
@@ -71,9 +75,9 @@ export const gameStartState: GameModel = {
   containsRivals: true,
   containsAtomics: true,
   currentTechs: [
-    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"},
-    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"},
-    {url: "https://api.dunecardshub.com/uploads/images/bl_tech_07.png"}
+    {url: "https://dunecardshub.com/images/bloodlines-tech-delivery-bay.webp"},
+    {url: "https://dunecardshub.com/images/bloodlines-tech-delivery-bay.webp"},
+    {url: "https://dunecardshub.com/images/bloodlines-tech-delivery-bay.webp"}
   ],
   currentSkills: [
     {url: "https://i.ibb.co/1YqZmtxK/charismatic.png"},

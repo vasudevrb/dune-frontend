@@ -104,6 +104,12 @@ export interface TechModel {
   flipped: boolean;
 }
 
+export interface RaidModel {
+  url: string;
+  type: string;
+  repeated: boolean;
+}
+
 export interface AgentModel {
   id: string;
   atLocation?: number;

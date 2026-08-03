@@ -15,6 +15,7 @@ const SectionType = {
   RESERVE: "RESERVE",
   TECH: "TECH",
   SKILL: "SKILL",
+  RAID: "RAID",
 } as const;
 
 export type SectionType = keyof typeof SectionType;
@@ -35,6 +36,7 @@ export function ImperiumRow(props: {
       case SectionType.RESERVE: return "Reserve Cards";
       case SectionType.TECH: return "Techs";
       case SectionType.SKILL: return "Sardaukar Skills";
+      case SectionType.RAID: return "Raids";
     }
   }
 
@@ -101,12 +103,30 @@ export function ImperiumRow(props: {
       }}>
       <Stack gap={0}>
 
-        {
-          props.game.currentTechs.length > 0 &&
-          <Group ps={16} pb={50}>
-            {getCardSection(SectionType.TECH, props.game.currentTechs, "195", "130", "contain")}
-          </Group>
-        }
+        <ScrollArea
+          className="scrollarea-imperium-row"
+          w={"100%"}
+          style={{flexShrink: 0}}
+          offsetScrollbars={false}
+          type={"never"}
+          scrollbars="x">
+          <div style={{display: 'flex', gap: 16, padding: 16}}>
+            {
+              props.game.currentTechs.length > 0 &&
+              <Group ps={16} pb={50}>
+                {getCardSection(SectionType.TECH, props.game.currentTechs, "195", "130", "contain")}
+              </Group>
+            }
+
+            {
+              props.game.currentTechs.length > 0 &&
+              <Group ps={16} pb={50}>
+                {getCardSection(SectionType.RAID, props.game.currentRaids, "195", "130", "contain")}
+              </Group>
+            }
+            <Space w={16}/>
+          </div>
+        </ScrollArea>
 
         {
           props.game.currentSkills.length > 0 &&
