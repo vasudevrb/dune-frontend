@@ -20,6 +20,7 @@ export interface PlayerModel {
   combat: CombatModel;
   skills: CardModel[];
   techs: TechModel[];
+  raids: RaidModel[];
   private?: {
     inHandCards: CardModel[];
     inPlayCards: CardModel[];

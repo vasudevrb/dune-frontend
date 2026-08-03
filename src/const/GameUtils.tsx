@@ -6,7 +6,7 @@ import {
   FactionType,
   type NavigationCardModel,
   ObjectiveType,
-  type PlayerModel,
+  type PlayerModel, type RaidModel,
   type TechModel
 } from "../model/PlayerModel.tsx";
 import {showNotification} from "./Util.tsx";
@@ -565,6 +565,20 @@ export function flipTech(game: GameModel, tech: TechModel, flipped: boolean) {
   )
 
   c.flipped = flipped;
+}
+
+export function repeatRaid(game: GameModel, raid: RaidModel, repeated: boolean) {
+  const thisPlayer = assertExists(
+    game.players.find(p => p.isThisPlayer),
+    "This player not found"
+  )
+
+  const r = assertExists(
+    thisPlayer.raids.find(c => c.url === raid.url),
+    `This raid ${raid.url} not found`
+  )
+
+  r.repeated = repeated;
 }
 
 export function getResourceIconByType(resourceType: string) {

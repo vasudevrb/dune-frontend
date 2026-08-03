@@ -165,7 +165,8 @@ export const playerStartState: PlayerModel = {
     strength: 0
   },
   skills: [],
-  techs: []
+  techs: [],
+  raids: []
 }
 
 export const PRINCESS_IRULAN: CharacterModel = {
