@@ -29,4 +29,6 @@ export interface GameModel {
   currentTechs: CardModel[];
   currentSkills: CardModel[];
   sardaukarCommanders: SardaukarCommanderModel[];
+
+  currentRaids: CardModel[];
 }

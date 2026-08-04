@@ -20,6 +20,7 @@ export interface PlayerModel {
   combat: CombatModel;
   skills: CardModel[];
   techs: TechModel[];
+  raids: RaidModel[];
   private?: {
     inHandCards: CardModel[];
     inPlayCards: CardModel[];
@@ -102,6 +103,12 @@ export interface ContractModel {
 export interface TechModel {
   url: string;
   flipped: boolean;
+}
+
+export interface RaidModel {
+  url: string;
+  type: string;
+  repeated: boolean;
 }
 
 export interface AgentModel {

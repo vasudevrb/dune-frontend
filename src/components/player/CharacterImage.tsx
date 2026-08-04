@@ -9,6 +9,7 @@ import {getColoredTroopIcon} from "../../const/GameUtils.tsx";
 import sardaukar_commander_icon from "../../assets/combat/sardaukar_commander.png";
 import {TechTiles} from "./TechTiles.tsx";
 import {NavigationCards} from "./NavigationCards.tsx";
+import {RaidBoard} from "./RaidBoard.tsx";
 
 export function CharacterImage(
   props: {
@@ -78,6 +79,7 @@ export function CharacterImage(
               src={sardaukar_commander_icon}/>
           </Group>
 
+          <RaidBoard player={props.playerModel} width={"265px"} nonInteractive={true} />
           <NavigationCards player={props.playerModel} showPresented={false} nonInteractive={true}/>
           <Contracts player={props.playerModel} nonInteractive={true}/>
           <SardaukarSkills player={props.playerModel} nonInteractive={true}/>

@@ -3,7 +3,7 @@ import {ScrollArea, Divider, Drawer, Text, Space, Stack, Group} from "@mantine/c
 import {Card, CardButtonType} from "./Card.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
 import type {CardModel} from "../../model/PlayerModel.tsx";
-import {ACQUIRE_COMMANDER_SKILL, ACQUIRE_IMPERIUM_CARD, ACQUIRE_RESERVE_CARD, ACQUIRE_TECH_TILE} from "../../const/Actions.tsx";
+import {ACQUIRE_COMMANDER_SKILL, ACQUIRE_IMPERIUM_CARD, ACQUIRE_RESERVE_CARD, ACQUIRE_TECH_TILE, COMMIT_RAID} from "../../const/Actions.tsx";
 import use_card_icon from "../../assets/cards/use_card.png";
 import {useWebSocket} from "../WebSocketContext.tsx";
 import type {GameModel} from "../../model/GameModel.tsx";
@@ -15,6 +15,7 @@ const SectionType = {
   RESERVE: "RESERVE",
   TECH: "TECH",
   SKILL: "SKILL",
+  RAID: "RAID",
 } as const;
 
 export type SectionType = keyof typeof SectionType;
@@ -35,6 +36,7 @@ export function ImperiumRow(props: {
       case SectionType.RESERVE: return "Reserve Cards";
       case SectionType.TECH: return "Techs";
       case SectionType.SKILL: return "Sardaukar Skills";
+      case SectionType.RAID: return "Raids";
     }
   }
 
@@ -45,6 +47,7 @@ export function ImperiumRow(props: {
         case SectionType.RESERVE: return ACQUIRE_RESERVE_CARD;
         case SectionType.TECH: return ACQUIRE_TECH_TILE;
         case SectionType.SKILL: return ACQUIRE_COMMANDER_SKILL;
+        case SectionType.RAID: return COMMIT_RAID;
       }
     }
     const getButton = (label: string) => {
@@ -101,12 +104,30 @@ export function ImperiumRow(props: {
       }}>
       <Stack gap={0}>
 
-        {
-          props.game.currentTechs.length > 0 &&
-          <Group ps={16} pb={50}>
-            {getCardSection(SectionType.TECH, props.game.currentTechs, "195", "130", "contain")}
-          </Group>
-        }
+        <ScrollArea
+          className="scrollarea-imperium-row"
+          w={"100%"}
+          style={{flexShrink: 0}}
+          offsetScrollbars={false}
+          type={"never"}
+          scrollbars="x">
+          <div style={{display: 'flex', gap: 16, padding: 16}}>
+            {
+              props.game.currentTechs.length > 0 &&
+              <Group ps={16} pb={50}>
+                {getCardSection(SectionType.TECH, props.game.currentTechs, "195", "130", "contain")}
+              </Group>
+            }
+
+            {
+              props.game.currentTechs.length > 0 &&
+              <Group ps={16} pb={50}>
+                {getCardSection(SectionType.RAID, props.game.currentRaids, "195", "130", "contain")}
+              </Group>
+            }
+            <Space w={16}/>
+          </div>
+        </ScrollArea>
 
         {
           props.game.currentSkills.length > 0 &&
