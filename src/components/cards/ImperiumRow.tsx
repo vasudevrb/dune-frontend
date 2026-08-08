@@ -3,7 +3,14 @@ import {ScrollArea, Divider, Drawer, Text, Space, Stack, Group} from "@mantine/c
 import {Card, CardButtonType} from "./Card.tsx";
 import {useGameStore} from "../../store/GameStore.tsx";
 import type {CardModel} from "../../model/PlayerModel.tsx";
-import {ACQUIRE_COMMANDER_SKILL, ACQUIRE_IMPERIUM_CARD, ACQUIRE_RESERVE_CARD, ACQUIRE_TECH_TILE, COMMIT_RAID} from "../../const/Actions.tsx";
+import {
+  ACQUIRE_COMMANDER_SKILL,
+  ACQUIRE_CONTRACT,
+  ACQUIRE_IMPERIUM_CARD,
+  ACQUIRE_RESERVE_CARD,
+  ACQUIRE_TECH_TILE,
+  COMMIT_RAID
+} from "../../const/Actions.tsx";
 import use_card_icon from "../../assets/cards/use_card.png";
 import {useWebSocket} from "../WebSocketContext.tsx";
 import type {GameModel} from "../../model/GameModel.tsx";
@@ -16,6 +23,7 @@ const SectionType = {
   TECH: "TECH",
   SKILL: "SKILL",
   RAID: "RAID",
+  CONTRACT: "CONTRACT",
 } as const;
 
 export type SectionType = keyof typeof SectionType;
@@ -32,29 +40,45 @@ export function ImperiumRow(props: {
 
   const getSectionLabel = (cardType: SectionType) => {
     switch (cardType) {
-      case SectionType.IMPERIUM: return "Imperium Row";
-      case SectionType.RESERVE: return "Reserve Cards";
-      case SectionType.TECH: return "Techs";
-      case SectionType.SKILL: return "Sardaukar Skills";
-      case SectionType.RAID: return "Raids";
+      case SectionType.IMPERIUM:
+        return "Imperium Row";
+      case SectionType.RESERVE:
+        return "Reserve Cards";
+      case SectionType.TECH:
+        return "Techs";
+      case SectionType.SKILL:
+        return "Sardaukar Skills";
+      case SectionType.RAID:
+        return "Raids";
+      case SectionType.CONTRACT:
+        return "Contracts";
     }
   }
 
   const getButtons = (cardType: SectionType, card: CardModel) => {
     const getOnClickActionType = () => {
       switch (cardType) {
-        case SectionType.IMPERIUM: return ACQUIRE_IMPERIUM_CARD;
-        case SectionType.RESERVE: return ACQUIRE_RESERVE_CARD;
-        case SectionType.TECH: return ACQUIRE_TECH_TILE;
-        case SectionType.SKILL: return ACQUIRE_COMMANDER_SKILL;
-        case SectionType.RAID: return COMMIT_RAID;
+        case SectionType.IMPERIUM:
+          return ACQUIRE_IMPERIUM_CARD;
+        case SectionType.RESERVE:
+          return ACQUIRE_RESERVE_CARD;
+        case SectionType.TECH:
+          return ACQUIRE_TECH_TILE;
+        case SectionType.SKILL:
+          return ACQUIRE_COMMANDER_SKILL;
+        case SectionType.RAID:
+          return COMMIT_RAID;
+        case SectionType.CONTRACT:
+          return ACQUIRE_CONTRACT;
       }
     }
     const getButton = (label: string) => {
       return {
         type: CardButtonType.Icon,
         label: label,
-        onclick: () => {sendMessage({action: getOnClickActionType(), body: {url: card.url}})}
+        onclick: () => {
+          sendMessage({action: getOnClickActionType(), body: {url: card.url}})
+        }
       }
     }
 
@@ -129,12 +153,32 @@ export function ImperiumRow(props: {
           </div>
         </ScrollArea>
 
-        {
-          props.game.currentSkills.length > 0 &&
-          <Group ps={16} pb={50}>
-            {getCardSection(SectionType.SKILL, props.game.currentSkills, "150", "150", "contain")}
-          </Group>
-        }
+        <ScrollArea
+          className="scrollarea-imperium-row"
+          w={"100%"}
+          style={{flexShrink: 0}}
+          offsetScrollbars={false}
+          type={"never"}
+          scrollbars="x">
+          <div style={{display: 'flex', gap: 16, padding: 16}}>
+            {
+              props.game.currentSkills.length > 0 &&
+              <Group ps={16} pb={50}>
+                {getCardSection(SectionType.SKILL, props.game.currentSkills, "150", "150", "contain")}
+              </Group>
+            }
+
+            {
+              props.game.currentContracts.length > 0 &&
+              <Group ps={16} pb={50}>
+                {getCardSection(SectionType.CONTRACT, props.game.currentContracts.map(c_url => {
+                  return {url: c_url};
+                }), "150", "150", "contain")}
+              </Group>
+            }
+            <Space w={16}/>
+          </div>
+        </ScrollArea>
 
         <ScrollArea
           className="scrollarea-imperium-row"
